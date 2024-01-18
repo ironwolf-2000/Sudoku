@@ -1,1 +1,1 @@
-# Sudoku-Games
+# Sudoku Games
