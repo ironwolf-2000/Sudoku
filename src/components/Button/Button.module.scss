@@ -1,0 +1,17 @@
+.Button {
+    border: none;
+    cursor: pointer;
+    background-color: lightgray;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: 0.2s;
+    width: 8rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0 darkgray;
+
+    &:active {
+        box-shadow: 0 0.125rem 0 darkgray;
+        transform: translateY(0.125rem);
+    }
+}
