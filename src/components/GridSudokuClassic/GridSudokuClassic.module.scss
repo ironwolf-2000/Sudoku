@@ -1,0 +1,43 @@
+.Grid {
+    background: black;
+    display: grid;
+    gap: 0.125rem;
+    grid-template: repeat(9, auto) / repeat(9, auto);
+    padding: 0.25rem;
+    width: max-content;
+}
+
+.Cell {
+    align-items: center;
+    background: white;
+    display: grid;
+    font-size: 1.25rem;
+    height: 3rem;
+    justify-items: center;
+    user-select: none;
+    width: 3rem;
+
+    &:nth-child(3n):not(:nth-child(9n)) {
+        margin-right: 0.125rem;
+    }
+
+    &:nth-child(27n + 28),
+    &:nth-child(27n + 29),
+    &:nth-child(27n + 30),
+    &:nth-child(27n + 31),
+    &:nth-child(27n + 32),
+    &:nth-child(27n + 33),
+    &:nth-child(27n + 34),
+    &:nth-child(27n + 35),
+    &:nth-child(27n + 36) {
+        margin-top: 0.125rem;
+    }
+
+    &.empty {
+        &:hover,
+        &:focus {
+            background: lightblue;
+            cursor: pointer;
+        }
+    }
+}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/App.const';
 import { Button } from '@components/Button';
 
-export const MainPage = () => {
+export const MainPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
