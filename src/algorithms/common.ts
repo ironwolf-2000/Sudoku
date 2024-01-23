@@ -1,12 +1,31 @@
 import { Board, Coordinate } from '@/App.types';
 
-const getShuffledCopy = (values: number[]): number[] => {
+export const getInclusiveRange = (lo: number, hi: number): number[] => {
+    return Array(hi - lo + 1)
+        .fill(null)
+        .map((_, i) => i + lo);
+};
+
+export const getShuffledCopy = (values: number[]): number[] => {
     const res = [...values];
 
     for (let i = 0; i < res.length; i++) {
         const j = i + Math.floor(Math.random() * (res.length - i));
         [res[i], res[j]] = [res[j], res[i]];
     }
+
+    return res;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getDeepCopy = (array: any): any => {
+    if (!Array.isArray(array)) {
+        return array;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const res: any[] = [];
+    array.forEach(el => res.push(getDeepCopy(el)));
 
     return res;
 };
@@ -53,7 +72,7 @@ const isValid = (board: Board, r: number, c: number, val: number): boolean => {
 
 // ==== Sudoku Solver ==== //
 
-const getEmptyCells = (board: Board): Coordinate[] => {
+export const getEmptyCells = (board: Board): Coordinate[] => {
     const res: Coordinate[] = [];
 
     for (let r = 0; r < board.length; r++) {
@@ -67,7 +86,7 @@ const getEmptyCells = (board: Board): Coordinate[] => {
     return res;
 };
 
-const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | null => {
+export const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | null => {
     let res: Board | null = null;
 
     const backtrack = (empty: Coordinate[], index: number): void => {
@@ -82,11 +101,7 @@ const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | null => {
 
         const [r, c] = empty[index];
 
-        for (const k of getShuffledCopy(
-            Array(9)
-                .fill(null)
-                .map((_, i) => i + 1)
-        )) {
+        for (const k of getShuffledCopy(getInclusiveRange(1, 9))) {
             if (isValid(board, r, c, k)) {
                 board[r][c] = k;
                 backtrack(empty, index + 1);

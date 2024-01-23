@@ -36,8 +36,24 @@
     &.empty {
         &:hover,
         &:focus {
-            background: lightblue;
+            background-color: lightblue;
             cursor: pointer;
         }
+    }
+
+    &.selected {
+        background-color: lightyellow;
+    }
+
+    &.clue {
+        background-color: lightgray;
+    }
+
+    &.error {
+        background-color: lightpink;
+    }
+
+    &.correct {
+        background-color: lightgreen;
     }
 }

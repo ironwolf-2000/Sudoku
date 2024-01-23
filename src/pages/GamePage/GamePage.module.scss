@@ -1,8 +1,26 @@
 .Container {
-    width: max-content;
+    display: flex;
+    justify-content: center;
     margin: 8rem auto;
+}
+
+.Body {
+    width: max-content;
 }
 
 .Board {
     margin-bottom: 2rem;
+}
+
+.GameButtonRow {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.Menu {
+    margin-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
 }
