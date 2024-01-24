@@ -89,7 +89,7 @@ export const getEmptyCells = (board: Board): Coordinate[] => {
 export const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | null => {
     let res: Board | null = null;
 
-    const backtrack = (empty: Coordinate[], index: number): void => {
+    const backtrack = (empty: Coordinate[], index: number) => {
         if (index === empty.length) {
             if (res !== null) {
                 throw new Error();

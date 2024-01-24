@@ -4,6 +4,7 @@ export interface IGridSudokuClassicProps {
     className?: string;
     board?: Board;
     selectedCell?: Coordinate;
+    hintCell?: Coordinate;
     onSelectCell: (cell: Coordinate) => void;
     solution?: Board;
     clueCells: Set<string>;

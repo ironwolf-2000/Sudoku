@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Board, Coordinate } from '@/App.types';
 import { getDeepCopy } from '@/algorithms/common';
@@ -6,8 +7,11 @@ import { createNewGame } from '@/algorithms/SudokuClassic';
 import { Button, GameButtonRow, GridSudokuClassic } from '@/components';
 import { Level, levelToClues } from './GamePage.const';
 import styles from './GamePage.module.scss';
+import { PATHS } from '@/App.const';
 
 export const GamePage: React.FC = () => {
+    const navigate = useNavigate();
+
     const [level, setLevel] = useState(Level.INSANE);
     const cluesCount = levelToClues[level];
 
@@ -15,6 +19,8 @@ export const GamePage: React.FC = () => {
     const [solution, setSolution] = useState<Board | undefined>();
 
     const [selectedCell, setSelectedCell] = useState<Coordinate | undefined>();
+    const [hintCell, setHintCell] = useState<Coordinate | undefined>();
+
     const [clueCells, setClueCells] = useState<Set<string>>(new Set());
     const [errorCells, setErrorCells] = useState<Set<string>>(new Set());
 
@@ -58,13 +64,40 @@ export const GamePage: React.FC = () => {
         setBoard(board);
         setSolution(solution);
         setClueCells(_clueCells);
-        setErrorCells(new Set());
-        setCheckMode(false);
     }, [cluesCount]);
 
-    useEffect(() => {
-        startNewGame();
-    }, [startNewGame]);
+    const restartGame = () => {
+        if (!board) {
+            return;
+        }
+
+        const _board = getDeepCopy(board);
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (!clueCells.has([i, j].join(' '))) {
+                    _board[i][j] = 0;
+                    console.log(i, j);
+                }
+            }
+        }
+
+        setBoard(_board);
+        setErrorCells(new Set());
+        setCheckMode(false);
+    };
+
+    useEffect(() => startNewGame(), [startNewGame]);
+
+    const handleSelectCell = (cell: Coordinate) => {
+        const [r, c] = cell;
+
+        if (selectedCell?.[0] === r && selectedCell?.[1] === c) {
+            setSelectedCell(undefined);
+        } else {
+            setSelectedCell([r, c]);
+        }
+    };
 
     const triggerCheckMode = () => {
         if (checkMode) {
@@ -75,14 +108,26 @@ export const GamePage: React.FC = () => {
         setTimeout(() => setCheckMode(false), 3000);
     };
 
-    const handleSelectCell = (cell: Coordinate): void => {
-        const [r, c] = cell;
-
-        if (selectedCell?.[0] === r && selectedCell?.[1] === c) {
-            setSelectedCell(undefined);
-        } else {
-            setSelectedCell([r, c]);
+    const showHint = () => {
+        if (!board) {
+            return;
         }
+
+        const emptyCells: Coordinate[] = [];
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (board[i][j] === 0) {
+                    emptyCells.push([i, j]);
+                }
+            }
+        }
+
+        const randomIndex = Math.floor(Math.random() * emptyCells.length);
+        const [r, c] = emptyCells[randomIndex];
+
+        setHintCell([r, c]);
+        setTimeout(() => setHintCell(undefined), 3000);
     };
 
     return (
@@ -92,6 +137,7 @@ export const GamePage: React.FC = () => {
                     className={styles.Board}
                     board={board}
                     selectedCell={selectedCell}
+                    hintCell={hintCell}
                     onSelectCell={handleSelectCell}
                     solution={solution}
                     clueCells={clueCells}
@@ -105,12 +151,10 @@ export const GamePage: React.FC = () => {
                 />
             </div>
             <div className={styles.Menu}>
-                <Button className={styles.ButtonNewGame} onClick={startNewGame}>
-                    New Game
-                </Button>
-                <Button className={styles.ButtonCheck} onClick={triggerCheckMode}>
-                    Check
-                </Button>
+                <Button onClick={() => navigate(PATHS.HOME)}>Home</Button>
+                <Button onClick={restartGame}>Restart</Button>
+                <Button onClick={triggerCheckMode}>Check</Button>
+                <Button onClick={showHint}>Hint</Button>
             </div>
         </div>
     );

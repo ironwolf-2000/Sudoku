@@ -41,6 +41,10 @@
         background-color: lightsteelblue;
     }
 
+    &.hint:not(.checkMode) {
+        background-color: greenyellow;
+    }
+
     &.clue {
         font-weight: bold;
 

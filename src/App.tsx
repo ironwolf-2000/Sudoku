@@ -6,7 +6,7 @@ import { PATHS } from './App.const';
 export const App = () => {
     const router = createBrowserRouter([
         {
-            path: PATHS.BASE,
+            path: PATHS.HOME,
             element: <MainPage />,
         },
         {

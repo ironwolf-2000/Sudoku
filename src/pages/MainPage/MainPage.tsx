@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PATHS } from '@/App.const';
 import { Button } from '@components/Button';
+import styles from './MainPage.module.scss';
 
 export const MainPage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,8 +12,10 @@ export const MainPage: React.FC = () => {
     };
 
     return (
-        <main>
-            <Button onClick={handleClick}>Play</Button>
+        <main className={styles.Container}>
+            <Button size="l" onClick={handleClick}>
+                Play
+            </Button>
         </main>
     );
 };

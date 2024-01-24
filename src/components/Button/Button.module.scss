@@ -14,4 +14,11 @@
         box-shadow: 0 0.125rem 0 darkgray;
         transform: translateY(0.125rem);
     }
+
+    &.size_l {
+        font-size: 1.25rem;
+        width: 12rem;
+        height: 4rem;
+        border-radius: 0.75rem;
+    }
 }

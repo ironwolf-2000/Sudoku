@@ -8,6 +8,7 @@ import { getCoordinatesFromBox } from './GridSudokuClassic.helpers';
 export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
     className,
     selectedCell,
+    hintCell,
     onSelectCell,
     board,
     solution,
@@ -29,7 +30,9 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
                         const clue = clueCells.has(cell);
                         const error = errorCells.has(cell);
                         const correct = val && !clue && !error;
+
                         const selected = selectedCell?.[0] === i && selectedCell?.[1] === j;
+                        const hint = hintCell?.[0] === i && hintCell?.[1] === j;
 
                         const sameRow = selectedCell?.[0] === i;
                         const sameColumn = selectedCell?.[1] === j;
@@ -42,6 +45,7 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
                                     styles.Cell,
                                     (sameRow || sameColumn || sameBox) && styles.affected,
                                     selected && styles.selected,
+                                    hint && styles.hint,
                                     clue && styles.clue,
                                     error && styles.error,
                                     correct && styles.correct,
@@ -49,7 +53,7 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
                                 )}
                                 onClick={!checkMode && !clueCells.has(cell) ? () => onSelectCell([i, j]) : undefined}
                             >
-                                {val || ''}
+                                {val || (hint && solution[hintCell[0]][hintCell[1]])}
                             </div>
                         );
                     })}
