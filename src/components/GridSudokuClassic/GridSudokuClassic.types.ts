@@ -1,12 +1,12 @@
-import { Board } from '@/App.types';
+import { Board, Coordinate } from '@/App.types';
 
 export interface IGridSudokuClassicProps {
     className?: string;
-    selected?: number;
     board?: Board;
+    selectedCell?: Coordinate;
+    onSelectCell: (cell: Coordinate) => void;
     solution?: Board;
     clueCells: Set<string>;
     errorCells: Set<string>;
     checkMode?: boolean;
-    onCellUpdate: (r: number, c: number) => void;
 }

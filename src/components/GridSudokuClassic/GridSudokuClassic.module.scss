@@ -11,7 +11,7 @@
     align-items: center;
     background: white;
     display: grid;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     height: 3rem;
     justify-items: center;
     user-select: none;
@@ -33,27 +33,27 @@
         margin-top: 0.125rem;
     }
 
-    &.empty {
-        &:hover,
-        &:focus {
-            background-color: lightblue;
-            cursor: pointer;
-        }
+    &.affected:not(.checkMode) {
+        background-color: aliceblue;
     }
 
-    &.selected {
-        background-color: lightyellow;
+    &.selected:not(.checkMode) {
+        background-color: lightsteelblue;
     }
 
     &.clue {
-        background-color: lightgray;
+        font-weight: bold;
+
+        &.checkMode {
+            background-color: lightgray;
+        }
     }
 
-    &.error {
+    &.error.checkMode {
         background-color: lightpink;
     }
 
-    &.correct {
+    &.correct.checkMode {
         background-color: lightgreen;
     }
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Board } from '@/App.types';
+import { Board, Coordinate } from '@/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import { Button, GameButtonRow, GridSudokuClassic } from '@/components';
@@ -14,19 +14,21 @@ export const GamePage: React.FC = () => {
     const [board, setBoard] = useState<Board | undefined>();
     const [solution, setSolution] = useState<Board | undefined>();
 
+    const [selectedCell, setSelectedCell] = useState<Coordinate | undefined>();
     const [clueCells, setClueCells] = useState<Set<string>>(new Set());
     const [errorCells, setErrorCells] = useState<Set<string>>(new Set());
-    const [selectedValue, setSelectedValue] = useState<number | undefined>();
 
     const [checkMode, setCheckMode] = useState<boolean>(false);
 
-    const updateBoard = (r: number, c: number) => {
-        if (!selectedValue || !solution) {
+    const updateBoard = (val: number) => {
+        if (!selectedCell || !solution) {
             return;
         }
 
+        const [r, c] = selectedCell;
+
         const _board = getDeepCopy(board);
-        _board[r][c] = selectedValue;
+        _board[r][c] = val;
 
         const _errorCells = new Set<string>(errorCells);
         const cell = [r, c].join(' ');
@@ -56,6 +58,8 @@ export const GamePage: React.FC = () => {
         setBoard(board);
         setSolution(solution);
         setClueCells(_clueCells);
+        setErrorCells(new Set());
+        setCheckMode(false);
     }, [cluesCount]);
 
     useEffect(() => {
@@ -71,23 +75,33 @@ export const GamePage: React.FC = () => {
         setTimeout(() => setCheckMode(false), 3000);
     };
 
+    const handleSelectCell = (cell: Coordinate): void => {
+        const [r, c] = cell;
+
+        if (selectedCell?.[0] === r && selectedCell?.[1] === c) {
+            setSelectedCell(undefined);
+        } else {
+            setSelectedCell([r, c]);
+        }
+    };
+
     return (
         <div className={styles.Container}>
             <div className={styles.Body}>
                 <GridSudokuClassic
                     className={styles.Board}
-                    selected={selectedValue}
                     board={board}
+                    selectedCell={selectedCell}
+                    onSelectCell={handleSelectCell}
                     solution={solution}
                     clueCells={clueCells}
                     errorCells={errorCells}
                     checkMode={checkMode}
-                    onCellUpdate={updateBoard}
                 />
                 <GameButtonRow
                     className={styles.GameButtonRow}
-                    selectedValue={selectedValue}
-                    onSelectValue={val => setSelectedValue(val === selectedValue ? 0 : val)}
+                    onSetValue={updateBoard}
+                    clickable={Boolean(selectedCell)}
                 />
             </div>
             <div className={styles.Menu}>
