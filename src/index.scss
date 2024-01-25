@@ -76,6 +76,18 @@ h6 {
   Other
 */
 
+:root {
+    --white: #ffffff;
+    --black: #202a31;
+
+    --blue-light: #bfd7ea;
+    --blue-dark: #74a8d2;
+    --blue-shadow: #2d608b;
+
+    --green: #8ac4ad;
+    --red: #f3a49d;
+}
+
 html {
     font-family:
         system-ui,
