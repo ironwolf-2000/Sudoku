@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Board, Coordinate } from '@/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
-import { Button, NumberButtons, GridSudokuClassic } from '@/components';
-import { Level, levelToClues } from './GamePage.const';
+import { Button, Icon } from '@/components';
 import styles from './GamePage.module.scss';
 import { PATHS } from '@/App.const';
 import home from '@assets/icons/home.svg';
 import restart from '@assets/icons/restart.svg';
-import { Icon } from '@/components/Icon';
+import { GridSudokuClassic, NumberButtons } from './components';
+import { Level, levelToClues } from './GamePage.const';
 
 export const GamePage: React.FC = () => {
     const navigate = useNavigate();
