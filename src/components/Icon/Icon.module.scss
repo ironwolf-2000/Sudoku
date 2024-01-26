@@ -1,0 +1,23 @@
+.Container {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.Icon {
+    width: auto;
+
+    &.size_s {
+        height: 1rem;
+    }
+
+    &.size_m {
+        height: 2rem;
+    }
+
+    &.size_l {
+        height: 3rem;
+    }
+}

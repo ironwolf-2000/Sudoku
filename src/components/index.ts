@@ -1,3 +1,3 @@
 export * from './Button';
-export * from './GameButtonRow';
+export * from './NumberButtons';
 export * from './GridSudokuClassic';

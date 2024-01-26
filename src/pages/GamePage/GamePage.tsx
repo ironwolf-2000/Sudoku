@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Board, Coordinate } from '@/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
-import { Button, GameButtonRow, GridSudokuClassic } from '@/components';
+import { Button, NumberButtons, GridSudokuClassic } from '@/components';
 import { Level, levelToClues } from './GamePage.const';
 import styles from './GamePage.module.scss';
 import { PATHS } from '@/App.const';
+import home from '@assets/icons/home.svg';
+import restart from '@assets/icons/restart.svg';
+import { Icon } from '@/components/Icon';
 
 export const GamePage: React.FC = () => {
     const navigate = useNavigate();
@@ -18,6 +21,7 @@ export const GamePage: React.FC = () => {
     const [board, setBoard] = useState<Board | undefined>();
     const [solution, setSolution] = useState<Board | undefined>();
 
+    const [selectedValue, setSelectedValue] = useState<number | undefined>();
     const [selectedCell, setSelectedCell] = useState<Coordinate | undefined>();
     const [hintCell, setHintCell] = useState<Coordinate | undefined>();
 
@@ -32,12 +36,12 @@ export const GamePage: React.FC = () => {
         }
 
         const [r, c] = selectedCell;
+        const cell = selectedCell.join(' ');
 
         const _board = getDeepCopy(board);
         _board[r][c] = val;
 
         const _errorCells = new Set<string>(errorCells);
-        const cell = [r, c].join(' ');
 
         if (_board[r][c] !== solution[r][c]) {
             _errorCells.add(cell);
@@ -77,7 +81,6 @@ export const GamePage: React.FC = () => {
             for (let j = 0; j < board.length; j++) {
                 if (!clueCells.has([i, j].join(' '))) {
                     _board[i][j] = 0;
-                    console.log(i, j);
                 }
             }
         }
@@ -90,13 +93,16 @@ export const GamePage: React.FC = () => {
     useEffect(() => startNewGame(), [startNewGame]);
 
     const handleSelectCell = (cell: Coordinate) => {
-        const [r, c] = cell;
-
-        if (selectedCell?.[0] === r && selectedCell?.[1] === c) {
+        if (selectedCell?.[0] === cell[0] && selectedCell?.[1] === cell[1]) {
             setSelectedCell(undefined);
         } else {
-            setSelectedCell([r, c]);
+            setSelectedCell(cell);
+            setSelectedValue(undefined);
         }
+    };
+
+    const handleSelectValue = (val: number) => {
+        setSelectedValue(val === selectedValue ? undefined : val);
     };
 
     const triggerCheckMode = () => {
@@ -132,29 +138,36 @@ export const GamePage: React.FC = () => {
 
     return (
         <div className={styles.Container}>
-            <div className={styles.Body}>
-                <GridSudokuClassic
-                    className={styles.Board}
-                    board={board}
-                    selectedCell={selectedCell}
-                    hintCell={hintCell}
-                    onSelectCell={handleSelectCell}
-                    solution={solution}
-                    clueCells={clueCells}
-                    errorCells={errorCells}
-                    checkMode={checkMode}
-                />
-                <GameButtonRow
-                    className={styles.GameButtonRow}
-                    onSetValue={updateBoard}
-                    clickable={Boolean(selectedCell)}
-                />
-            </div>
-            <div className={styles.Menu}>
-                <Button onClick={() => navigate(PATHS.HOME)}>Home</Button>
-                <Button onClick={restartGame}>Restart</Button>
-                <Button onClick={triggerCheckMode}>Check</Button>
-                <Button onClick={showHint}>Hint</Button>
+            <div className={styles.Content}>
+                <div className={styles.Header}>
+                    <Icon src={home} size="l" onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
+                    <Icon src={restart} size="l" onClick={restartGame} label="Restart game" />
+                </div>
+                <div className={styles.Body}>
+                    <GridSudokuClassic
+                        board={board}
+                        selectedValue={selectedValue}
+                        selectedCell={selectedCell}
+                        hintCell={hintCell}
+                        onSelectCell={handleSelectCell}
+                        solution={solution}
+                        clueCells={clueCells}
+                        errorCells={errorCells}
+                        checkMode={checkMode}
+                    />
+                    <div className={styles.Controls}>
+                        <div className={styles.Menu}>
+                            <Button onClick={triggerCheckMode}>Check</Button>
+                            <Button onClick={showHint}>Hint</Button>
+                        </div>
+                        <NumberButtons
+                            valueSetting={Boolean(selectedCell)}
+                            selectedValue={selectedValue}
+                            onSetValue={updateBoard}
+                            onSelectValue={handleSelectValue}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -7,6 +7,7 @@ import { getCoordinatesFromBox } from './GridSudokuClassic.helpers';
 
 export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
     className,
+    selectedValue,
     selectedCell,
     hintCell,
     onSelectCell,
@@ -44,7 +45,7 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
                                 className={classnames(
                                     styles.Cell,
                                     (sameRow || sameColumn || sameBox) && styles.affected,
-                                    selected && styles.selected,
+                                    (selected || val === selectedValue) && styles.selected,
                                     hint && styles.hint,
                                     clue && styles.clue,
                                     error && styles.error,
