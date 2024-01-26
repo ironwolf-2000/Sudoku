@@ -1,3 +1,9 @@
+export enum GameStatus {
+    SUCCESS,
+    FAILURE,
+    PENDING,
+}
+
 export enum Level {
     EASY,
     MEDIUM,

@@ -23,10 +23,33 @@
     flex-direction: column;
     gap: 0.25rem;
     margin-left: 2rem;
+    width: 17rem;
 }
 
 .Menu {
     display: flex;
     gap: 0.25rem;
     margin-bottom: 1rem;
+}
+
+.NumberButtons {
+    margin-bottom: 2rem;
+}
+
+.InfoLabel {
+    font-weight: bold;
+
+    &.success {
+        color: var(--green);
+        text-transform: uppercase;
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    &.failure {
+        color: var(--red);
+        text-transform: uppercase;
+        font-weight: 1.25rem;
+        text-align: center;
+    }
 }

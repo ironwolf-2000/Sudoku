@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { IGridSudokuClassicProps } from './GridSudokuClassic.types';
 import styles from './GridSudokuClassic.module.scss';
 import { getCoordinatesFromBox } from './GridSudokuClassic.helpers';
+import { GameStatus } from '../../GamePage.const';
 
 export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
     className,
@@ -11,6 +12,7 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
     selectedCell,
     hintCell,
     onSelectCell,
+    gameStatus,
     board,
     solution,
     clueCells,
@@ -21,8 +23,18 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
         return null;
     }
 
+    const success = gameStatus === GameStatus.SUCCESS;
+    const failure = gameStatus === GameStatus.FAILURE;
+
     return (
-        <div className={classnames(styles.Grid, className)}>
+        <div
+            className={classnames(
+                styles.Grid,
+                !checkMode && success && styles.success,
+                !checkMode && failure && styles.failure,
+                className
+            )}
+        >
             {board.map((row, i) => (
                 <React.Fragment key={i}>
                     {row.map((val, j) => {
@@ -44,15 +56,19 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
                                 key={i * row.length + j}
                                 className={classnames(
                                     styles.Cell,
-                                    (sameRow || sameColumn || sameBox) && styles.affected,
-                                    (selected || val === selectedValue) && styles.selected,
+                                    !success && (sameRow || sameColumn || sameBox) && styles.affected,
+                                    !success && (selected || val === selectedValue) && styles.selected,
                                     hint && styles.hint,
                                     clue && styles.clue,
                                     error && styles.error,
                                     correct && styles.correct,
                                     checkMode && styles.checkMode
                                 )}
-                                onClick={!checkMode && !clueCells.has(cell) ? () => onSelectCell([i, j]) : undefined}
+                                onClick={
+                                    !success && !checkMode && !clueCells.has(cell)
+                                        ? () => onSelectCell([i, j])
+                                        : undefined
+                                }
                             >
                                 {val || (hint && solution[hintCell[0]][hintCell[1]])}
                             </div>

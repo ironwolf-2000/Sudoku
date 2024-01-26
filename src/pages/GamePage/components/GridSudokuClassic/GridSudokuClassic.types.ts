@@ -1,4 +1,5 @@
 import { Board, Coordinate } from '@/App.types';
+import { GameStatus } from '../../GamePage.const';
 
 export interface IGridSudokuClassicProps {
     className?: string;
@@ -10,5 +11,6 @@ export interface IGridSudokuClassicProps {
     solution?: Board;
     clueCells: Set<string>;
     errorCells: Set<string>;
+    gameStatus: GameStatus;
     checkMode?: boolean;
 }

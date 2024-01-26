@@ -11,7 +11,12 @@
     border-radius: 0.5rem;
     box-shadow: 0 0.2rem 0 var(--blue-shadow);
 
-    &:active {
+    &.disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+
+    &:not(&.disabled):active {
         box-shadow: 0 0.1rem 0 var(--blue-shadow);
         transform: translateY(0.1rem);
     }

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import classnames from 'classnames';
 
 import { Board, Coordinate } from '@/App.types';
 import { getDeepCopy } from '@/algorithms/common';
@@ -10,13 +11,14 @@ import { PATHS } from '@/App.const';
 import home from '@assets/icons/home.svg';
 import restart from '@assets/icons/restart.svg';
 import { GridSudokuClassic, NumberButtons } from './components';
-import { Level, levelToClues } from './GamePage.const';
+import { GameStatus, Level, levelToClues } from './GamePage.const';
 
 export const GamePage: React.FC = () => {
     const navigate = useNavigate();
 
     const [level, setLevel] = useState(Level.INSANE);
-    const cluesCount = levelToClues[level];
+    // const cluesCount = levelToClues[level];
+    const cluesCount = 79;
 
     const [board, setBoard] = useState<Board | undefined>();
     const [solution, setSolution] = useState<Board | undefined>();
@@ -27,6 +29,40 @@ export const GamePage: React.FC = () => {
 
     const [clueCells, setClueCells] = useState<Set<string>>(new Set());
     const [errorCells, setErrorCells] = useState<Set<string>>(new Set());
+
+    const emptyCells = useMemo(() => {
+        if (!board) {
+            return [];
+        }
+
+        const result: Coordinate[] = [];
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (board[i][j] === 0) {
+                    result.push([i, j]);
+                }
+            }
+        }
+
+        return result;
+    }, [board]);
+
+    const gameStatus = useMemo(() => {
+        if (!board || !solution || emptyCells.length > 0) {
+            return GameStatus.PENDING;
+        }
+
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (board[i][j] !== solution[i][j]) {
+                    return GameStatus.FAILURE;
+                }
+            }
+        }
+
+        return GameStatus.SUCCESS;
+    }, [board, emptyCells.length, solution]);
 
     const [checkMode, setCheckMode] = useState<boolean>(false);
 
@@ -115,18 +151,8 @@ export const GamePage: React.FC = () => {
     };
 
     const showHint = () => {
-        if (!board) {
+        if (!board || emptyCells.length === 0) {
             return;
-        }
-
-        const emptyCells: Coordinate[] = [];
-
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                if (board[i][j] === 0) {
-                    emptyCells.push([i, j]);
-                }
-            }
         }
 
         const randomIndex = Math.floor(Math.random() * emptyCells.length);
@@ -153,19 +179,31 @@ export const GamePage: React.FC = () => {
                         solution={solution}
                         clueCells={clueCells}
                         errorCells={errorCells}
+                        gameStatus={gameStatus}
                         checkMode={checkMode}
                     />
                     <div className={styles.Controls}>
                         <div className={styles.Menu}>
                             <Button onClick={triggerCheckMode}>Check</Button>
-                            <Button onClick={showHint}>Hint</Button>
+                            <Button onClick={showHint} disabled={emptyCells.length === 0}>
+                                Hint
+                            </Button>
                         </div>
                         <NumberButtons
+                            className={styles.NumberButtons}
                             valueSetting={Boolean(selectedCell)}
                             selectedValue={selectedValue}
                             onSetValue={updateBoard}
                             onSelectValue={handleSelectValue}
                         />
+                        {gameStatus === GameStatus.SUCCESS && (
+                            <p className={classnames(styles.InfoLabel, styles.success)}>
+                                You've successfully completed the puzzle!
+                            </p>
+                        )}
+                        {gameStatus === GameStatus.FAILURE && (
+                            <p className={classnames(styles.InfoLabel, styles.failure)}>You've made some mistakes!</p>
+                        )}
                     </div>
                 </div>
             </div>
