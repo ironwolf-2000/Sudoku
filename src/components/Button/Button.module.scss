@@ -6,9 +6,6 @@
     text-transform: uppercase;
     font-weight: bold;
     transition: 0.2s;
-    width: 8rem;
-    height: 3rem;
-    border-radius: 0.5rem;
     box-shadow: 0 0.2rem 0 var(--blue-shadow);
 
     &.disabled {
@@ -19,12 +16,5 @@
     &:not(&.disabled):active {
         box-shadow: 0 0.1rem 0 var(--blue-shadow);
         transform: translateY(0.1rem);
-    }
-
-    &.size_l {
-        font-size: 1.25rem;
-        width: 12rem;
-        height: 4rem;
-        border-radius: 0.75rem;
     }
 }

@@ -65,7 +65,7 @@ export const GamePage: React.FC = () => {
         return GameStatus.SUCCESS;
     }, [board, boardSize, emptyCells.length, solution]);
 
-    const [checkMode, setCheckMode] = useState<boolean>(false);
+    const [checkMode, setCheckMode] = useState(false);
 
     const startNewGame = useCallback(() => {
         const [board, solution] = createNewGame(cluesCount);
@@ -115,6 +115,24 @@ export const GamePage: React.FC = () => {
         }
     };
 
+    const handleErase = () => {
+        if (!selectedCell || gameStatus === GameStatus.SUCCESS) {
+            return;
+        }
+
+        const _board = getDeepCopy(board);
+
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if (i === selectedCell[0] && j === selectedCell[1]) {
+                    _board[i][j] = 0;
+                }
+            }
+        }
+
+        setBoard(_board);
+    };
+
     const updateBoard = (val: number) => {
         if (!selectedCell || !solution) {
             return;
@@ -152,7 +170,7 @@ export const GamePage: React.FC = () => {
     };
 
     const showHint = () => {
-        if (!board || emptyCells.length === 0) {
+        if (!board || checkMode || emptyCells.length === 0) {
             return;
         }
 
@@ -167,14 +185,14 @@ export const GamePage: React.FC = () => {
         <div className={styles.Container}>
             <div className={styles.Content}>
                 <div className={styles.Header}>
-                    <Icon src={home} onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
-                    <Icon src={restart} onClick={restartGame} label="Restart game" />
+                    <Icon src={home} withTitle onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
+                    <Icon src={restart} withTitle onClick={restartGame} label="Restart game" />
                 </div>
                 <div className={styles.Body}>
                     <GridSudokuClassic
                         board={board}
                         selectedValue={selectedValue}
-                        selectedCell={selectedCell}
+                        selectedCell={gameStatus !== GameStatus.SUCCESS ? selectedCell : undefined}
                         hintCell={hintCell}
                         onSelectCell={handleSelectCell}
                         solution={solution}
@@ -184,14 +202,14 @@ export const GamePage: React.FC = () => {
                         checkMode={checkMode}
                     />
                     <GameControls
-                        onTriggerCheckMode={triggerCheckMode}
+                        gameStatus={gameStatus}
+                        onSelectValue={handleSelectValue}
                         onShowHint={showHint}
-                        emptyCells={emptyCells}
+                        onTriggerCheckMode={triggerCheckMode}
+                        onErase={handleErase}
+                        onUpdateBoard={updateBoard}
                         selectedCell={selectedCell}
                         selectedValue={selectedValue}
-                        onUpdateBoard={updateBoard}
-                        onSelectValue={handleSelectValue}
-                        gameStatus={gameStatus}
                     />
                 </div>
             </div>

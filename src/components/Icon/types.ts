@@ -1,6 +1,7 @@
 export interface IIconProps {
+    className?: string;
     src: string;
     label: string;
-    size?: 's' | 'm' | 'l';
+    withTitle?: boolean;
     onClick?: () => void;
 }

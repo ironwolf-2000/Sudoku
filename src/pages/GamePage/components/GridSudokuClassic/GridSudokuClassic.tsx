@@ -21,7 +21,6 @@ export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
 }) => {
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
     const cellsClassNames = useCellsClassNames(
-        gameStatus,
         clueCells,
         errorCells,
         checkMode,

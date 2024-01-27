@@ -6,5 +6,5 @@ export const getClueCountByLevel = (size: number, level: number) => {
     }
 
     // TODO: adjust the difficulty
-    return total - level;
+    return total - level * 2;
 };

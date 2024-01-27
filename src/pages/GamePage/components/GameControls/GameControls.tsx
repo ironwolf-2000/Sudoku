@@ -1,27 +1,30 @@
-import { Button } from '@/components';
+import { Button, Icon } from '@/components';
 import { NumberButtons } from '..';
 import classnames from 'classnames';
 import { GameStatus } from '../../const';
 import styles from './GameControls.module.scss';
 import { IGameControlsProps } from './types';
+import eraser from '@/assets/icons/eraser.svg';
+import hint from '@/assets/icons/hint.svg';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
-    onTriggerCheckMode,
+    gameStatus,
+    onSelectValue,
     onShowHint,
-    emptyCells,
+    onErase,
+    onTriggerCheckMode,
+    onUpdateBoard,
     selectedCell,
     selectedValue,
-    onUpdateBoard,
-    onSelectValue,
-    gameStatus,
 }) => {
     return (
         <div className={styles.Container}>
-            <div className={styles.Menu}>
-                <Button onClick={onTriggerCheckMode}>Check</Button>
-                <Button onClick={onShowHint} disabled={emptyCells.length === 0}>
-                    Hint
+            <div className={styles.Header}>
+                <Button className={styles.HeaderButton} onClick={onTriggerCheckMode}>
+                    Check
                 </Button>
+                <Icon className={styles.HeaderButton} src={hint} onClick={onShowHint} label="hint" />
+                <Icon className={styles.HeaderButton} src={eraser} onClick={onErase} label="eraser" />
             </div>
             <NumberButtons
                 className={styles.NumberButtons}

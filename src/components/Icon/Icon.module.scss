@@ -1,23 +1,15 @@
 .Container {
-    border: none;
-    outline: none;
+    align-items: center;
     background-color: transparent;
+    border: none;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    outline: none;
     padding: 0;
 }
 
 .Icon {
     width: auto;
-
-    &.size_s {
-        height: 1rem;
-    }
-
-    &.size_m {
-        height: 2rem;
-    }
-
-    &.size_l {
-        height: 3rem;
-    }
+    height: 2rem;
 }

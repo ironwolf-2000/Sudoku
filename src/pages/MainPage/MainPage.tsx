@@ -13,7 +13,7 @@ export const MainPage: React.FC = () => {
 
     return (
         <main className={styles.Container}>
-            <Button size="l" onClick={handleClick}>
+            <Button className={styles.PlayButton} onClick={handleClick}>
                 Play
             </Button>
         </main>

@@ -21,7 +21,6 @@ export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, c
 };
 
 export const useCellsClassNames = (
-    gameStatus: GameStatus,
     clueCells: Set<string>,
     errorCells: Set<string>,
     checkMode?: boolean,
@@ -34,7 +33,6 @@ export const useCellsClassNames = (
         return [];
     }
 
-    const success = gameStatus === GameStatus.SUCCESS;
     const classNames: string[][][] = [];
 
     for (let i = 0; i < board.length; i++) {
@@ -63,11 +61,11 @@ export const useCellsClassNames = (
                 }
             });
 
-            if (!success && (sameRow || sameColumn || sameBox)) {
+            if (sameRow || sameColumn || sameBox) {
                 classNames[i][j].push(styles.affected);
             }
 
-            if (!success && (selected || value === selectedValue)) {
+            if (selected || value === selectedValue) {
                 classNames[i][j].push(styles.selected);
             }
         }

@@ -1,13 +1,13 @@
-import { Coordinate } from '@/app/App.types';
-import { GameStatus } from '../../GamePage.const';
+import { Coordinate } from '@/app/types';
+import { GameStatus } from '../../const';
 
 export interface IGameControlsProps {
-    onTriggerCheckMode: () => void;
+    gameStatus: GameStatus;
+    onSelectValue: (val: number) => void;
     onShowHint: () => void;
-    emptyCells: Coordinate[];
+    onErase: () => void;
+    onTriggerCheckMode: () => void;
+    onUpdateBoard: (val: number) => void;
     selectedCell?: Coordinate;
     selectedValue?: number;
-    onUpdateBoard: (val: number) => void;
-    onSelectValue: (val: number) => void;
-    gameStatus: GameStatus;
 }

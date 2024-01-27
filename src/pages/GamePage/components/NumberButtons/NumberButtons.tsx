@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 
 import { getInclusiveRange } from '@/algorithms/common';
-import { INumberButtonsProps } from './NumberButtons.types';
+import { INumberButtonsProps } from './types';
 import styles from './NumberButtons.module.scss';
 
 export const NumberButtons: React.FC<INumberButtonsProps> = ({
