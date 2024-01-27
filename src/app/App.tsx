@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
-import { GamePage, MainPage } from './pages';
+import { GamePage, MainPage } from '@/pages';
 import { PATHS } from './App.const';
 
 export const App = () => {

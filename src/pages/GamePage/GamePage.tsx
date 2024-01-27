@@ -2,14 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import classnames from 'classnames';
 
-import { Board, Coordinate } from '@/App.types';
+import { Board, Coordinate } from '@/app/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import { Button, Icon } from '@/components';
 import styles from './GamePage.module.scss';
-import { PATHS } from '@/App.const';
-import home from '@assets/icons/home.svg';
-import restart from '@assets/icons/restart.svg';
+import { PATHS } from '@/app/App.const';
+import home from '@/assets/icons/home.svg';
+import restart from '@/assets/icons/restart.svg';
 import { GridSudokuClassic, NumberButtons } from './components';
 import { GameStatus, Level, levelToClues } from './GamePage.const';
 
