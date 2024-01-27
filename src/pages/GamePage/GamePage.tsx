@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 
+import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
@@ -11,14 +13,14 @@ import { PATHS } from '@/app/App.const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
 import { GridSudokuClassic, NumberButtons } from './components';
-import { GameStatus, Level, levelToClues } from './GamePage.const';
+import { GameStatus } from './GamePage.const';
+import { getClueCountByLevel } from './GamePage.helpers';
 
 export const GamePage: React.FC = () => {
     const navigate = useNavigate();
 
-    const [level, setLevel] = useState(Level.INSANE);
-    // const cluesCount = levelToClues[level];
-    const cluesCount = 79;
+    const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
+    const cluesCount = getClueCountByLevel(boardSize, level);
 
     const [board, setBoard] = useState<Board | undefined>();
     const [solution, setSolution] = useState<Board | undefined>();
@@ -37,8 +39,8 @@ export const GamePage: React.FC = () => {
 
         const result: Coordinate[] = [];
 
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
                 if (board[i][j] === 0) {
                     result.push([i, j]);
                 }
@@ -46,15 +48,15 @@ export const GamePage: React.FC = () => {
         }
 
         return result;
-    }, [board]);
+    }, [board, boardSize]);
 
     const gameStatus = useMemo(() => {
         if (!board || !solution || emptyCells.length > 0) {
             return GameStatus.PENDING;
         }
 
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
                 if (board[i][j] !== solution[i][j]) {
                     return GameStatus.FAILURE;
                 }
@@ -62,7 +64,7 @@ export const GamePage: React.FC = () => {
         }
 
         return GameStatus.SUCCESS;
-    }, [board, emptyCells.length, solution]);
+    }, [board, boardSize, emptyCells.length, solution]);
 
     const [checkMode, setCheckMode] = useState<boolean>(false);
 
@@ -93,8 +95,8 @@ export const GamePage: React.FC = () => {
         const [board, solution] = createNewGame(cluesCount);
         const _clueCells = new Set<string>();
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
                 if (board[i][j]) {
                     _clueCells.add([i, j].join(' '));
                 }
@@ -104,7 +106,7 @@ export const GamePage: React.FC = () => {
         setBoard(board);
         setSolution(solution);
         setClueCells(_clueCells);
-    }, [cluesCount]);
+    }, [boardSize, cluesCount]);
 
     const restartGame = () => {
         if (!board) {
@@ -113,8 +115,8 @@ export const GamePage: React.FC = () => {
 
         const _board = getDeepCopy(board);
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
                 if (!clueCells.has([i, j].join(' '))) {
                     _board[i][j] = 0;
                 }
