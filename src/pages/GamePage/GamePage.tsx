@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import classnames from 'classnames';
 
 import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/App.types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
-import { Button, Icon } from '@/components';
+import { Icon } from '@/components';
 import styles from './GamePage.module.scss';
 import { PATHS } from '@/app/App.const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
-import { GridSudokuClassic, NumberButtons } from './components';
+import { GameControls, GridSudokuClassic } from './components';
 import { GameStatus } from './GamePage.const';
 import { getClueCountByLevel } from './GamePage.helpers';
 
@@ -68,29 +67,6 @@ export const GamePage: React.FC = () => {
 
     const [checkMode, setCheckMode] = useState<boolean>(false);
 
-    const updateBoard = (val: number) => {
-        if (!selectedCell || !solution) {
-            return;
-        }
-
-        const [r, c] = selectedCell;
-        const cell = selectedCell.join(' ');
-
-        const _board = getDeepCopy(board);
-        _board[r][c] = val;
-
-        const _errorCells = new Set<string>(errorCells);
-
-        if (_board[r][c] !== solution[r][c]) {
-            _errorCells.add(cell);
-        } else if (_board[r][c] === solution[r][c] && errorCells.has(cell)) {
-            _errorCells.delete(cell);
-        }
-
-        setBoard(_board);
-        setErrorCells(_errorCells);
-    };
-
     const startNewGame = useCallback(() => {
         const [board, solution] = createNewGame(cluesCount);
         const _clueCells = new Set<string>();
@@ -139,6 +115,29 @@ export const GamePage: React.FC = () => {
         }
     };
 
+    const updateBoard = (val: number) => {
+        if (!selectedCell || !solution) {
+            return;
+        }
+
+        const [r, c] = selectedCell;
+        const cell = selectedCell.join(' ');
+
+        const _board = getDeepCopy(board);
+        _board[r][c] = val;
+
+        const _errorCells = new Set<string>(errorCells);
+
+        if (_board[r][c] !== solution[r][c]) {
+            _errorCells.add(cell);
+        } else if (_board[r][c] === solution[r][c] && errorCells.has(cell)) {
+            _errorCells.delete(cell);
+        }
+
+        setBoard(_board);
+        setErrorCells(_errorCells);
+    };
+
     const handleSelectValue = (val: number) => {
         setSelectedValue(val === selectedValue ? undefined : val);
     };
@@ -184,29 +183,16 @@ export const GamePage: React.FC = () => {
                         gameStatus={gameStatus}
                         checkMode={checkMode}
                     />
-                    <div className={styles.Controls}>
-                        <div className={styles.Menu}>
-                            <Button onClick={triggerCheckMode}>Check</Button>
-                            <Button onClick={showHint} disabled={emptyCells.length === 0}>
-                                Hint
-                            </Button>
-                        </div>
-                        <NumberButtons
-                            className={styles.NumberButtons}
-                            valueSetting={Boolean(selectedCell)}
-                            selectedValue={selectedValue}
-                            onSetValue={updateBoard}
-                            onSelectValue={handleSelectValue}
-                        />
-                        {gameStatus === GameStatus.SUCCESS && (
-                            <p className={classnames(styles.InfoLabel, styles.success)}>
-                                You've successfully completed the puzzle!
-                            </p>
-                        )}
-                        {gameStatus === GameStatus.FAILURE && (
-                            <p className={classnames(styles.InfoLabel, styles.failure)}>You've made some mistakes!</p>
-                        )}
-                    </div>
+                    <GameControls
+                        onTriggerCheckMode={triggerCheckMode}
+                        onShowHint={showHint}
+                        emptyCells={emptyCells}
+                        selectedCell={selectedCell}
+                        selectedValue={selectedValue}
+                        onUpdateBoard={updateBoard}
+                        onSelectValue={handleSelectValue}
+                        gameStatus={gameStatus}
+                    />
                 </div>
             </div>
         </div>

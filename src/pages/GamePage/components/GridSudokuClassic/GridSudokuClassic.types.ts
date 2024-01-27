@@ -1,4 +1,4 @@
-import { Board, Coordinate } from '@/App.types';
+import { Board, Coordinate } from '@/app/App.types';
 import { GameStatus } from '../../GamePage.const';
 
 export interface IGridSudokuClassicProps {
