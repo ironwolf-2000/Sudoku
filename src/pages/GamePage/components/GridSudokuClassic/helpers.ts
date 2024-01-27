@@ -1,4 +1,4 @@
-import { Coordinate } from '@/App.types';
+import { Coordinate } from '@/app/App.types';
 
 export const getCoordinatesFromBox = (cell: Coordinate): Set<string> => {
     const [r0, c0] = cell.map(x => Math.floor(x / 3) * 3);

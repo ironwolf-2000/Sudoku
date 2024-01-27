@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import gameSettingsReducer from '../features/gameSettings/gameSettingsSlice';
+import gameSettingsReducer from '@/features/gameSettings';
 
 export const store = configureStore({
     reducer: { gameSettings: gameSettingsReducer },

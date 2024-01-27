@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { PATHS } from '@/app/App.const';
+import { PATHS } from '@/app/const';
 import { Button } from '@/components/Button';
 import styles from './MainPage.module.scss';
 

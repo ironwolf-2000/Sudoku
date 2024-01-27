@@ -3,17 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app';
-import { Board, Coordinate } from '@/app/App.types';
+import { Board, Coordinate } from '@/app/types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import { Icon } from '@/components';
 import styles from './GamePage.module.scss';
-import { PATHS } from '@/app/App.const';
+import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
 import { GameControls, GridSudokuClassic } from './components';
-import { GameStatus } from './GamePage.const';
-import { getClueCountByLevel } from './GamePage.helpers';
+import { GameStatus } from './const';
+import { getClueCountByLevel } from './helpers';
 
 export const GamePage: React.FC = () => {
     const navigate = useNavigate();
@@ -167,8 +167,8 @@ export const GamePage: React.FC = () => {
         <div className={styles.Container}>
             <div className={styles.Content}>
                 <div className={styles.Header}>
-                    <Icon src={home} size="l" onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
-                    <Icon src={restart} size="l" onClick={restartGame} label="Restart game" />
+                    <Icon src={home} onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
+                    <Icon src={restart} onClick={restartGame} label="Restart game" />
                 </div>
                 <div className={styles.Body}>
                     <GridSudokuClassic

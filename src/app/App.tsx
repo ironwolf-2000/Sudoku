@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import { GamePage, MainPage } from '@/pages';
-import { PATHS } from './App.const';
+import { PATHS } from './const';
 
 export const App = () => {
     const router = createBrowserRouter([

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-import { IIconProps } from './Icon.types';
+import { IIconProps } from './types';
 import styles from './Icon.module.scss';
 
 export const Icon: React.FC<IIconProps> = ({ src, label, size = 'm', onClick }) => {

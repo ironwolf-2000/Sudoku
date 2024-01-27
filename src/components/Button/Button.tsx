@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 
-import { IButtonProps } from './Button.types';
+import { IButtonProps } from './types';
 import styles from './Button.module.scss';
 
 export const Button: React.FC<IButtonProps> = ({ className, children, size = 'm', disabled, onClick }) => {

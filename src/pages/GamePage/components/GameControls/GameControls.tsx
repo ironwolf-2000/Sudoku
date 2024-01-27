@@ -1,9 +1,9 @@
 import { Button } from '@/components';
 import { NumberButtons } from '..';
 import classnames from 'classnames';
-import { GameStatus } from '../../GamePage.const';
-import { IGameControlsProps } from './GameControls.types';
+import { GameStatus } from '../../const';
 import styles from './GameControls.module.scss';
+import { IGameControlsProps } from './types';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     onTriggerCheckMode,
