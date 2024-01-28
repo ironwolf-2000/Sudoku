@@ -6,7 +6,7 @@
     text-transform: uppercase;
     font-weight: bold;
     transition: 0.2s;
-    box-shadow: 0 0.2rem 0 var(--blue-shadow);
+    box-shadow: 0 0.2rem 0 var(--blue-darker);
 
     &.disabled {
         opacity: 0.5;
@@ -14,7 +14,7 @@
     }
 
     &:not(&.disabled):active {
-        box-shadow: 0 0.1rem 0 var(--blue-shadow);
+        box-shadow: 0 0.1rem 0 var(--blue-darker);
         transform: translateY(0.1rem);
     }
 }

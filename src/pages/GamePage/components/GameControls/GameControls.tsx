@@ -1,11 +1,16 @@
-import { Button, Icon } from '@/components';
-import { DigitButtons } from '..';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import classnames from 'classnames';
+
+import { RootState } from '@/app';
+import { Icon } from '@/components';
+import { DigitButtons } from '..';
 import { GameStatus } from '../../const';
 import styles from './GameControls.module.scss';
 import { IGameControlsProps } from './types';
 import eraser from '@/assets/icons/eraser.svg';
 import hint from '@/assets/icons/hint.svg';
+import doubleCheck from '@/assets/icons/double_check.svg';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
@@ -17,14 +22,44 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     selectedCell,
     selectedValue,
 }) => {
+    const { checksCount, hintsCount } = useSelector((state: RootState) => state.gameControls);
+
+    const icons = [
+        {
+            badge: String(checksCount),
+            disabled: checksCount === 0,
+            label: 'check',
+            onClick: onTriggerCheckMode,
+            src: doubleCheck,
+            withCaption: true,
+        },
+        {
+            badge: String(hintsCount),
+            disabled: hintsCount === 0,
+            label: 'hint',
+            onClick: onShowHint,
+            src: hint,
+            withCaption: true,
+        },
+        { src: eraser, onClick: onErase, label: 'eraser', withCaption: true },
+    ];
+
+    const [hovered, setHovered] = useState<string | undefined>();
+
     return (
         <div className={styles.GameControls}>
             <div className={styles.Header}>
-                <Button className={styles.HeaderButton} onClick={onTriggerCheckMode}>
-                    Check
-                </Button>
-                <Icon className={styles.HeaderButton} src={hint} onClick={onShowHint} label="hint" />
-                <Icon className={styles.HeaderButton} src={eraser} onClick={onErase} label="eraser" />
+                {icons.map(({ label, ...props }) => (
+                    <Icon
+                        key={label}
+                        className={styles.HeaderButton}
+                        onHover={() => setHovered(label)}
+                        onHoverEnd={() => setHovered(undefined)}
+                        label={label}
+                        captionVisible={hovered === label}
+                        {...props}
+                    />
+                ))}
             </div>
             <DigitButtons
                 className={styles.DigitButtons}

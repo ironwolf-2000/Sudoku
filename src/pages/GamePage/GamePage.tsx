@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/types';
@@ -7,12 +7,15 @@ import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import styles from './GamePage.module.scss';
 
+import { decrementChecksCount, decrementHintsCount } from '@/features/gameControls';
 import { GameControls, GameHeader, SudokuGrid } from './components';
 import { GameStatus, HINT_TIMEOUT } from './const';
 import { getClueCountByLevel } from './helpers';
 
 export const GamePage: React.FC = () => {
+    const dispatch = useDispatch();
     const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
+
     const cluesCount = getClueCountByLevel(boardSize, level);
 
     const [board, setBoard] = useState<Board | undefined>();
@@ -161,6 +164,7 @@ export const GamePage: React.FC = () => {
 
         setCheckMode(true);
         setTimeout(() => setCheckMode(false), HINT_TIMEOUT);
+        dispatch(decrementChecksCount());
     };
 
     const showHint = () => {
@@ -183,6 +187,8 @@ export const GamePage: React.FC = () => {
             setHintCell([r, c]);
             setTimeout(() => setHintCell(undefined), HINT_TIMEOUT);
         }
+
+        dispatch(decrementHintsCount());
     };
 
     return (

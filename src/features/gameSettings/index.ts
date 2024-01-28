@@ -1,25 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { GameSettingsState } from './types';
+
+interface GameSettingsState {
+    boardSize: number;
+    level: number;
+}
 
 const initialState: GameSettingsState = {
-    boardSize: 9,
     level: 1,
+    boardSize: 9,
 };
 
 export const gameSettingsSlice = createSlice({
     name: 'gameSettings',
     initialState,
     reducers: {
-        selectBoardSize: (state, action: PayloadAction<number>) => {
-            state.boardSize = action.payload;
-        },
-        selectLevel: (state, action: PayloadAction<number>) => {
+        setLevel: (state, action: PayloadAction<number>) => {
             state.level = action.payload;
+        },
+        setBoardSize: (state, action: PayloadAction<number>) => {
+            state.boardSize = action.payload;
         },
     },
 });
 
-export const { selectBoardSize, selectLevel } = gameSettingsSlice.actions;
+export const { setBoardSize, setLevel } = gameSettingsSlice.actions;
 
 export default gameSettingsSlice.reducer;

@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
 import { RootState } from '@/app';
-import { selectLevel } from '@/features/gameSettings';
-import { LEVELS_COUNT } from '@/features/gameSettings/const';
+import { TOTAL_LEVEL_COUNT } from '@/app/const';
+import { setLevel } from '@/features/gameSettings';
 import starFilled from '@/assets/icons/star_filled.svg';
 import starEmpty from '@/assets/icons/star_empty.svg';
 import { Icon } from '..';
@@ -19,7 +19,7 @@ export const Stars: React.FC<IStarsProps> = ({ interactive }) => {
 
     return (
         <div className={classnames(styles.Stars, !interactive && styles.nonInteractive)}>
-            {Array(LEVELS_COUNT)
+            {Array(TOTAL_LEVEL_COUNT)
                 .fill(null)
                 .map((_, i) => {
                     const filled = i < (hoveredCount || level);
@@ -29,7 +29,7 @@ export const Stars: React.FC<IStarsProps> = ({ interactive }) => {
                         extraProps = {
                             onHover: () => setHoveredCount(i + 1),
                             onHoverEnd: () => setHoveredCount(0),
-                            onClick: () => dispatch(selectLevel(i + 1)),
+                            onClick: () => dispatch(setLevel(i + 1)),
                         };
                     }
 
