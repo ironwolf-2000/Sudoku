@@ -6,7 +6,7 @@ import styles from './Icon.module.scss';
 export const Icon: React.FC<IIconProps> = ({ src, label, withTitle, onHover, onHoverEnd, onClick, className }) => {
     return (
         <button
-            className={classnames(styles.Container, className)}
+            className={classnames(styles.Icon, className)}
             onMouseOver={onHover}
             onMouseLeave={onHoverEnd}
             onClick={onClick}

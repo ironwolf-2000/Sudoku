@@ -1,17 +1,10 @@
-.Container {
+.GamePage {
     display: flex;
     justify-content: center;
 }
 
 .Content {
     width: max-content;
-}
-
-.Header {
-    display: flex;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
-    column-gap: 1rem;
 }
 
 .Body {

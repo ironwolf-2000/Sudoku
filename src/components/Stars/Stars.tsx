@@ -18,7 +18,7 @@ export const Stars: React.FC<IStarsProps> = ({ interactive }) => {
     const [hoveredCount, setHoveredCount] = useState(0);
 
     return (
-        <div className={classnames(styles.Container, !interactive && styles.nonInteractive)}>
+        <div className={classnames(styles.Stars, !interactive && styles.nonInteractive)}>
             {Array(LEVELS_COUNT)
                 .fill(null)
                 .map((_, i) => {

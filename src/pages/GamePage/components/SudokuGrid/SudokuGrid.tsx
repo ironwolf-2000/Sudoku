@@ -1,12 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import { IGridSudokuClassicProps } from './types';
+import { ISudokuGridProps } from './types';
 import { useCellsClassNames, useGridClassNames } from './hooks';
 import { GameStatus } from '../../const';
 import { Coordinate } from '@/app/types';
 
-export const GridSudokuClassic: React.FC<IGridSudokuClassicProps> = ({
+export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     className,
     selectedValue,
     selectedCell,

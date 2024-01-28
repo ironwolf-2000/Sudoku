@@ -1,10 +1,10 @@
 import { Board, Coordinate } from '@/app/types';
 import { GameStatus } from '../../const';
-import styles from './GridSudokuClassic.module.scss';
+import styles from './SudokuGrid.module.scss';
 import { getCoordinatesFromBox } from './helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
-    const classNames = [styles.Grid, customClassName];
+    const classNames = [styles.SudokuGrid, customClassName];
 
     const success = gameStatus === GameStatus.SUCCESS;
     const failure = gameStatus === GameStatus.FAILURE;

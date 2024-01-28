@@ -1,7 +1,7 @@
 import { Board, Coordinate } from '@/app/types';
 import { GameStatus } from '../../const';
 
-export interface IGridSudokuClassicProps {
+export interface ISudokuGridProps {
     className?: string;
     board?: Board;
     selectedValue?: number;

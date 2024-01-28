@@ -1,4 +1,4 @@
-export interface INumberButtonsProps {
+export interface IDigitButtonsProps {
     /** The optional CSS class name for styling */
     className?: string;
     /** The number of different values */

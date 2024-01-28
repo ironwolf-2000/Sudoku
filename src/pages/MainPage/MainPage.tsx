@@ -13,7 +13,7 @@ export const MainPage: React.FC = () => {
     };
 
     return (
-        <div className={styles.Container}>
+        <div className={styles.MainPage}>
             <header>
                 <h1 className={styles.Title}>Sudoku Game</h1>
             </header>

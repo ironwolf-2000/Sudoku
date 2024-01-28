@@ -1,5 +1,5 @@
 import { Button, Icon } from '@/components';
-import { NumberButtons } from '..';
+import { DigitButtons } from '..';
 import classnames from 'classnames';
 import { GameStatus } from '../../const';
 import styles from './GameControls.module.scss';
@@ -18,7 +18,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     selectedValue,
 }) => {
     return (
-        <div className={styles.Container}>
+        <div className={styles.GameControls}>
             <div className={styles.Header}>
                 <Button className={styles.HeaderButton} onClick={onTriggerCheckMode}>
                     Check
@@ -26,8 +26,8 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                 <Icon className={styles.HeaderButton} src={hint} onClick={onShowHint} label="hint" />
                 <Icon className={styles.HeaderButton} src={eraser} onClick={onErase} label="eraser" />
             </div>
-            <NumberButtons
-                className={styles.NumberButtons}
+            <DigitButtons
+                className={styles.DigitButtons}
                 valueSetting={Boolean(selectedCell)}
                 selectedValue={selectedValue}
                 onSetValue={onUpdateBoard}

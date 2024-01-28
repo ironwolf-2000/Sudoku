@@ -1,3 +1,4 @@
+export * from './DigitButtons';
 export * from './GameControls';
-export * from './GridSudokuClassic';
-export * from './NumberButtons';
+export * from './GameHeader';
+export * from './SudokuGrid';

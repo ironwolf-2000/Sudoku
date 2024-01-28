@@ -1,23 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
-import { Icon, Stars } from '@/components';
 import styles from './GamePage.module.scss';
-import { PATHS } from '@/app/const';
-import home from '@/assets/icons/home.svg';
-import restart from '@/assets/icons/restart.svg';
-import { GameControls, GridSudokuClassic } from './components';
-import { GameStatus } from './const';
+
+import { GameControls, GameHeader, SudokuGrid } from './components';
+import { GameStatus, HINT_TIMEOUT } from './const';
 import { getClueCountByLevel } from './helpers';
 
 export const GamePage: React.FC = () => {
-    const navigate = useNavigate();
-
     const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
     const cluesCount = getClueCountByLevel(boardSize, level);
 
@@ -38,8 +32,8 @@ export const GamePage: React.FC = () => {
 
         const result: Coordinate[] = [];
 
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (board[i][j] === 0) {
                     result.push([i, j]);
                 }
@@ -47,15 +41,15 @@ export const GamePage: React.FC = () => {
         }
 
         return result;
-    }, [board, boardSize]);
+    }, [board]);
 
     const gameStatus = useMemo(() => {
         if (!board || !solution || emptyCells.length > 0) {
             return GameStatus.PENDING;
         }
 
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (board[i][j] !== solution[i][j]) {
                     return GameStatus.FAILURE;
                 }
@@ -63,7 +57,7 @@ export const GamePage: React.FC = () => {
         }
 
         return GameStatus.SUCCESS;
-    }, [board, boardSize, emptyCells.length, solution]);
+    }, [board, emptyCells.length, solution]);
 
     const [checkMode, setCheckMode] = useState(false);
 
@@ -71,8 +65,8 @@ export const GamePage: React.FC = () => {
         const [board, solution] = createNewGame(cluesCount);
         const _clueCells = new Set<string>();
 
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (board[i][j]) {
                     _clueCells.add([i, j].join(' '));
                 }
@@ -82,17 +76,17 @@ export const GamePage: React.FC = () => {
         setBoard(board);
         setSolution(solution);
         setClueCells(_clueCells);
-    }, [boardSize, cluesCount]);
+    }, [cluesCount]);
 
-    const restartGame = () => {
+    const restartGame = useCallback(() => {
         if (!board) {
             return;
         }
 
         const _board = getDeepCopy(board);
 
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (!clueCells.has([i, j].join(' '))) {
                     _board[i][j] = 0;
                 }
@@ -102,7 +96,7 @@ export const GamePage: React.FC = () => {
         setBoard(_board);
         setErrorCells(new Set());
         setCheckMode(false);
-    };
+    }, [board, clueCells]);
 
     useEffect(() => startNewGame(), [startNewGame]);
 
@@ -116,14 +110,14 @@ export const GamePage: React.FC = () => {
     };
 
     const handleErase = () => {
-        if (!selectedCell || gameStatus === GameStatus.SUCCESS) {
+        if (!board || !selectedCell || gameStatus === GameStatus.SUCCESS) {
             return;
         }
 
         const _board = getDeepCopy(board);
 
-        for (let i = 0; i < boardSize; i++) {
-            for (let j = 0; j < boardSize; j++) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
                 if (i === selectedCell[0] && j === selectedCell[1]) {
                     _board[i][j] = 0;
                 }
@@ -166,7 +160,7 @@ export const GamePage: React.FC = () => {
         }
 
         setCheckMode(true);
-        setTimeout(() => setCheckMode(false), 3000);
+        setTimeout(() => setCheckMode(false), HINT_TIMEOUT);
     };
 
     const showHint = () => {
@@ -187,20 +181,16 @@ export const GamePage: React.FC = () => {
 
         if (r !== -1 && c !== -1) {
             setHintCell([r, c]);
-            setTimeout(() => setHintCell(undefined), 3000);
+            setTimeout(() => setHintCell(undefined), HINT_TIMEOUT);
         }
     };
 
     return (
-        <div className={styles.Container}>
+        <div className={styles.GamePage}>
             <div className={styles.Content}>
-                <div className={styles.Header}>
-                    <Icon src={home} withTitle onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
-                    <Icon src={restart} withTitle onClick={restartGame} label="Restart game" />
-                    <Stars />
-                </div>
+                <GameHeader onRestartGame={restartGame} />
                 <div className={styles.Body}>
-                    <GridSudokuClassic
+                    <SudokuGrid
                         board={board}
                         selectedValue={selectedValue}
                         selectedCell={gameStatus !== GameStatus.SUCCESS ? selectedCell : undefined}
