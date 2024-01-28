@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-export interface GameSettingsState {
-    boardSize: number;
-    level: number;
-}
+import { GameSettingsState } from './types';
 
 const initialState: GameSettingsState = {
     boardSize: 9,

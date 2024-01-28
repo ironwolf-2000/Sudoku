@@ -3,5 +3,7 @@ export interface IIconProps {
     src: string;
     label: string;
     withTitle?: boolean;
+    onHover?: () => void;
+    onHoverEnd?: () => void;
     onClick?: () => void;
 }

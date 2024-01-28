@@ -6,7 +6,7 @@ import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/types';
 import { getDeepCopy } from '@/algorithms/common';
 import { createNewGame } from '@/algorithms/SudokuClassic';
-import { Icon } from '@/components';
+import { Icon, Stars } from '@/components';
 import styles from './GamePage.module.scss';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
@@ -197,6 +197,7 @@ export const GamePage: React.FC = () => {
                 <div className={styles.Header}>
                     <Icon src={home} withTitle onClick={() => navigate(PATHS.MAIN)} label="Go to main page" />
                     <Icon src={restart} withTitle onClick={restartGame} label="Restart game" />
+                    <Stars />
                 </div>
                 <div className={styles.Body}>
                     <GridSudokuClassic

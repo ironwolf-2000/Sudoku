@@ -1,0 +1,7 @@
+.Container {
+    display: flex;
+
+    &.nonInteractive {
+        pointer-events: none;
+    }
+}
