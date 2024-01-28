@@ -58,16 +58,21 @@
         }
     }
 
-    &.hint:not(.checkMode) {
+    &.hint {
         font-weight: bold;
-        background-color: var(--green);
     }
 
-    &.error.checkMode {
-        background-color: var(--red);
+    &.error {
+        &.hint,
+        &.checkMode {
+            background-color: var(--red);
+        }
     }
 
-    &.correct.checkMode {
-        background-color: var(--green);
+    &.correct {
+        &.hint,
+        &.checkMode {
+            background-color: var(--green);
+        }
     }
 }

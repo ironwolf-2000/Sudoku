@@ -170,15 +170,25 @@ export const GamePage: React.FC = () => {
     };
 
     const showHint = () => {
-        if (!board || checkMode || emptyCells.length === 0) {
+        if (!board || checkMode) {
             return;
         }
 
-        const randomIndex = Math.floor(Math.random() * emptyCells.length);
-        const [r, c] = emptyCells[randomIndex];
+        let r = -1;
+        let c = -1;
 
-        setHintCell([r, c]);
-        setTimeout(() => setHintCell(undefined), 3000);
+        if (errorCells.size > 0) {
+            const errorCellsArray = Array.from(errorCells);
+            const cell = errorCellsArray[Math.floor(Math.random() * errorCellsArray.length)].split(' ').map(Number);
+            [r, c] = [cell[0], cell[1]];
+        } else if (emptyCells.length > 0) {
+            [r, c] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        }
+
+        if (r !== -1 && c !== -1) {
+            setHintCell([r, c]);
+            setTimeout(() => setHintCell(undefined), 3000);
+        }
     };
 
     return (

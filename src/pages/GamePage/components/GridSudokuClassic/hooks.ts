@@ -61,6 +61,10 @@ export const useCellsClassNames = (
                 }
             });
 
+            if (hint) {
+                classNames[i][j].push(error ? styles.error : styles.correct);
+            }
+
             if (sameRow || sameColumn || sameBox) {
                 classNames[i][j].push(styles.affected);
             }
