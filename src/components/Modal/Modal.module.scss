@@ -1,0 +1,59 @@
+.Modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    &.hidden {
+        visibility: hidden;
+    }
+}
+
+.Content {
+    max-width: 80vw;
+    padding: 1.5rem;
+    border-radius: 2rem;
+    background-color: var(--blue-light);
+    z-index: 3;
+}
+
+.Title {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.Body {
+    font-size: 1.25rem;
+}
+
+.Footer {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.Button {
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: var(--blue-dark);
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: var(--blue-darker);
+    }
+}
