@@ -6,7 +6,7 @@ import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
 import { decrementChecksCount, decrementHintsCount } from '@/features/gameControls';
-import { GameControls, GameHeader, SudokuGrid } from './components';
+import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
 import { GameStatus, HINT_TIMEOUT } from './const';
 import {
     setBoard,
@@ -131,8 +131,8 @@ export const GamePage: React.FC = () => {
     return (
         <div className={styles.GamePage}>
             <div className={styles.Content}>
-                <GameHeader />
-                <div className={styles.Body}>
+                <div>
+                    <SudokuGridHeader />
                     <SudokuGrid
                         board={board}
                         selectedValue={selectedValue}
@@ -144,15 +144,15 @@ export const GamePage: React.FC = () => {
                         gameStatus={gameStatus}
                         checkMode={checkMode}
                     />
-                    <GameControls
-                        gameStatus={gameStatus}
-                        onSelectValue={handleSelectValue}
-                        onShowHint={showHint}
-                        onTriggerCheckMode={triggerCheckMode}
-                        selectedCell={selectedCell}
-                        selectedValue={selectedValue}
-                    />
                 </div>
+                <GameControls
+                    gameStatus={gameStatus}
+                    onSelectValue={handleSelectValue}
+                    onShowHint={showHint}
+                    onTriggerCheckMode={triggerCheckMode}
+                    selectedCell={selectedCell}
+                    selectedValue={selectedValue}
+                />
             </div>
         </div>
     );

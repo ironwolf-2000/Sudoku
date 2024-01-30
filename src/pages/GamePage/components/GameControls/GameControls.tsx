@@ -54,11 +54,11 @@ export const GameControls: React.FC<IGameControlsProps> = ({
 
     return (
         <div className={styles.GameControls}>
-            <div className={styles.Header}>
+            <div className={styles.ActionButtonContainer}>
                 {icons.map(({ label, ...props }) => (
                     <Icon
                         key={label}
-                        className={styles.HeaderButton}
+                        className={styles.ActionButton}
                         onHover={() => setHovered(label)}
                         onHoverEnd={() => setHovered(undefined)}
                         label={label}

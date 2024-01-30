@@ -11,14 +11,14 @@ import { Icon } from '..';
 import { IStarsProps } from './types';
 import styles from './Stars.module.scss';
 
-export const Stars: React.FC<IStarsProps> = ({ interactive }) => {
+export const Stars: React.FC<IStarsProps> = ({ className, interactive }) => {
     const { level } = useSelector((state: RootState) => state.gameSettings);
     const dispatch = useDispatch();
 
     const [hoveredCount, setHoveredCount] = useState(0);
 
     return (
-        <div className={classnames(styles.Stars, !interactive && styles.nonInteractive)}>
+        <div className={classnames(styles.Stars, !interactive && styles.nonInteractive, className)}>
             {Array(TOTAL_LEVEL_COUNT)
                 .fill(null)
                 .map((_, i) => {

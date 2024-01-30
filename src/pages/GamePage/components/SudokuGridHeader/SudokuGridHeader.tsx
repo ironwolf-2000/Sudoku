@@ -7,9 +7,9 @@ import { restartGame } from '@/features/gameGrid';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
-import styles from './GameHeader.module.scss';
+import styles from './SudokuGridHeader.module.scss';
 
-export const GameHeader: React.FC = () => {
+export const SudokuGridHeader: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -29,10 +29,13 @@ export const GameHeader: React.FC = () => {
 
     return (
         <>
-            <div className={styles.GameHeader}>
-                <Icon src={home} withTitle onClick={() => setQuitModalVisible(true)} label="Go to main page" />
-                <Icon src={restart} withTitle onClick={() => setRestartModalVisible(true)} label="Restart game" />
-                <Stars />
+            <div className={styles.SudokuGridHeader}>
+                <div className={styles.ButtonContainer}>
+                    <Icon src={home} withTitle onClick={() => setQuitModalVisible(true)} label="Go to main page" />
+                    <Icon src={restart} withTitle onClick={() => setRestartModalVisible(true)} label="Restart game" />
+                </div>
+                <Stars className={styles.Stars} />
+                <div className={styles.Time}>0:00</div>
             </div>
             <Modal
                 visible={quitModalVisible}
