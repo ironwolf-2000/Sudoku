@@ -1,7 +1,15 @@
-import { Board } from '@/App.types';
-import { generateSudoku, getDeepCopy, getEmptyCells, getInclusiveRange, getShuffledCopy, solveSudoku } from '../common';
+import { Board, RawBoard } from '@/app/types';
+import {
+    convertToBoard,
+    generateSudoku,
+    getDeepCopy,
+    getEmptyCells,
+    getInclusiveRange,
+    getShuffledCopy,
+    solveSudoku,
+} from '../common';
 
-const removeClues = (board: Board, cluesCount: number): Board => {
+const removeClues = (board: RawBoard, cluesCount: number): RawBoard => {
     let filledCount = board.length ** 2;
     const indices = getShuffledCopy(getInclusiveRange(0, filledCount));
 
@@ -55,5 +63,5 @@ export const createNewGame = (cluesCount: number): [Board, Board] => {
         }
     }
 
-    return [board, solution];
+    return [convertToBoard(board), convertToBoard(solution)];
 };

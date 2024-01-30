@@ -1,4 +1,9 @@
-import { Board, Coordinate } from '@/App.types';
+import { RawBoard, Board, Coordinate } from '@/app/types';
+import { INITIAL_BOARD } from './const';
+
+export const convertToBoard = (rawBoard: RawBoard): Board => {
+    return rawBoard.map(row => row.map(val => ({ clue: val !== 0, val })));
+};
 
 export const getInclusiveRange = (lo: number, hi: number): number[] => {
     return Array(hi - lo + 1)
@@ -30,7 +35,7 @@ export const getDeepCopy = (array: any): any => {
     return res;
 };
 
-const isRowValid = (board: Board, r: number, c: number, val: number): boolean => {
+const isRowValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     for (let j = 0; j < board.length; j++) {
         if (c !== j && board[r][j] === val) {
             return false;
@@ -40,7 +45,7 @@ const isRowValid = (board: Board, r: number, c: number, val: number): boolean =>
     return true;
 };
 
-const isColumnValid = (board: Board, r: number, c: number, val: number): boolean => {
+const isColumnValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     for (let i = 0; i < board.length; i++) {
         if (r !== i && board[i][c] === val) {
             return false;
@@ -50,7 +55,7 @@ const isColumnValid = (board: Board, r: number, c: number, val: number): boolean
     return true;
 };
 
-const isBoxValid = (board: Board, r: number, c: number, val: number): boolean => {
+const isBoxValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     const r0 = Math.floor(r / 3) * 3;
     const c0 = Math.floor(c / 3) * 3;
 
@@ -66,13 +71,13 @@ const isBoxValid = (board: Board, r: number, c: number, val: number): boolean =>
     return true;
 };
 
-const isValid = (board: Board, r: number, c: number, val: number): boolean => {
+const isValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     return isRowValid(board, r, c, val) && isColumnValid(board, r, c, val) && isBoxValid(board, r, c, val);
 };
 
 // ==== Sudoku Solver ==== //
 
-export const getEmptyCells = (board: Board): Coordinate[] => {
+export const getEmptyCells = (board: RawBoard): Coordinate[] => {
     const res: Coordinate[] = [];
 
     for (let r = 0; r < board.length; r++) {
@@ -86,8 +91,8 @@ export const getEmptyCells = (board: Board): Coordinate[] => {
     return res;
 };
 
-export const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | null => {
-    let res: Board | null = null;
+export const solveSudoku = (board: RawBoard, emptyCells: Coordinate[]): RawBoard | null => {
+    let res: RawBoard | null = null;
 
     const backtrack = (empty: Coordinate[], index: number) => {
         if (index === empty.length) {
@@ -114,26 +119,16 @@ export const solveSudoku = (board: Board, emptyCells: Coordinate[]): Board | nul
     return res;
 };
 
-export const generateSudoku = (size: number): Board => {
-    const blankBoard: Board = [];
+export const generateSudoku = (): RawBoard => {
+    let grid: RawBoard | null = null;
 
-    for (let i = 0; i < size; i++) {
-        blankBoard.push([]);
-
-        for (let j = 0; j < size; j++) {
-            blankBoard[i].push(0);
-        }
-    }
-
-    let res: Board | null = null;
-
-    while (res === null) {
+    while (grid === null) {
         try {
-            res = solveSudoku(blankBoard, getEmptyCells(blankBoard));
+            grid = solveSudoku(INITIAL_BOARD, getEmptyCells(INITIAL_BOARD));
         } catch {
             /* empty */
         }
     }
 
-    return res;
+    return grid;
 };

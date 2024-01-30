@@ -21,29 +21,23 @@ export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, c
 };
 
 export const useCellsClassNames = (
-    clueCells: Set<string>,
-    errorCells: Set<string>,
+    board: Board,
+    errorCells: Coordinate[],
     checkMode?: boolean,
     selectedCell?: Coordinate,
     hintCell?: Coordinate,
-    selectedValue?: number,
-    board?: Board
+    selectedValue?: number
 ) => {
-    if (!board) {
-        return [];
-    }
-
     const classNames: string[][][] = [];
 
     for (let i = 0; i < board.length; i++) {
         classNames.push([]);
 
         for (let j = 0; j < board.length; j++) {
-            const value = board[i][j];
-            const cell = [i, j].join(' ');
+            const value = board[i][j].val;
 
-            const clue = clueCells.has(cell);
-            const error = errorCells.has(cell);
+            const clue = Boolean(board[i][j].clue);
+            const error = errorCells.some(([r, c]) => r === i && c === j);
             const correct = value && !clue && !error;
 
             const selected = selectedCell?.[0] === i && selectedCell?.[1] === j;
@@ -51,7 +45,7 @@ export const useCellsClassNames = (
 
             const sameRow = selectedCell?.[0] === i;
             const sameColumn = selectedCell?.[1] === j;
-            const sameBox = selectedCell && getCoordinatesFromBox(selectedCell).has(cell);
+            const sameBox = selectedCell && getCoordinatesFromBox(selectedCell).some(([r, c]) => r === i && c === j);
 
             classNames[i].push([styles.Cell]);
 

@@ -1,59 +1,73 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/app';
-import { Board, Coordinate } from '@/app/types';
-import { getDeepCopy } from '@/algorithms/common';
-import { createNewGame } from '@/algorithms/SudokuClassic';
+import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
 import { decrementChecksCount, decrementHintsCount } from '@/features/gameControls';
 import { GameControls, GameHeader, SudokuGrid } from './components';
 import { GameStatus, HINT_TIMEOUT } from './const';
-import { getClueCountByLevel } from './helpers';
+import {
+    setBoard,
+    setCheckMode,
+    setHintCell,
+    setSelectedCell,
+    setSelectedValue,
+    setSolution,
+} from '@/features/gameGrid';
+import { createNewGame } from '@/algorithms/SudokuClassic';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
+
     const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
+    const { board, solution, selectedValue, selectedCell, hintCell, checkMode } = useSelector(
+        (state: RootState) => state.gameGrid
+    );
 
-    const cluesCount = getClueCountByLevel(boardSize, level);
+    const cluesCount = useMemo(() => {
+        const total = boardSize ** 2;
 
-    const [board, setBoard] = useState<Board | undefined>();
-    const [solution, setSolution] = useState<Board | undefined>();
-
-    const [selectedValue, setSelectedValue] = useState<number | undefined>();
-    const [selectedCell, setSelectedCell] = useState<Coordinate | undefined>();
-    const [hintCell, setHintCell] = useState<Coordinate | undefined>();
-
-    const [clueCells, setClueCells] = useState<Set<string>>(new Set());
-    const [errorCells, setErrorCells] = useState<Set<string>>(new Set());
+        return level >= 1 && level <= 5 ? total - level * 2 : total;
+    }, [boardSize, level]);
 
     const emptyCells = useMemo(() => {
-        if (!board) {
-            return [];
-        }
-
-        const result: Coordinate[] = [];
+        const emptyCells: Coordinate[] = [];
 
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board.length; j++) {
-                if (board[i][j] === 0) {
-                    result.push([i, j]);
+                if (board[i][j].val === 0) {
+                    emptyCells.push([i, j]);
                 }
             }
         }
 
-        return result;
+        return emptyCells;
     }, [board]);
 
+    const errorCells = useMemo(() => {
+        const errorCells: Coordinate[] = [];
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                if (board[i][j].val !== 0 && board[i][j].val !== solution[i][j].val) {
+                    errorCells.push([i, j]);
+                }
+            }
+        }
+
+        return errorCells;
+    }, [board, solution]);
+
     const gameStatus = useMemo(() => {
-        if (!board || !solution || emptyCells.length > 0) {
+        if (emptyCells.length > 0) {
             return GameStatus.PENDING;
         }
 
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board.length; j++) {
-                if (board[i][j] !== solution[i][j]) {
+                if (board[i][j].val !== solution[i][j].val) {
                     return GameStatus.FAILURE;
                 }
             }
@@ -62,99 +76,25 @@ export const GamePage: React.FC = () => {
         return GameStatus.SUCCESS;
     }, [board, emptyCells.length, solution]);
 
-    const [checkMode, setCheckMode] = useState(false);
-
-    const startNewGame = useCallback(() => {
+    useEffect(() => {
         const [board, solution] = createNewGame(cluesCount);
-        const _clueCells = new Set<string>();
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j]) {
-                    _clueCells.add([i, j].join(' '));
-                }
-            }
-        }
-
-        setBoard(board);
-        setSolution(solution);
-        setClueCells(_clueCells);
-    }, [cluesCount]);
-
-    const restartGame = useCallback(() => {
-        if (!board) {
-            return;
-        }
-
-        const _board = getDeepCopy(board);
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (!clueCells.has([i, j].join(' '))) {
-                    _board[i][j] = 0;
-                }
-            }
-        }
-
-        setBoard(_board);
-        setErrorCells(new Set());
-        setCheckMode(false);
-    }, [board, clueCells]);
-
-    useEffect(() => startNewGame(), [startNewGame]);
+        dispatch(setBoard(board));
+        dispatch(setSolution(solution));
+        dispatch(setCheckMode(false));
+    }, [cluesCount, dispatch]);
 
     const handleSelectCell = (cell: Coordinate) => {
         if (selectedCell?.[0] === cell[0] && selectedCell?.[1] === cell[1]) {
-            setSelectedCell(undefined);
+            dispatch(setSelectedCell(undefined));
         } else {
-            setSelectedCell(cell);
-            setSelectedValue(undefined);
+            dispatch(setSelectedCell(cell));
+            dispatch(setSelectedValue(undefined));
         }
-    };
-
-    const handleErase = () => {
-        if (!board || !selectedCell || gameStatus === GameStatus.SUCCESS) {
-            return;
-        }
-
-        const _board = getDeepCopy(board);
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (i === selectedCell[0] && j === selectedCell[1]) {
-                    _board[i][j] = 0;
-                }
-            }
-        }
-
-        setBoard(_board);
-    };
-
-    const updateBoard = (val: number) => {
-        if (!selectedCell || !solution) {
-            return;
-        }
-
-        const [r, c] = selectedCell;
-        const cell = selectedCell.join(' ');
-
-        const _board = getDeepCopy(board);
-        _board[r][c] = val;
-
-        const _errorCells = new Set<string>(errorCells);
-
-        if (_board[r][c] !== solution[r][c]) {
-            _errorCells.add(cell);
-        } else if (_board[r][c] === solution[r][c] && errorCells.has(cell)) {
-            _errorCells.delete(cell);
-        }
-
-        setBoard(_board);
-        setErrorCells(_errorCells);
     };
 
     const handleSelectValue = (val: number) => {
-        setSelectedValue(val === selectedValue ? undefined : val);
+        dispatch(setSelectedValue(val === selectedValue ? undefined : val));
     };
 
     const triggerCheckMode = () => {
@@ -162,30 +102,27 @@ export const GamePage: React.FC = () => {
             return;
         }
 
-        setCheckMode(true);
-        setTimeout(() => setCheckMode(false), HINT_TIMEOUT);
+        dispatch(setCheckMode(true));
+        setTimeout(() => dispatch(setCheckMode(false)), HINT_TIMEOUT);
         dispatch(decrementChecksCount());
     };
 
     const showHint = () => {
-        if (!board || checkMode) {
+        if (checkMode) {
             return;
         }
 
-        let r = -1;
-        let c = -1;
+        let [r, c] = [-1, -1];
 
-        if (errorCells.size > 0) {
-            const errorCellsArray = Array.from(errorCells);
-            const cell = errorCellsArray[Math.floor(Math.random() * errorCellsArray.length)].split(' ').map(Number);
-            [r, c] = [cell[0], cell[1]];
+        if (errorCells.length > 0) {
+            [r, c] = errorCells[Math.floor(Math.random() * errorCells.length)];
         } else if (emptyCells.length > 0) {
             [r, c] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
         }
 
         if (r !== -1 && c !== -1) {
-            setHintCell([r, c]);
-            setTimeout(() => setHintCell(undefined), HINT_TIMEOUT);
+            dispatch(setHintCell([r, c]));
+            setTimeout(() => dispatch(setHintCell(undefined)), HINT_TIMEOUT);
         }
 
         dispatch(decrementHintsCount());
@@ -194,7 +131,7 @@ export const GamePage: React.FC = () => {
     return (
         <div className={styles.GamePage}>
             <div className={styles.Content}>
-                <GameHeader onRestartGame={restartGame} />
+                <GameHeader />
                 <div className={styles.Body}>
                     <SudokuGrid
                         board={board}
@@ -203,7 +140,6 @@ export const GamePage: React.FC = () => {
                         hintCell={hintCell}
                         onSelectCell={handleSelectCell}
                         solution={solution}
-                        clueCells={clueCells}
                         errorCells={errorCells}
                         gameStatus={gameStatus}
                         checkMode={checkMode}
@@ -213,8 +149,6 @@ export const GamePage: React.FC = () => {
                         onSelectValue={handleSelectValue}
                         onShowHint={showHint}
                         onTriggerCheckMode={triggerCheckMode}
-                        onErase={handleErase}
-                        onUpdateBoard={updateBoard}
                         selectedCell={selectedCell}
                         selectedValue={selectedValue}
                     />

@@ -3,14 +3,13 @@ import { GameStatus } from '../../const';
 
 export interface ISudokuGridProps {
     className?: string;
-    board?: Board;
+    board: Board;
     selectedValue?: number;
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
     onSelectCell: (cell: Coordinate) => void;
-    solution?: Board;
-    clueCells: Set<string>;
-    errorCells: Set<string>;
+    solution: Board;
+    errorCells: Coordinate[];
     gameStatus: GameStatus;
     checkMode?: boolean;
 }

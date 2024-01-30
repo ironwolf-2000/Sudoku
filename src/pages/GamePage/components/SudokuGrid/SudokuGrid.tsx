@@ -1,10 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
 
+import { Coordinate } from '@/app/types';
 import { ISudokuGridProps } from './types';
 import { useCellsClassNames, useGridClassNames } from './hooks';
 import { GameStatus } from '../../const';
-import { Coordinate } from '@/app/types';
 
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     className,
@@ -15,29 +15,16 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     gameStatus,
     board,
     solution,
-    clueCells,
     errorCells,
     checkMode,
 }) => {
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
-    const cellsClassNames = useCellsClassNames(
-        clueCells,
-        errorCells,
-        checkMode,
-        selectedCell,
-        hintCell,
-        selectedValue,
-        board
-    );
+    const cellsClassNames = useCellsClassNames(board, errorCells, checkMode, selectedCell, hintCell, selectedValue);
 
     const success = gameStatus === GameStatus.SUCCESS;
 
-    if (!board || !solution) {
-        return null;
-    }
-
     const handleCellClick = (cell: Coordinate) => {
-        if (!success && !checkMode && !clueCells.has(cell.join(' '))) {
+        if (!success && !checkMode && !board[cell[0]][cell[1]].clue) {
             onSelectCell(cell);
         }
     };
@@ -46,13 +33,13 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
         <div className={classnames(gridClassNames)}>
             {board.map((row, i) => (
                 <React.Fragment key={i}>
-                    {row.map((val, j) => (
+                    {row.map(({ val }, j) => (
                         <div
                             key={i * row.length + j}
                             className={classnames(cellsClassNames[i][j])}
                             onClick={() => handleCellClick([i, j])}
                         >
-                            {val || (hintCell?.[0] === i && hintCell?.[1] === j && solution[i][j])}
+                            {val || (hintCell?.[0] === i && hintCell?.[1] === j && solution[i][j].val)}
                         </div>
                     ))}
                 </React.Fragment>

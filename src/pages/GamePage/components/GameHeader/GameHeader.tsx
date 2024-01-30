@@ -1,26 +1,30 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
+import { restartGame } from '@/features/gameGrid';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
 import styles from './GameHeader.module.scss';
-import { IGameHeaderProps } from './types';
 
-export const GameHeader: React.FC<IGameHeaderProps> = ({ onRestartGame }) => {
+export const GameHeader: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [quitModalVisible, setQuitModalVisible] = useState(false);
-    const handleQuitModalApply = () => {
-        setQuitModalVisible(false);
-        navigate(PATHS.MAIN);
-    };
-
     const [restartModalVisible, setRestartModalVisible] = useState(false);
-    const handleRestartModalApply = () => {
-        setRestartModalVisible(false);
-        onRestartGame();
+
+    const handleModalApply = (quit: boolean) => {
+        dispatch(restartGame());
+
+        if (quit) {
+            setQuitModalVisible(false);
+            navigate(PATHS.MAIN);
+        } else {
+            setRestartModalVisible(false);
+        }
     };
 
     return (
@@ -33,7 +37,7 @@ export const GameHeader: React.FC<IGameHeaderProps> = ({ onRestartGame }) => {
             <Modal
                 visible={quitModalVisible}
                 applyButtonLabel="Leave"
-                onApply={handleQuitModalApply}
+                onApply={() => handleModalApply(true)}
                 onClose={() => setQuitModalVisible(false)}
             >
                 Are you sure you want to quit the game?
@@ -41,7 +45,7 @@ export const GameHeader: React.FC<IGameHeaderProps> = ({ onRestartGame }) => {
             <Modal
                 visible={restartModalVisible}
                 applyButtonLabel="Restart"
-                onApply={handleRestartModalApply}
+                onApply={() => handleModalApply(false)}
                 onClose={() => setRestartModalVisible(false)}
             >
                 Are you sure you want to restart the game?
