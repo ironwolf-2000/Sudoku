@@ -5,3 +5,5 @@ export enum GameStatus {
 }
 
 export const HINT_TIMEOUT = 3000;
+
+export const LAPTOP_BREAKPOINT = 1024;

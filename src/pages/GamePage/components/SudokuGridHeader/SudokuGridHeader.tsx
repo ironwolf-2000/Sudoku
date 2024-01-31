@@ -31,8 +31,20 @@ export const SudokuGridHeader: React.FC = () => {
         <>
             <div className={styles.SudokuGridHeader}>
                 <div className={styles.ButtonContainer}>
-                    <Icon src={home} withTitle onClick={() => setQuitModalVisible(true)} label="Go to main page" />
-                    <Icon src={restart} withTitle onClick={() => setRestartModalVisible(true)} label="Restart game" />
+                    <Icon
+                        className={styles.IconButton}
+                        src={home}
+                        withTitle
+                        onClick={() => setQuitModalVisible(true)}
+                        label="Go to main page"
+                    />
+                    <Icon
+                        className={styles.IconButton}
+                        src={restart}
+                        withTitle
+                        onClick={() => setRestartModalVisible(true)}
+                        label="Restart game"
+                    />
                 </div>
                 <Stars className={styles.Stars} />
                 <div className={styles.Time}>0:00</div>

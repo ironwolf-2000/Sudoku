@@ -7,7 +7,7 @@ import styles from './GamePage.module.scss';
 
 import { decrementChecksCount, decrementHintsCount } from '@/features/gameControls';
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
-import { GameStatus, HINT_TIMEOUT } from './const';
+import { GameStatus, HINT_TIMEOUT, LAPTOP_BREAKPOINT } from './const';
 import {
     setBoard,
     setCheckMode,
@@ -17,11 +17,13 @@ import {
     setSolution,
 } from '@/features/gameGrid';
 import { createNewGame } from '@/algorithms/SudokuClassic';
+import { useWindowSize } from './hooks';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
-
+    const { width: windowWidth } = useWindowSize();
     const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
+
     const { board, solution, selectedValue, selectedCell, hintCell, checkMode } = useSelector(
         (state: RootState) => state.gameGrid
     );
@@ -144,15 +146,27 @@ export const GamePage: React.FC = () => {
                         gameStatus={gameStatus}
                         checkMode={checkMode}
                     />
+                    {windowWidth < LAPTOP_BREAKPOINT && (
+                        <GameControls
+                            gameStatus={gameStatus}
+                            onSelectValue={handleSelectValue}
+                            onShowHint={showHint}
+                            onTriggerCheckMode={triggerCheckMode}
+                            selectedCell={selectedCell}
+                            selectedValue={selectedValue}
+                        />
+                    )}
                 </div>
-                <GameControls
-                    gameStatus={gameStatus}
-                    onSelectValue={handleSelectValue}
-                    onShowHint={showHint}
-                    onTriggerCheckMode={triggerCheckMode}
-                    selectedCell={selectedCell}
-                    selectedValue={selectedValue}
-                />
+                {windowWidth >= LAPTOP_BREAKPOINT && (
+                    <GameControls
+                        gameStatus={gameStatus}
+                        onSelectValue={handleSelectValue}
+                        onShowHint={showHint}
+                        onTriggerCheckMode={triggerCheckMode}
+                        selectedCell={selectedCell}
+                        selectedValue={selectedValue}
+                    />
+                )}
             </div>
         </div>
     );

@@ -1,14 +1,23 @@
 .GameControls {
-    margin-top: 4rem;
-    margin-left: 2rem;
-    width: 20rem;
+    margin-top: 2rem;
+    width: 100%;
+
+    @media screen and (min-width: 1024px) {
+        margin-left: 2rem;
+        margin-top: 4rem;
+        width: 20rem;
+    }
 }
 
 .ActionButtonContainer {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.25rem;
-    margin-bottom: 0.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 1rem;
+
+    @media screen and (min-width: 1024px) {
+        margin-bottom: 0.5rem;
+    }
 }
 
 .ActionButton {
@@ -18,9 +27,13 @@
 }
 
 .DigitButtons {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.25rem;
     margin-bottom: 2rem;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+
+    @media screen and (min-width: 1024px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 }
 
 .InfoLabel {

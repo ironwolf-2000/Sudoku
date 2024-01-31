@@ -9,11 +9,17 @@
     border: none;
     color: var(--black);
     cursor: pointer;
-    font-size: 1.5rem;
     font-weight: bold;
-    height: 5rem;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-time);
     user-select: none;
+
+    height: 3rem;
+    font-size: 1.25rem;
+
+    @media screen and (min-width: 1024px) {
+        height: 5rem;
+        font-size: 1.5rem;
+    }
 
     &.selected,
     &:hover {

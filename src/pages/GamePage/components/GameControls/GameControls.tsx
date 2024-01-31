@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classnames from 'classnames';
 
 import { RootState } from '@/app';
 import { Icon } from '@/components';
 import { DigitButtons } from '..';
-import { GameStatus } from '../../const';
+import { GameStatus, LAPTOP_BREAKPOINT } from '../../const';
 import styles from './GameControls.module.scss';
 import { IGameControlsProps } from './types';
 import eraser from '@/assets/icons/eraser.svg';
 import hint from '@/assets/icons/hint.svg';
 import doubleCheck from '@/assets/icons/double_check.svg';
 import { updateSelectedBoardCell } from '@/features/gameGrid';
+import { useWindowSize } from '../../hooks';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
@@ -21,8 +21,9 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     selectedCell,
     selectedValue,
 }) => {
-    const { checksCount, hintsCount } = useSelector((state: RootState) => state.gameControls);
+    const { width: windowWidth } = useWindowSize();
     const dispatch = useDispatch();
+    const { checksCount, hintsCount } = useSelector((state: RootState) => state.gameControls);
 
     const icons = [
         {
@@ -51,6 +52,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     ];
 
     const [hovered, setHovered] = useState<string | undefined>();
+    const narrowScreen = windowWidth < LAPTOP_BREAKPOINT;
 
     return (
         <div className={styles.GameControls}>
@@ -59,10 +61,10 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                     <Icon
                         key={label}
                         className={styles.ActionButton}
-                        onHover={() => setHovered(label)}
-                        onHoverEnd={() => setHovered(undefined)}
+                        onHover={!narrowScreen ? () => setHovered(label) : undefined}
+                        onHoverEnd={!narrowScreen ? () => setHovered(undefined) : undefined}
                         label={label}
-                        captionVisible={hovered === label}
+                        captionVisible={narrowScreen || hovered === label}
                         {...props}
                     />
                 ))}
@@ -74,14 +76,6 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                 onSetValue={val => dispatch(updateSelectedBoardCell(val))}
                 onSelectValue={onSelectValue}
             />
-            {gameStatus === GameStatus.SUCCESS && (
-                <p className={classnames(styles.InfoLabel, styles.success)}>
-                    You've successfully completed the puzzle!
-                </p>
-            )}
-            {gameStatus === GameStatus.FAILURE && (
-                <p className={classnames(styles.InfoLabel, styles.failure)}>You've made some mistakes!</p>
-            )}
         </div>
     );
 };
