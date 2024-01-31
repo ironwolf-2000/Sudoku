@@ -6,9 +6,9 @@ import styles from './Icon.module.scss';
 export const Icon: React.FC<IIconProps> = ({
     src,
     disabled,
+    title,
     label,
     badge,
-    withTitle,
     withCaption,
     captionVisible,
     onHover,
@@ -23,10 +23,12 @@ export const Icon: React.FC<IIconProps> = ({
             onMouseLeave={onHoverEnd}
             onClick={onClick}
             aria-label={label}
-            title={withTitle ? label : undefined}
+            title={title}
         >
-            {badge && <span className={styles.Badge}>{badge}</span>}
-            <img className={styles.Content} src={src} alt={label} />
+            <div className={styles.Content}>
+                {badge && <span className={styles.Badge}>{badge}</span>}
+                <img className={styles.Image} src={src} alt={label} />
+            </div>
             {withCaption && (
                 <span className={classnames(styles.Caption, (disabled || !captionVisible) && styles.hidden)}>
                     {label}

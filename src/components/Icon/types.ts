@@ -2,9 +2,9 @@ export interface IIconProps {
     className?: string;
     src: string;
     disabled?: boolean;
-    label: string;
+    title?: string;
+    label?: string;
     badge?: string;
-    withTitle?: boolean;
     withCaption?: boolean;
     captionVisible?: boolean;
     onHover?: () => void;

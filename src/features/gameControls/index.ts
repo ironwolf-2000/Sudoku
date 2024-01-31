@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface GameControlsState {
-    checksCount: number;
-    hintsCount: number;
+    checkCount: number;
+    hintCount: number;
 }
 
 const initialState: GameControlsState = {
-    checksCount: 1,
-    hintsCount: 3,
+    checkCount: 0,
+    hintCount: 0,
 };
 
 export const gameControlsSlice = createSlice({
@@ -16,20 +16,20 @@ export const gameControlsSlice = createSlice({
     initialState,
     reducers: {
         setCheckCount: (state, action: PayloadAction<number>) => {
-            state.checksCount = action.payload;
+            state.checkCount = action.payload;
         },
-        decrementChecksCount: state => {
-            state.checksCount--;
+        decrementCheckCount: state => {
+            state.checkCount--;
         },
-        setHintsCount: (state, action: PayloadAction<number>) => {
-            state.hintsCount = action.payload;
+        setHintCount: (state, action: PayloadAction<number>) => {
+            state.hintCount = action.payload;
         },
-        decrementHintsCount: state => {
-            state.hintsCount--;
+        decrementHintCount: state => {
+            state.hintCount--;
         },
     },
 });
 
-export const { setCheckCount, decrementChecksCount, setHintsCount, decrementHintsCount } = gameControlsSlice.actions;
+export const { setCheckCount, decrementCheckCount, setHintCount, decrementHintCount } = gameControlsSlice.actions;
 
 export default gameControlsSlice.reducer;

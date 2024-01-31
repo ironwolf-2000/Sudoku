@@ -1,23 +1,29 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
-import { restartGame } from '@/features/gameGrid';
+import { restartGame, setHintCell } from '@/features/gameGrid';
+import { setCheckCount, setHintCount } from '@/features/gameControls';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
 import styles from './SudokuGridHeader.module.scss';
+import { RootState } from '@/app';
 
 export const SudokuGridHeader: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.gameSettings);
 
     const [quitModalVisible, setQuitModalVisible] = useState(false);
     const [restartModalVisible, setRestartModalVisible] = useState(false);
 
     const handleModalApply = (quit: boolean) => {
         dispatch(restartGame());
+        dispatch(setHintCell(undefined));
+        dispatch(setCheckCount(initialCheckCount));
+        dispatch(setHintCount(initialHintCount));
 
         if (quit) {
             setQuitModalVisible(false);
@@ -34,16 +40,14 @@ export const SudokuGridHeader: React.FC = () => {
                     <Icon
                         className={styles.IconButton}
                         src={home}
-                        withTitle
                         onClick={() => setQuitModalVisible(true)}
-                        label="Go to main page"
+                        title="Go to main page"
                     />
                     <Icon
                         className={styles.IconButton}
                         src={restart}
-                        withTitle
                         onClick={() => setRestartModalVisible(true)}
-                        label="Restart game"
+                        title="Restart game"
                     />
                 </div>
                 <Stars className={styles.Stars} />

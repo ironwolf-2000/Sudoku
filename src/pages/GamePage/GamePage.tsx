@@ -5,9 +5,8 @@ import { RootState } from '@/app';
 import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
-import { decrementChecksCount, decrementHintsCount } from '@/features/gameControls';
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
-import { GameStatus, HINT_TIMEOUT, LAPTOP_BREAKPOINT } from './const';
+import { GameStatus, CHECK_MODE_TIMEOUT, LAPTOP_BREAKPOINT } from './const';
 import {
     setBoard,
     setCheckMode,
@@ -18,11 +17,14 @@ import {
 } from '@/features/gameGrid';
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import { useWindowSize } from './hooks';
+import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const { width: windowWidth } = useWindowSize();
-    const { boardSize, level } = useSelector((state: RootState) => state.gameSettings);
+    const { level, initialCheckCount, initialHintCount, boardSize } = useSelector(
+        (state: RootState) => state.gameSettings
+    );
 
     const { board, solution, selectedValue, selectedCell, hintCell, checkMode } = useSelector(
         (state: RootState) => state.gameGrid
@@ -84,9 +86,13 @@ export const GamePage: React.FC = () => {
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckMode(false));
-    }, [cluesCount, dispatch]);
+        dispatch(setCheckCount(initialCheckCount));
+        dispatch(setHintCount(initialHintCount));
+    }, [cluesCount, dispatch, initialCheckCount, initialHintCount]);
 
     const handleSelectCell = (cell: Coordinate) => {
+        dispatch(setHintCell(undefined));
+
         if (selectedCell?.[0] === cell[0] && selectedCell?.[1] === cell[1]) {
             dispatch(setSelectedCell(undefined));
         } else {
@@ -105,12 +111,12 @@ export const GamePage: React.FC = () => {
         }
 
         dispatch(setCheckMode(true));
-        setTimeout(() => dispatch(setCheckMode(false)), HINT_TIMEOUT);
-        dispatch(decrementChecksCount());
+        setTimeout(() => dispatch(setCheckMode(false)), CHECK_MODE_TIMEOUT);
+        dispatch(decrementCheckCount());
     };
 
     const showHint = () => {
-        if (checkMode) {
+        if (checkMode || hintCell) {
             return;
         }
 
@@ -124,10 +130,8 @@ export const GamePage: React.FC = () => {
 
         if (r !== -1 && c !== -1) {
             dispatch(setHintCell([r, c]));
-            setTimeout(() => dispatch(setHintCell(undefined)), HINT_TIMEOUT);
+            dispatch(decrementHintCount());
         }
-
-        dispatch(decrementHintsCount());
     };
 
     return (

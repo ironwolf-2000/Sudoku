@@ -23,20 +23,20 @@ export const GameControls: React.FC<IGameControlsProps> = ({
 }) => {
     const { width: windowWidth } = useWindowSize();
     const dispatch = useDispatch();
-    const { checksCount, hintsCount } = useSelector((state: RootState) => state.gameControls);
+    const { checkCount, hintCount } = useSelector((state: RootState) => state.gameControls);
 
     const icons = [
         {
-            badge: String(checksCount),
-            disabled: gameStatus === GameStatus.SUCCESS || checksCount === 0,
+            badge: String(checkCount),
+            disabled: gameStatus === GameStatus.SUCCESS || checkCount === 0,
             label: 'check',
             onClick: onTriggerCheckMode,
             src: doubleCheck,
             withCaption: true,
         },
         {
-            badge: String(hintsCount),
-            disabled: gameStatus === GameStatus.SUCCESS || hintsCount === 0,
+            badge: String(hintCount),
+            disabled: gameStatus === GameStatus.SUCCESS || hintCount === 0,
             label: 'hint',
             onClick: onShowHint,
             src: hint,
