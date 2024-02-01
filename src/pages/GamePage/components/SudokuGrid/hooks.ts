@@ -4,7 +4,7 @@ import styles from './SudokuGrid.module.scss';
 import { getCoordinatesFromBox } from './helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
-    const classNames = [styles.SudokuGrid, customClassName];
+    const classNames = [styles.Content, customClassName];
 
     const success = gameStatus === GameStatus.SUCCESS;
     const failure = gameStatus === GameStatus.FAILURE;

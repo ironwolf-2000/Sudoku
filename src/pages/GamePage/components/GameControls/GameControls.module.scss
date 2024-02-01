@@ -24,6 +24,10 @@
     flex-grow: 1;
     border-radius: 0.5rem;
     color: var(--blue-darker);
+
+    &.disabled {
+        cursor: default;
+    }
 }
 
 .DigitButtons {

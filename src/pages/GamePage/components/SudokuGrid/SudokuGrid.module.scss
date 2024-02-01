@@ -1,4 +1,8 @@
 .SudokuGrid {
+    position: relative;
+}
+
+.Content {
     background-color: var(--black);
     color: var(--black);
     display: grid;

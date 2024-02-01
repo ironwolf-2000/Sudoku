@@ -4,11 +4,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 interface GameControlsState {
     checkCount: number;
     hintCount: number;
+    gamePaused: boolean;
 }
 
 const initialState: GameControlsState = {
     checkCount: 0,
     hintCount: 0,
+    gamePaused: false,
 };
 
 export const gameControlsSlice = createSlice({
@@ -27,9 +29,13 @@ export const gameControlsSlice = createSlice({
         decrementHintCount: state => {
             state.hintCount--;
         },
+        toggleGamePaused: state => {
+            state.gamePaused = !state.gamePaused;
+        },
     },
 });
 
-export const { setCheckCount, decrementCheckCount, setHintCount, decrementHintCount } = gameControlsSlice.actions;
+export const { setCheckCount, decrementCheckCount, setHintCount, decrementHintCount, toggleGamePaused } =
+    gameControlsSlice.actions;
 
 export default gameControlsSlice.reducer;

@@ -1,10 +1,14 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 
 import { Coordinate } from '@/app/types';
 import { ISudokuGridProps } from './types';
 import { useCellsClassNames, useGridClassNames } from './hooks';
 import { GameStatus } from '../../const';
+import { RootState } from '@/app';
+import { PauseOverlay } from '..';
+import styles from './SudokuGrid.module.scss';
 
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     className,
@@ -18,6 +22,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     errorCells,
     checkMode,
 }) => {
+    const { gamePaused } = useSelector((state: RootState) => state.gameControls);
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
     const cellsClassNames = useCellsClassNames(board, errorCells, checkMode, selectedCell, hintCell, selectedValue);
 
@@ -30,20 +35,23 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     };
 
     return (
-        <div className={classnames(gridClassNames)}>
-            {board.map((row, i) => (
-                <React.Fragment key={i}>
-                    {row.map(({ val }, j) => (
-                        <div
-                            key={i * row.length + j}
-                            className={classnames(cellsClassNames[i][j])}
-                            onClick={() => handleCellClick([i, j])}
-                        >
-                            {val || (hintCell?.[0] === i && hintCell?.[1] === j && solution[i][j].val)}
-                        </div>
-                    ))}
-                </React.Fragment>
-            ))}
+        <div className={styles.SudokuGrid}>
+            {gamePaused && <PauseOverlay />}
+            <div className={classnames(gridClassNames)}>
+                {board.map((row, i) => (
+                    <React.Fragment key={i}>
+                        {row.map(({ val }, j) => (
+                            <div
+                                key={i * row.length + j}
+                                className={classnames(cellsClassNames[i][j])}
+                                onClick={() => handleCellClick([i, j])}
+                            >
+                                {val || (hintCell?.[0] === i && hintCell?.[1] === j && solution[i][j].val)}
+                            </div>
+                        ))}
+                    </React.Fragment>
+                ))}
+            </div>
         </div>
     );
 };
