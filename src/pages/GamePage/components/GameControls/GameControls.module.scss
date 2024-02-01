@@ -3,9 +3,9 @@
     width: 100%;
 
     @media screen and (min-width: 1024px) {
-        margin-left: 2rem;
-        margin-top: 4rem;
-        width: 20rem;
+        margin-left: 3.5rem;
+        margin-top: 4.5rem;
+        width: 18rem;
     }
 }
 
@@ -32,7 +32,6 @@
 
 .DigitButtons {
     gap: 0.25rem;
-    margin-bottom: 2rem;
     grid-template-columns: repeat(9, minmax(0, 1fr));
 
     @media screen and (min-width: 1024px) {

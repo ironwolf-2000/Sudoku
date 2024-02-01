@@ -5,13 +5,14 @@
 
 :root {
     --white: #ffffff;
+    --gray-lighter: #f7f7f7;
     --black: #202a31;
     --blue-lighter: #f4f8fc;
     --blue-light: #bfd7ea;
     --blue-dark: #74a8d2;
     --blue-darker: #2d608b;
-    --green: #14cc60;
-    --red: #f42c04;
+    --green: #3dbb6b;
+    --red: #f44336;
 
     --transition-time: 0.2s;
 }
@@ -40,9 +41,9 @@ html {
         'Helvetica Neue',
         sans-serif;
 
-    font-size: calc(100vw / (560 / 16));
+    font-size: 2.5vw;
 
-    @media screen and (min-width: 560px) {
+    @media screen and (min-width: 640px) {
         font-size: 16px;
     }
 }

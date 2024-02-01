@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
-import { restartGame, setHintCell } from '@/features/gameGrid';
+import { restartGame, setHintCell, setSelectedCell } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused } from '@/features/gameControls';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
@@ -12,8 +12,10 @@ import pause from '@/assets/icons/pause.svg';
 import play from '@/assets/icons/play.svg';
 import styles from './SudokuGridHeader.module.scss';
 import { RootState } from '@/app';
+import { GameStatus } from '../../const';
+import { ISudokuGridHeaderProps } from './types';
 
-export const SudokuGridHeader: React.FC = () => {
+export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.gameSettings);
@@ -25,12 +27,12 @@ export const SudokuGridHeader: React.FC = () => {
     const gameTimeTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
     useEffect(() => {
-        if (!gamePaused) {
+        if (!gamePaused && gameStatus !== GameStatus.SUCCESS) {
             gameTimeTimeoutRef.current = setTimeout(() => setGameTime(gameTime + 1), 1000);
         }
 
         return () => clearTimeout(gameTimeTimeoutRef.current);
-    }, [gameTime, gamePaused]);
+    }, [gameTime, gamePaused, gameStatus]);
 
     const formattedGameTime = useMemo(() => {
         const minutes = Math.floor(gameTime / 60);
@@ -58,6 +60,14 @@ export const SudokuGridHeader: React.FC = () => {
         }
     };
 
+    const handleGamePausedToggle = () => {
+        if (!gamePaused) {
+            dispatch(setSelectedCell(undefined));
+        }
+
+        dispatch(toggleGamePaused());
+    };
+
     return (
         <>
             <div className={styles.SudokuGridHeader}>
@@ -78,7 +88,12 @@ export const SudokuGridHeader: React.FC = () => {
                 <Stars className={styles.Stars} />
                 <div className={styles.Time}>
                     <span>{formattedGameTime}</span>
-                    <Icon src={gamePaused ? play : pause} size="s" onClick={() => dispatch(toggleGamePaused())} />
+                    <Icon
+                        src={gamePaused ? play : pause}
+                        size="s"
+                        disabled={gameStatus === GameStatus.SUCCESS}
+                        onClick={handleGamePausedToggle}
+                    />
                 </div>
             </div>
             <Modal

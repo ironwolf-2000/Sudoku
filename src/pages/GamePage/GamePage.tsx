@@ -18,6 +18,7 @@ import {
 import { createNewGame } from '@/algorithms/SudokuClassic';
 import { useWindowSize } from './hooks';
 import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
+import { Card } from '@/components';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
@@ -135,10 +136,10 @@ export const GamePage: React.FC = () => {
     };
 
     return (
-        <div className={styles.GamePage}>
+        <Card className={styles.GamePage}>
             <div className={styles.Content}>
                 <div>
-                    <SudokuGridHeader />
+                    <SudokuGridHeader gameStatus={gameStatus} />
                     <SudokuGrid
                         board={board}
                         selectedValue={selectedValue}
@@ -172,6 +173,6 @@ export const GamePage: React.FC = () => {
                     />
                 )}
             </div>
-        </div>
+        </Card>
     );
 };

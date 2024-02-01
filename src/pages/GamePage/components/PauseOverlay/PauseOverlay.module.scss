@@ -5,8 +5,16 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: var(--blue-lighter);
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @supports (backdrop-filter: none) {
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(0.25rem);
+    }
+
+    @supports not (backdrop-filter: none) {
+        background-color: var(--gray-lighter);
+    }
 }

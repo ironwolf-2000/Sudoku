@@ -1,0 +1,9 @@
+.Card {
+    display: flex;
+    justify-content: center;
+    padding: 3.5rem;
+    background-color: var(--blue-lighter);
+    width: min-content;
+    border-radius: 2rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0 0.125rem 0.5rem 0;
+}
