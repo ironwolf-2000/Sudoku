@@ -1,7 +1,10 @@
+import { useSelector } from 'react-redux';
+
+import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/types';
 import { GameStatus } from '../../const';
 import styles from './SudokuGrid.module.scss';
-import { getCoordinatesFromBox } from './helpers';
+import { getSelectedCoordinates } from './helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
     const classNames = [styles.Content, customClassName];
@@ -28,28 +31,25 @@ export const useCellsClassNames = (
     hintCell?: Coordinate,
     selectedValue?: number
 ) => {
+    const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
     const classNames: string[][][] = [];
 
     for (let i = 0; i < board.length; i++) {
         classNames.push([]);
 
         for (let j = 0; j < board.length; j++) {
+            classNames[i].push([styles.Cell]);
             const value = board[i][j].val;
 
+            const hint = hintCell?.[0] === i && hintCell?.[1] === j;
             const clue = Boolean(board[i][j].clue);
             const error = errorCells.some(([r, c]) => r === i && c === j);
             const correct = value && !clue && !error;
+            const selected =
+                (selectedCell && i === selectedCell[0] && j === selectedCell[1]) || value === selectedValue;
+            const affected = getSelectedCoordinates(sudokuType, selectedCell).some(([r, c]) => r === i && c === j);
 
-            const selected = selectedCell?.[0] === i && selectedCell?.[1] === j;
-            const hint = hintCell?.[0] === i && hintCell?.[1] === j;
-
-            const sameRow = selectedCell?.[0] === i;
-            const sameColumn = selectedCell?.[1] === j;
-            const sameBox = selectedCell && getCoordinatesFromBox(selectedCell).some(([r, c]) => r === i && c === j);
-
-            classNames[i].push([styles.Cell]);
-
-            Object.entries({ hint, clue, error, correct, checkMode }).forEach(([key, val]) => {
+            Object.entries({ checkMode, hint, clue, error, correct, selected, affected }).forEach(([key, val]) => {
                 if (val) {
                     classNames[i][j].push(styles[key]);
                 }
@@ -57,14 +57,6 @@ export const useCellsClassNames = (
 
             if (hint) {
                 classNames[i][j].push(error ? styles.error : styles.correct);
-            }
-
-            if (sameRow || sameColumn || sameBox) {
-                classNames[i][j].push(styles.affected);
-            }
-
-            if (selected || value === selectedValue) {
-                classNames[i][j].push(styles.selected);
             }
         }
     }

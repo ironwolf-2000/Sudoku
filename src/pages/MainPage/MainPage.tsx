@@ -15,6 +15,11 @@ export const MainPage: React.FC = () => {
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount, sudokuType } = useSelector((state: RootState) => state.gameSettings);
 
+    const sudokuTypes = [
+        [SudokuType.CLASSIC, 'Classic'],
+        [SudokuType.DIAGONALS, 'Diagonals'],
+    ] as const;
+
     return (
         <Card className={styles.MainPage}>
             <div>
@@ -50,24 +55,15 @@ export const MainPage: React.FC = () => {
                     <section className={styles.Section}>
                         <h2 className={styles.SectionTitle}>Type:</h2>
                         <div className={styles.TypeContent}>
-                            <button
-                                className={classnames(
-                                    styles.TypeButton,
-                                    sudokuType === SudokuType.CLASSIC && styles.selected
-                                )}
-                                onClick={() => dispatch(setSudokuType(SudokuType.CLASSIC))}
-                            >
-                                Classic
-                            </button>
-                            <button
-                                className={classnames(
-                                    styles.TypeButton,
-                                    sudokuType === SudokuType.DIAGONALS && styles.selected
-                                )}
-                                onClick={() => dispatch(setSudokuType(SudokuType.DIAGONALS))}
-                            >
-                                Diagonals
-                            </button>
+                            {sudokuTypes.map(([type, label]) => (
+                                <button
+                                    key={type}
+                                    className={classnames(styles.TypeButton, sudokuType === type && styles.selected)}
+                                    onClick={() => dispatch(setSudokuType(SudokuType[type]))}
+                                >
+                                    {label}
+                                </button>
+                            ))}
                         </div>
                     </section>
                 </main>

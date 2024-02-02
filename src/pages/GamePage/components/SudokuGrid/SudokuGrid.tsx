@@ -9,6 +9,7 @@ import { GameStatus } from '../../const';
 import { RootState } from '@/app';
 import { PauseOverlay } from '..';
 import styles from './SudokuGrid.module.scss';
+import { SudokuType } from '@/app/const';
 
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     className,
@@ -22,6 +23,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     errorCells,
     checkMode,
 }) => {
+    const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
     const cellsClassNames = useCellsClassNames(board, errorCells, checkMode, selectedCell, hintCell, selectedValue);
@@ -37,6 +39,12 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     return (
         <div className={styles.SudokuGrid}>
             {gamePaused && <PauseOverlay />}
+            {sudokuType === SudokuType.DIAGONALS && (
+                <>
+                    <div className={styles.MainDiagonal}></div>
+                    <div className={styles.AntiDiagonal}></div>
+                </>
+            )}
             <div className={classnames(gridClassNames)}>
                 {board.map((row, i) => (
                     <React.Fragment key={i}>

@@ -1,5 +1,6 @@
 .SudokuGrid {
     position: relative;
+    overflow: hidden;
 }
 
 .Content {
@@ -79,4 +80,26 @@
             background-color: var(--green);
         }
     }
+}
+
+.MainDiagonal {
+    width: 141%;
+    transform: rotate(45deg);
+    transform-origin: top left;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0.1rem;
+}
+
+.AntiDiagonal {
+    width: 141%;
+    transform: rotate(-45deg);
+    transform-origin: bottom left;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 0;
+    left: 0.1rem;
 }
