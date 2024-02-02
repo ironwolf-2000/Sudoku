@@ -2,8 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { Board, Coordinate } from '@/app/types';
-import { INITIAL_BOARD } from '@/algorithms/const';
-import { convertToBoard } from '@/algorithms/common';
 
 interface GameGridState {
     board: Board;
@@ -15,8 +13,8 @@ interface GameGridState {
 }
 
 const initialState: GameGridState = {
-    board: convertToBoard(INITIAL_BOARD),
-    solution: convertToBoard(INITIAL_BOARD),
+    board: [],
+    solution: [],
     checkMode: false,
 };
 

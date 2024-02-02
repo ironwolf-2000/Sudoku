@@ -15,7 +15,7 @@ import {
     setSelectedValue,
     setSolution,
 } from '@/features/gameGrid';
-import { createNewGame } from '@/algorithms/SudokuClassic';
+import { createNewGame } from '@/algorithms';
 import { useWindowSize } from './hooks';
 import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
@@ -23,7 +23,7 @@ import { Card } from '@/components';
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const { width: windowWidth } = useWindowSize();
-    const { level, initialCheckCount, initialHintCount, boardSize } = useSelector(
+    const { level, initialCheckCount, initialHintCount, sudokuType, boardSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
 
@@ -82,14 +82,14 @@ export const GamePage: React.FC = () => {
     }, [board, emptyCells.length, solution]);
 
     useEffect(() => {
-        const [board, solution] = createNewGame(cluesCount);
+        const [board, solution] = createNewGame(sudokuType, cluesCount);
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckMode(false));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [cluesCount, dispatch, initialCheckCount, initialHintCount]);
+    }, [cluesCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
 
     const handleSelectCell = (cell: Coordinate) => {
         dispatch(setHintCell(undefined));

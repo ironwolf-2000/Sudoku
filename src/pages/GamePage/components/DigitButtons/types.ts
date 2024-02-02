@@ -2,7 +2,7 @@ export interface IDigitButtonsProps {
     /** The optional CSS class name for styling */
     className?: string;
     /** The number of different values */
-    count?: number;
+    count: number;
     /** Indicates if the button is setting the value */
     valueSetting?: boolean;
     selectedValue?: number;

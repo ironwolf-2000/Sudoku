@@ -24,6 +24,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
 }) => {
     const { width: windowWidth } = useWindowSize();
     const dispatch = useDispatch();
+    const { boardSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, gamePaused } = useSelector((state: RootState) => state.gameControls);
 
     const icons = [
@@ -72,6 +73,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             </div>
             <DigitButtons
                 className={styles.DigitButtons}
+                count={boardSize}
                 valueSetting={Boolean(selectedCell)}
                 selectedValue={selectedValue}
                 onSetValue={val => dispatch(updateSelectedBoardCell(val))}

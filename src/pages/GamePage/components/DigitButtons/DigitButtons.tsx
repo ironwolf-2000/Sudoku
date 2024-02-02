@@ -1,14 +1,14 @@
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { getInclusiveRange } from '@/algorithms/common';
 import { RootState } from '@/app';
 import { IDigitButtonsProps } from './types';
 import styles from './DigitButtons.module.scss';
+import { getInclusiveRange } from '@/algorithms/helpers';
 
 export const DigitButtons: React.FC<IDigitButtonsProps> = ({
     className,
-    count = 9,
+    count,
     selectedValue,
     valueSetting,
     onSetValue,

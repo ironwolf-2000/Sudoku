@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
-import { restartGame, setHintCell, setSelectedCell } from '@/features/gameGrid';
+import { restartGame, setHintCell } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused } from '@/features/gameControls';
 import { PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
@@ -60,14 +60,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         }
     };
 
-    const handleGamePausedToggle = () => {
-        if (!gamePaused) {
-            dispatch(setSelectedCell(undefined));
-        }
-
-        dispatch(toggleGamePaused());
-    };
-
     return (
         <>
             <div className={styles.SudokuGridHeader}>
@@ -92,7 +84,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         src={gamePaused ? play : pause}
                         size="s"
                         disabled={gameStatus === GameStatus.SUCCESS}
-                        onClick={handleGamePausedToggle}
+                        onClick={() => dispatch(toggleGamePaused())}
                     />
                 </div>
             </div>
