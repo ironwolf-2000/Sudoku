@@ -26,10 +26,15 @@
     background-color: var(--gray-lighter);
     display: grid;
     font-size: 1.5rem;
+    font-weight: bold;
     height: 3rem;
     justify-items: center;
     user-select: none;
     width: 3rem;
+
+    &:not(.checkMode):not(.hint):not(.clue) {
+        color: var(--blue-darker);
+    }
 
     &:nth-child(3n):not(:nth-child(9n)) {
         margin-right: 0.1rem;
@@ -52,19 +57,11 @@
     }
 
     &.selected:not(.checkMode) {
+        background-color: var(--blue);
+    }
+
+    &.clue.checkMode {
         background-color: var(--blue-dark);
-    }
-
-    &.clue {
-        font-weight: bold;
-
-        &.checkMode {
-            background-color: var(--blue-dark);
-        }
-    }
-
-    &.hint {
-        font-weight: bold;
     }
 
     &.error {
@@ -79,6 +76,10 @@
         &.checkMode {
             background-color: var(--green);
         }
+    }
+
+    &.bad:not(.checkMode):not(.hint):not(.clue) {
+        color: var(--red);
     }
 }
 

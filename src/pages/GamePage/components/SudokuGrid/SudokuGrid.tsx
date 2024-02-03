@@ -25,6 +25,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
 }) => {
     const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
     const cellsClassNames = useCellsClassNames(board, errorCells, checkMode, selectedCell, hintCell, selectedValue);
 

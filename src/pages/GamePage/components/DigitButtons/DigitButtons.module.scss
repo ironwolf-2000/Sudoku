@@ -24,7 +24,8 @@
         cursor: pointer;
 
         &.selected,
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: var(--blue-dark);
         }
     }

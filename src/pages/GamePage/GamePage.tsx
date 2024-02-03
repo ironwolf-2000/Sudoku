@@ -34,7 +34,7 @@ export const GamePage: React.FC = () => {
     const cluesCount = useMemo(() => {
         const total = boardSize ** 2;
 
-        return level >= 1 && level <= 5 ? total - level * 2 : total;
+        return level >= 1 && level <= 5 ? total - 2 ** level : total;
     }, [boardSize, level]);
 
     const emptyCells = useMemo(() => {

@@ -1,5 +1,5 @@
 import { SudokuType } from '@/app/const';
-import { Coordinate } from '@/app/types';
+import { Board, Coordinate } from '@/app/types';
 
 const getCoordinatesFromRow = (r: number): Coordinate[] => {
     const res: Coordinate[] = [];
@@ -67,4 +67,16 @@ export const getSelectedCoordinates = (sudokuType: SudokuType, cell?: Coordinate
     }
 
     return res;
+};
+
+export const isBadCell = (sudokuType: SudokuType, board: Board, r0: number, c0: number) => {
+    const coordinates = getSelectedCoordinates(sudokuType, [r0, c0]);
+
+    for (const [r, c] of coordinates) {
+        if ((r !== r0 || c !== c0) && board[r][c].val === board[r0][c0].val) {
+            return true;
+        }
+    }
+
+    return false;
 };

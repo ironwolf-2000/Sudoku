@@ -4,6 +4,6 @@ export enum GameStatus {
     PENDING,
 }
 
-export const CHECK_MODE_TIMEOUT = 3000;
+export const CHECK_MODE_TIMEOUT = 2000;
 
 export const LAPTOP_BREAKPOINT = 1024;

@@ -4,7 +4,7 @@ import { RootState } from '@/app';
 import { Board, Coordinate } from '@/app/types';
 import { GameStatus } from '../../const';
 import styles from './SudokuGrid.module.scss';
-import { getSelectedCoordinates } from './helpers';
+import { getSelectedCoordinates, isBadCell } from './helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
     const classNames = [styles.Content, customClassName];
@@ -48,8 +48,9 @@ export const useCellsClassNames = (
             const selected =
                 (selectedCell && i === selectedCell[0] && j === selectedCell[1]) || value === selectedValue;
             const affected = getSelectedCoordinates(sudokuType, selectedCell).some(([r, c]) => r === i && c === j);
+            const bad = isBadCell(sudokuType, board, i, j);
 
-            Object.entries({ checkMode, hint, clue, error, correct, selected, affected }).forEach(([key, val]) => {
+            Object.entries({ checkMode, hint, clue, error, correct, selected, affected, bad }).forEach(([key, val]) => {
                 if (val) {
                     classNames[i][j].push(styles[key]);
                 }
