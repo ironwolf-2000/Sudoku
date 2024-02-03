@@ -10,7 +10,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+
+    &.show {
+        animation: fade-in var(--transition-time) ease-out forwards;
+    }
+
+    &.hide {
+        animation: fade-out var(--transition-time) ease-in-out forwards;
+    }
 
     &.hidden {
         visibility: hidden;
@@ -18,42 +25,100 @@
 }
 
 .Content {
-    max-width: 80vw;
-    padding: 1.5rem;
-    border-radius: 2rem;
-    background-color: var(--blue-light);
+    max-width: calc(min(100vw, 720px) - 6rem);
     z-index: 3;
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: var(--blue-lighter);
+
+    &.show {
+        animation: slide-up var(--transition-time) ease-out forwards;
+    }
+
+    &.hide {
+        animation: slide-down var(--transition-time) ease-in-out forwards;
+    }
 }
 
 .Title {
     text-transform: uppercase;
+    text-align: center;
     font-weight: bold;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--black);
 }
 
 .Body {
     font-size: 1.25rem;
+    margin-bottom: 3rem;
+    color: var(--black);
 }
 
 .Footer {
     display: flex;
     justify-content: flex-end;
     column-gap: 0.5rem;
-    margin-top: 1.5rem;
 }
 
 .Button {
     border: none;
     outline: none;
     padding: 0.5rem 1rem;
+    border: 0.125rem solid var(--black);
     border-radius: 1rem;
-    background-color: var(--blue-dark);
-    color: var(--white);
     cursor: pointer;
-    transition: background-color var(--transition-time);
+    text-transform: uppercase;
+    font-weight: bold;
+    transition:
+        background-color var(--transition-time),
+        color var(--transition-time);
+    background-color: transparent;
+    color: var(--black);
 
-    &:hover {
-        background-color: var(--blue-darker);
+    &:hover,
+    &:focus {
+        background-color: var(--black);
+        color: var(--white);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        background-color: transparent;
+    }
+    to {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+@keyframes fade-out {
+    from {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    to {
+        background-color: transparent;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(1rem);
+        opacity: 0;
     }
 }

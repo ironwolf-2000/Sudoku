@@ -1,8 +1,8 @@
 export interface IModalProps {
     children?: React.ReactNode;
-    title?: string;
     visible?: boolean;
-    onApply?: () => void;
+    title: string;
+    onApply: () => void;
     onClose: () => void;
-    applyButtonLabel?: string;
+    applyButtonLabel: string;
 }

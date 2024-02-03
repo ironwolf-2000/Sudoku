@@ -14,6 +14,7 @@ import styles from './SudokuGridHeader.module.scss';
 import { RootState } from '@/app';
 import { GameStatus } from '../../const';
 import { ISudokuGridHeaderProps } from './types';
+import { ModalType } from './const';
 
 export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus }) => {
     const navigate = useNavigate();
@@ -21,8 +22,11 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
     const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.gameSettings);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
 
-    const [quitModalVisible, setQuitModalVisible] = useState(false);
-    const [restartModalVisible, setRestartModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState<Record<ModalType, boolean>>({
+        [ModalType.QUIT]: false,
+        [ModalType.RESTART]: false,
+    });
+
     const [gameTime, setGameTime] = useState(0);
     const gameTimeTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
@@ -41,25 +45,49 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         return `${minutes}:${String(seconds).padStart(2, '0')}`;
     }, [gameTime]);
 
-    const handleModalApply = (quit: boolean) => {
-        dispatch(restartGame());
-        dispatch(setHintCell(undefined));
-        dispatch(setSelectedValue(undefined));
-        dispatch(setCheckCount(initialCheckCount));
-        dispatch(setHintCount(initialHintCount));
+    const handleModalOpen = (modalType: ModalType) => {
+        setModalVisible(prev => ({ ...prev, [modalType]: true }));
 
+        if (!gamePaused) {
+            dispatch(toggleGamePaused());
+        }
+    };
+
+    const handleModalClose = (modalType: ModalType, apply: boolean) => {
         if (gamePaused) {
             dispatch(toggleGamePaused());
         }
 
-        if (quit) {
-            setQuitModalVisible(false);
-            navigate(PATHS.MAIN);
-        } else {
-            setRestartModalVisible(false);
+        setModalVisible(prev => ({ ...prev, [modalType]: false }));
+
+        if (apply) {
+            dispatch(restartGame());
+            dispatch(setHintCell(undefined));
+            dispatch(setSelectedValue(undefined));
+            dispatch(setCheckCount(initialCheckCount));
+            dispatch(setHintCount(initialHintCount));
             setGameTime(0);
+
+            if (modalType === ModalType.QUIT) {
+                navigate(PATHS.MAIN);
+            }
         }
     };
+
+    const modalData = [
+        {
+            modalType: ModalType.QUIT,
+            applyLabel: 'Quit',
+            title: 'Quit the game?',
+            text: 'You will lose the progress in the current game.',
+        },
+        {
+            modalType: ModalType.RESTART,
+            applyLabel: 'Restart',
+            title: 'Restart the game?',
+            text: 'You will start the same sudoku board from the beginning.',
+        },
+    ] as const;
 
     return (
         <>
@@ -68,14 +96,14 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                     <Icon
                         className={styles.IconButton}
                         src={home}
-                        onClick={() => setQuitModalVisible(true)}
-                        title="Go to main page"
+                        onClick={() => handleModalOpen(ModalType.QUIT)}
+                        title="Quit the game"
                     />
                     <Icon
                         className={styles.IconButton}
                         src={restart}
-                        onClick={() => setRestartModalVisible(true)}
-                        title="Restart game"
+                        onClick={() => handleModalOpen(ModalType.RESTART)}
+                        title="Restart the game"
                     />
                 </div>
                 <Stars className={styles.Stars} />
@@ -89,22 +117,18 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                     />
                 </div>
             </div>
-            <Modal
-                visible={quitModalVisible}
-                applyButtonLabel="Leave"
-                onApply={() => handleModalApply(true)}
-                onClose={() => setQuitModalVisible(false)}
-            >
-                Are you sure you want to quit the game?
-            </Modal>
-            <Modal
-                visible={restartModalVisible}
-                applyButtonLabel="Restart"
-                onApply={() => handleModalApply(false)}
-                onClose={() => setRestartModalVisible(false)}
-            >
-                Are you sure you want to restart the game?
-            </Modal>
+            {modalData.map(({ modalType, applyLabel, title, text }) => (
+                <Modal
+                    key={modalType}
+                    visible={modalVisible[modalType]}
+                    title={title}
+                    applyButtonLabel={applyLabel}
+                    onApply={() => handleModalClose(modalType, true)}
+                    onClose={() => handleModalClose(modalType, false)}
+                >
+                    {text}
+                </Modal>
+            ))}
         </>
     );
 };
