@@ -71,8 +71,12 @@ export const gameGridSlice = createSlice({
             const val = action.payload;
             const [r, c] = state.selectedCell;
 
-            if (!state.board[r][c].notes.includes(val)) {
+            const itemIndex = state.board[r][c].notes.indexOf(val);
+
+            if (itemIndex === -1) {
                 state.board[r][c].notes.push(val);
+            } else {
+                state.board[r][c].notes.splice(itemIndex, 1);
             }
         },
     },
