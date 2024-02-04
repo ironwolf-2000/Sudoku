@@ -1,6 +1,9 @@
+import { GameStatus } from '../../const';
+
 export interface IDigitButtonsProps {
     /** The optional CSS class name for styling */
     className?: string;
+    gameStatus: GameStatus;
     /** The number of different values */
     count: number;
     /** Indicates if the button is setting the value */

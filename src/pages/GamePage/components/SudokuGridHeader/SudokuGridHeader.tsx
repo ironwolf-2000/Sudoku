@@ -14,7 +14,7 @@ import styles from './SudokuGridHeader.module.scss';
 import { RootState } from '@/app';
 import { GameStatus } from '../../const';
 import { ISudokuGridHeaderProps } from './types';
-import { GAME_TIMEOUT, MODAL_DATA, ModalType } from './const';
+import { GAME_COMPLETED_MODAL_DELAY, GAME_TIMEOUT, MODAL_DATA, ModalType } from './const';
 import { getFormattedTime } from './helpers';
 
 export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus }) => {
@@ -27,6 +27,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         [ModalType.QUIT]: false,
         [ModalType.RESTART]: false,
         [ModalType.TIME_OVER]: false,
+        [ModalType.GAME_COMPLETED]: false,
     });
 
     const [gameTime, setGameTime] = useState(0);
@@ -58,7 +59,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
             dispatch(setHintCount(initialHintCount));
             setGameTime(0);
 
-            if (modalType === ModalType.QUIT) {
+            if (modalType === ModalType.QUIT || modalType === ModalType.GAME_COMPLETED) {
                 navigate(PATHS.MAIN);
             }
         }
@@ -75,6 +76,12 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
 
         return () => clearTimeout(gameTimeTimeoutRef.current);
     }, [gameTime, gamePaused, gameStatus, handleModalOpen]);
+
+    useEffect(() => {
+        if (gameStatus === GameStatus.SUCCESS) {
+            setTimeout(() => handleModalOpen(ModalType.GAME_COMPLETED), GAME_COMPLETED_MODAL_DELAY);
+        }
+    }, [gameStatus, handleModalOpen]);
 
     const formattedGameTime = useMemo(() => {
         return getFormattedTime(gameTime);
@@ -105,22 +112,22 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                 <div className={styles.Time}>
                     <span>{formattedGameTime}</span>
                     <Icon
-                        src={gamePaused ? play : pause}
-                        label="pause"
+                        src={gamePaused || gameStatus === GameStatus.SUCCESS ? play : pause}
+                        label={gamePaused || gameStatus === GameStatus.SUCCESS ? 'play' : 'pause'}
                         size="s"
                         disabled={gameStatus === GameStatus.SUCCESS}
                         onClick={() => dispatch(toggleGamePaused())}
                     />
                 </div>
             </div>
-            {MODAL_DATA.map(({ modalType, title, applyButtonLabel, text }) => (
+            {MODAL_DATA.map(({ modalType, title, applyButtonLabel, text, withCloseButton }) => (
                 <Modal
                     key={modalType}
                     visible={modalVisible[modalType]}
                     title={title}
                     applyButtonLabel={applyButtonLabel}
                     onApply={() => handleModalClose(modalType, true)}
-                    onClose={modalType != ModalType.TIME_OVER ? () => handleModalClose(modalType, false) : undefined}
+                    onClose={withCloseButton ? () => handleModalClose(modalType, false) : undefined}
                 >
                     {text}
                 </Modal>

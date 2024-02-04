@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
@@ -13,6 +14,8 @@ import check from '@/assets/icons/check.svg';
 import pencil from '@/assets/icons/pencil.svg';
 import { updateSelectedCellNotes, updateSelectedCellValue } from '@/features/gameGrid';
 import { toggleWithNotes } from '@/features/gameControls';
+import { useLayoutType } from '@/app/hooks';
+import { LayoutType } from '@/app/const';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
@@ -23,6 +26,8 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     selectedValue,
 }) => {
     const dispatch = useDispatch();
+    const layoutType = useLayoutType();
+
     const { initialWithNotes, boardSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
 
@@ -56,11 +61,25 @@ export const GameControls: React.FC<IGameControlsProps> = ({
         },
     ];
 
+    const [hoveredIcon, setHoveredIcon] = useState('');
+
     const handleSetValue = (val: number) => {
         if (!withNotes) {
             dispatch(updateSelectedCellValue(val));
         } else {
             dispatch(updateSelectedCellNotes(val));
+        }
+    };
+
+    const handleIconHover = (label: string) => {
+        if (layoutType === LayoutType.DESKTOP) {
+            setHoveredIcon(label);
+        }
+    };
+
+    const handleIconHoverEnd = () => {
+        if (layoutType === LayoutType.DESKTOP) {
+            setHoveredIcon('');
         }
     };
 
@@ -73,6 +92,9 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                         className={classnames(styles.ActionButton, gamePaused && styles.disabled)}
                         label={label}
                         withCaption
+                        captionVisible={layoutType === LayoutType.MOBILE || hoveredIcon === label}
+                        onHover={() => handleIconHover(label)}
+                        onHoverEnd={handleIconHoverEnd}
                         {...props}
                     />
                 ))}
@@ -80,6 +102,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             <DigitButtons
                 className={styles.DigitButtons}
                 count={boardSize}
+                gameStatus={gameStatus}
                 valueSetting={Boolean(selectedCell)}
                 selectedValue={selectedValue}
                 onSetValue={handleSetValue}

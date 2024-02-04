@@ -68,7 +68,7 @@ export const GamePage: React.FC = () => {
     }, [board, solution]);
 
     const gameStatus = useMemo(() => {
-        if (emptyCells.length > 0) {
+        if (board.length === 0 || emptyCells.length > 0) {
             return GameStatus.PENDING;
         }
 

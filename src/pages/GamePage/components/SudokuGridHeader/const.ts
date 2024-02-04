@@ -2,27 +2,40 @@ export enum ModalType {
     QUIT = 'QUIT',
     RESTART = 'RESTART',
     TIME_OVER = 'TIME_OVER',
+    GAME_COMPLETED = 'GAME_COMPLETED',
 }
 
 export const MODAL_DATA = [
     {
         modalType: ModalType.QUIT,
-        applyButtonLabel: 'Quit',
         title: 'Quit the game?',
-        text: 'You will lose the progress in the current game.',
+        text: 'This action will result in the loss of your current game progress.',
+        applyButtonLabel: 'Quit',
+        withCloseButton: true,
     },
     {
         modalType: ModalType.RESTART,
-        applyButtonLabel: 'Restart',
         title: 'Restart the game?',
-        text: 'You will start the same sudoku board from the beginning.',
+        text: 'Restarting will set you back to the beginning of the same Sudoku board.',
+        applyButtonLabel: 'Restart',
+        withCloseButton: true,
     },
     {
         modalType: ModalType.TIME_OVER,
-        applyButtonLabel: 'Understood',
-        title: 'Time is over',
+        title: 'Time is over!',
         text: 'Uh-oh! The clock has run out on this Sudoku challenge. The game will now be restarted.',
+        applyButtonLabel: 'Understood',
+        withCloseButton: false,
+    },
+    {
+        modalType: ModalType.GAME_COMPLETED,
+        title: 'Game completed!',
+        text: 'Congratulations! You successfully completed the Sudoku challenge.',
+        applyButtonLabel: 'Home page',
+        withCloseButton: false,
     },
 ] as const;
 
 export const GAME_TIMEOUT = 7200;
+
+export const GAME_COMPLETED_MODAL_DELAY = 1000;

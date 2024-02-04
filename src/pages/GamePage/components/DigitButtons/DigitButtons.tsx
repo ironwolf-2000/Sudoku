@@ -5,22 +5,21 @@ import { RootState } from '@/app';
 import { IDigitButtonsProps } from './types';
 import styles from './DigitButtons.module.scss';
 import { getInclusiveRange } from '@/algorithms/helpers';
+import { GameStatus } from '../../const';
 
 export const DigitButtons: React.FC<IDigitButtonsProps> = ({
     className,
     count,
+    gameStatus,
     selectedValue,
     valueSetting,
     onSetValue,
     onSelectValue,
 }) => {
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const disabled = gamePaused || gameStatus === GameStatus.SUCCESS;
 
     const handleClick = (val: number) => {
-        if (gamePaused) {
-            return;
-        }
-
         if (valueSetting) {
             onSetValue(val);
         } else {
@@ -36,8 +35,9 @@ export const DigitButtons: React.FC<IDigitButtonsProps> = ({
                     className={classnames(
                         styles.Button,
                         selectedValue === val && styles.selected,
-                        gamePaused && styles.disabled
+                        disabled && styles.disabled
                     )}
+                    disabled={disabled}
                     onClick={() => handleClick(val)}
                 >
                     {val}

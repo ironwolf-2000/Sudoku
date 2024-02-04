@@ -1,19 +1,9 @@
-.MainPage {
-    margin: 3rem auto;
-}
-
-.PageTitle {
+.Title {
     text-align: center;
     text-transform: uppercase;
     white-space: nowrap;
-
-    font-size: 2.5rem;
-    margin-bottom: 2.5rem;
-
-    @media screen and (min-width: 1024px) {
-        font-size: 3rem;
-        margin-bottom: 3rem;
-    }
+    font-size: 3rem;
+    margin-bottom: 3rem;
 }
 
 .Body {
@@ -26,10 +16,6 @@
     align-items: center;
     column-gap: 1rem;
     margin-bottom: 2rem;
-}
-
-.ExtrasSection {
-    margin-bottom: 0.75rem;
 }
 
 .SectionTitle {

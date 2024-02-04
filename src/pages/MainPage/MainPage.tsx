@@ -52,21 +52,17 @@ export const MainPage: React.FC = () => {
     return (
         <Card className={styles.MainPage}>
             <div>
-                <header>
-                    <h1 className={styles.PageTitle}>Sudoku Game</h1>
-                </header>
+                <h1 className={styles.Title}>Sudoku Game</h1>
                 <main className={styles.Body}>
                     <section className={styles.Section}>
                         <h2 className={styles.SectionTitle}>Difficulty:</h2>
-                        <div>
-                            <Stars interactive />
-                        </div>
+                        <Stars interactive />
                     </section>
-                    <section className={classnames(styles.Section, styles.ExtrasSection)}>
+                    <section className={styles.Section}>
                         <h2 className={styles.SectionTitle}>Extras:</h2>
                         <div className={styles.ExtrasContent}>
                             {extrasIcons.map(props => (
-                                <Icon key={props.label} title="Tap to change" withCaption {...props} />
+                                <Icon key={props.label} title="Tap to change" withCaption captionVisible {...props} />
                             ))}
                         </div>
                     </section>
