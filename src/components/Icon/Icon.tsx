@@ -44,7 +44,7 @@ export const Icon: React.FC<IIconProps> = ({
 
     return (
         <button
-            className={classnames(styles.Icon, disabled && styles.disabled, className)}
+            className={classnames(styles.Icon, disabled && styles.disabled, styles[`size_${size}`], className)}
             onMouseOver={handleMouseOver}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
@@ -52,8 +52,8 @@ export const Icon: React.FC<IIconProps> = ({
             title={title}
         >
             <div className={styles.Content}>
-                {badge && <span className={classnames(styles.Badge, styles[`size_${size}`])}>{badge}</span>}
-                <img className={classnames(styles.Image, styles[`size_${size}`])} src={src} alt={label} />
+                {badge && <span className={classnames(styles.Badge)}>{badge}</span>}
+                <img className={classnames(styles.Image)} src={src} alt={label} />
             </div>
             {withCaption && (
                 <span className={classnames(styles.Caption, !captionVisible && styles.hidden)}>{label}</span>

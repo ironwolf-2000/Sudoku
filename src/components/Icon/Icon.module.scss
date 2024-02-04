@@ -17,6 +17,36 @@
         opacity: 0.5;
         pointer-events: none;
     }
+
+    &.size_s {
+        .Image {
+            height: 1.5rem;
+        }
+
+        .Caption {
+            font-size: 0.75rem;
+        }
+    }
+
+    &.size_m {
+        .Image {
+            height: 2rem;
+        }
+
+        .Caption {
+            font-size: 1rem;
+        }
+    }
+
+    &.size_l {
+        .Image {
+            height: 3rem;
+        }
+
+        .Caption {
+            font-size: 1.25rem;
+        }
+    }
 }
 
 .Content {
@@ -42,18 +72,6 @@
 .Image {
     width: auto;
     pointer-events: none;
-
-    &.size_s {
-        height: 1.5rem;
-    }
-
-    &.size_m {
-        height: 2rem;
-    }
-
-    &.size_l {
-        height: 3rem;
-    }
 }
 
 .Caption {

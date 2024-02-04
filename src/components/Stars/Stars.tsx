@@ -11,7 +11,7 @@ import { Icon } from '..';
 import { IStarsProps } from './types';
 import styles from './Stars.module.scss';
 
-export const Stars: React.FC<IStarsProps> = ({ className, interactive }) => {
+export const Stars: React.FC<IStarsProps> = ({ className, interactive, size = 'm' }) => {
     const { level } = useSelector((state: RootState) => state.gameSettings);
     const dispatch = useDispatch();
 
@@ -37,6 +37,7 @@ export const Stars: React.FC<IStarsProps> = ({ className, interactive }) => {
                         <Icon
                             key={i}
                             src={filled ? starFilled : starEmpty}
+                            size={size}
                             label={filled ? 'filled star' : 'empty star'}
                             {...extraProps}
                         />

@@ -29,10 +29,12 @@ export const Modal: React.FC<IModalProps> = ({ children, title, visible, applyBu
             <div className={classnames(styles.Content, animationClassName)}>
                 <header className={styles.Title}>{title}</header>
                 <div className={styles.Body}>{children}</div>
-                <footer className={styles.Footer}>
-                    <button className={styles.Button} onClick={() => onModalClose(onClose)}>
-                        Cancel
-                    </button>
+                <footer className={classnames(styles.Footer, !onClose && styles.withOneElement)}>
+                    {onClose && (
+                        <button className={styles.Button} onClick={() => onModalClose(onClose)}>
+                            Cancel
+                        </button>
+                    )}
                     <button className={styles.Button} onClick={() => onModalClose(onApply)}>
                         {applyButtonLabel}
                     </button>

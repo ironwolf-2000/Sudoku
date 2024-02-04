@@ -57,8 +57,12 @@
 
 .Footer {
     display: flex;
-    justify-content: flex-end;
     column-gap: 0.5rem;
+    justify-content: flex-end;
+
+    &.withOneElement {
+        justify-content: center;
+    }
 }
 
 .Button {
