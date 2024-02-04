@@ -19,7 +19,7 @@ import { createNewGame } from '@/algorithms';
 import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
 import { LayoutType } from '@/app/const';
-import { useLayoutType } from '@/app/hooks';
+import { useLayoutType, useOutsideClick } from '@/app/hooks';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
@@ -148,6 +148,14 @@ export const GamePage: React.FC = () => {
         }
     };
 
+    const handleOutsideClick = () => {
+        dispatch(setHintCell(undefined));
+        dispatch(setSelectedCell(undefined));
+        dispatch(setSelectedValue(undefined));
+    };
+
+    const contentRef = useOutsideClick<HTMLDivElement>(handleOutsideClick);
+
     const gameControlsProps = {
         gameStatus,
         selectedCell,
@@ -159,7 +167,7 @@ export const GamePage: React.FC = () => {
 
     return (
         <Card className={styles.GamePage}>
-            <div className={styles.Content}>
+            <div className={styles.Content} ref={contentRef}>
                 <div>
                     <SudokuGridHeader gameStatus={gameStatus} />
                     <SudokuGrid gameStatus={gameStatus} errorCells={errorCells} onSelectCell={handleSelectCell} />

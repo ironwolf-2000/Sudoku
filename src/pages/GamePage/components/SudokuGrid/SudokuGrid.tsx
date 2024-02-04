@@ -17,10 +17,8 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
     const cellsClassNames = useCellsClassNames(gameStatus, errorCells, hintCell, checkMode);
 
-    const success = gameStatus === GameStatus.SUCCESS;
-
     const handleCellClick = (cell: Coordinate) => {
-        if (!success && !checkMode && !board[cell[0]][cell[1]].clue) {
+        if (gameStatus !== GameStatus.SUCCESS && !checkMode && !board[cell[0]][cell[1]].clue) {
             onSelectCell(cell);
         }
     };
