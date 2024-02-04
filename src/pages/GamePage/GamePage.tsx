@@ -36,7 +36,15 @@ export const GamePage: React.FC = () => {
     const cluesCount = useMemo(() => {
         const total = boardSize ** 2;
 
-        return level >= 1 && level <= 5 ? total - 2 ** level : total;
+        if (level >= 1 && level <= 3) {
+            return total - 3 ** level;
+        }
+
+        if (level >= 4 && level <= 5) {
+            return total - level * 10;
+        }
+
+        return total;
     }, [boardSize, level]);
 
     const emptyCells = useMemo(() => {
@@ -154,17 +162,7 @@ export const GamePage: React.FC = () => {
             <div className={styles.Content}>
                 <div>
                     <SudokuGridHeader gameStatus={gameStatus} />
-                    <SudokuGrid
-                        board={board}
-                        selectedValue={selectedValue}
-                        selectedCell={gameStatus !== GameStatus.SUCCESS ? selectedCell : undefined}
-                        hintCell={hintCell}
-                        onSelectCell={handleSelectCell}
-                        solution={solution}
-                        errorCells={errorCells}
-                        gameStatus={gameStatus}
-                        checkMode={checkMode}
-                    />
+                    <SudokuGrid gameStatus={gameStatus} errorCells={errorCells} onSelectCell={handleSelectCell} />
                     {layoutType === LayoutType.MOBILE && <GameControls {...gameControlsProps} />}
                 </div>
                 {layoutType === LayoutType.DESKTOP && <GameControls {...gameControlsProps} />}

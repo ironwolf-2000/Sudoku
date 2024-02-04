@@ -47,6 +47,7 @@ export const MainPage: React.FC = () => {
     const sudokuTypes = [
         { type: SudokuType.CLASSIC, label: 'Classic' },
         { type: SudokuType.DIAGONALS, label: 'Diagonals' },
+        { type: SudokuType.EVEN_ODD, label: 'Even-Odd' },
     ] as const;
 
     return (

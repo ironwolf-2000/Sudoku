@@ -1,6 +1,7 @@
 export enum SudokuType {
     CLASSIC = 'CLASSIC',
     DIAGONALS = 'DIAGONALS',
+    EVEN_ODD = 'EVEN_ODD',
 }
 
 export const LAPTOP_BREAKPOINT = 1024;

@@ -38,4 +38,4 @@ export const MODAL_DATA = [
 
 export const GAME_TIMEOUT = 7200;
 
-export const GAME_COMPLETED_MODAL_DELAY = 1000;
+export const GAME_COMPLETED_MODAL_DELAY = 1500;

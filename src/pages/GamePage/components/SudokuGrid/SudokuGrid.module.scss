@@ -32,10 +32,6 @@
     user-select: none;
     width: 3rem;
 
-    &:not(.checkMode):not(.hint):not(.clue) {
-        color: var(--blue-darker);
-    }
-
     &:nth-child(3n):not(:nth-child(9n)) {
         margin-right: 0.1rem;
     }
@@ -50,6 +46,14 @@
     &:nth-child(27n + 35),
     &:nth-child(27n + 36) {
         margin-top: 0.1rem;
+    }
+
+    &.shaded {
+        background-color: var(--gray);
+    }
+
+    &:not(.checkMode):not(.hint):not(.clue) {
+        color: var(--blue-darker);
     }
 
     &.affected:not(.checkMode) {
@@ -87,27 +91,4 @@
         font-size: 0.5rem;
         padding: 0.25rem;
     }
-}
-
-%Diagonal {
-    width: 141%;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    position: absolute;
-    left: 0.1rem;
-    pointer-events: none;
-}
-
-.MainDiagonal {
-    @extend %Diagonal;
-    transform: rotate(45deg);
-    transform-origin: top left;
-    top: 0;
-}
-
-.AntiDiagonal {
-    @extend %Diagonal;
-    transform: rotate(-45deg);
-    transform-origin: bottom left;
-    bottom: 0;
 }

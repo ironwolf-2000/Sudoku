@@ -9,25 +9,13 @@ import { GameStatus } from '../../const';
 import { RootState } from '@/app';
 import { PauseOverlay } from '..';
 import styles from './SudokuGrid.module.scss';
-import { SudokuType } from '@/app/const';
 
-export const SudokuGrid: React.FC<ISudokuGridProps> = ({
-    className,
-    selectedValue,
-    selectedCell,
-    hintCell,
-    onSelectCell,
-    gameStatus,
-    board,
-    solution,
-    errorCells,
-    checkMode,
-}) => {
-    const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
+export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, errorCells, onSelectCell }) => {
+    const { board, solution, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
 
     const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
-    const cellsClassNames = useCellsClassNames(board, errorCells, checkMode, selectedCell, hintCell, selectedValue);
+    const cellsClassNames = useCellsClassNames(gameStatus, errorCells, hintCell, checkMode);
 
     const success = gameStatus === GameStatus.SUCCESS;
 
@@ -55,12 +43,6 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
     return (
         <div className={styles.SudokuGrid}>
             {gamePaused && <PauseOverlay />}
-            {sudokuType === SudokuType.DIAGONALS && (
-                <>
-                    <div className={styles.MainDiagonal}></div>
-                    <div className={styles.AntiDiagonal}></div>
-                </>
-            )}
             <div className={classnames(gridClassNames)}>
                 {board.map((row, r) => (
                     <React.Fragment key={r}>{row.map((_, c) => renderCell(r, c))}</React.Fragment>
