@@ -6,6 +6,7 @@ interface GameSettingsState {
     level: number;
     initialCheckCount: number;
     initialHintCount: number;
+    initialWithNotes: boolean;
     sudokuType: SudokuType;
     boardSize: number;
 }
@@ -14,6 +15,7 @@ const initialState: GameSettingsState = {
     level: 1,
     initialCheckCount: 1,
     initialHintCount: 3,
+    initialWithNotes: false,
     sudokuType: SudokuType.CLASSIC,
     boardSize: 9,
 };
@@ -34,6 +36,9 @@ export const gameSettingsSlice = createSlice({
         incrementInitialHintCount: state => {
             state.initialHintCount = (state.initialHintCount + 1) % (MAX_HINT_COUNT + 1);
         },
+        toggleInitialWithNotes: state => {
+            state.initialWithNotes = !state.initialWithNotes;
+        },
         setSudokuType: (state, action: PayloadAction<SudokuType>) => {
             state.sudokuType = action.payload;
         },
@@ -43,7 +48,13 @@ export const gameSettingsSlice = createSlice({
     },
 });
 
-export const { setLevel, incrementInitialCheckCount, incrementInitialHintCount, setSudokuType, setBoardSize } =
-    gameSettingsSlice.actions;
+export const {
+    setLevel,
+    incrementInitialCheckCount,
+    incrementInitialHintCount,
+    toggleInitialWithNotes,
+    setSudokuType,
+    setBoardSize,
+} = gameSettingsSlice.actions;
 
 export default gameSettingsSlice.reducer;

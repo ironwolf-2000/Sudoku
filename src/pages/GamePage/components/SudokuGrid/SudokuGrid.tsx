@@ -37,6 +37,21 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
         }
     };
 
+    const renderCell = (r: number, c: number) => {
+        const cellValue = board[r][c].val || (hintCell?.[0] === r && hintCell?.[1] === c ? solution[r][c].val : 0);
+        const cellNotes = board[r][c].notes.length ? board[r][c].notes : null;
+
+        return (
+            <div
+                key={r * board.length + c}
+                className={classnames(cellsClassNames[r][c])}
+                onClick={() => handleCellClick([r, c])}
+            >
+                {cellValue || cellNotes?.map(el => <div key={el}>{el}</div>)}
+            </div>
+        );
+    };
+
     return (
         <div className={styles.SudokuGrid}>
             {gamePaused && <PauseOverlay />}
@@ -47,18 +62,8 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
                 </>
             )}
             <div className={classnames(gridClassNames)}>
-                {board.map((row, i) => (
-                    <React.Fragment key={i}>
-                        {row.map(({ val }, j) => (
-                            <div
-                                key={i * row.length + j}
-                                className={classnames(cellsClassNames[i][j])}
-                                onClick={() => handleCellClick([i, j])}
-                            >
-                                {val || (hintCell?.[0] === i && hintCell?.[1] === j && solution[i][j].val)}
-                            </div>
-                        ))}
-                    </React.Fragment>
+                {board.map((row, r) => (
+                    <React.Fragment key={r}>{row.map((_, c) => renderCell(r, c))}</React.Fragment>
                 ))}
             </div>
         </div>

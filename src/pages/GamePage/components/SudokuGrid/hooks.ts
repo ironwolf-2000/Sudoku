@@ -49,12 +49,15 @@ export const useCellsClassNames = (
                 (selectedCell && i === selectedCell[0] && j === selectedCell[1]) || value === selectedValue;
             const affected = getSelectedCoordinates(sudokuType, selectedCell).some(([r, c]) => r === i && c === j);
             const bad = isBadCell(sudokuType, board, i, j);
+            const withNotes = board[i][j].val === 0 && (!hintCell || hintCell[0] !== i || hintCell[1] !== j);
 
-            Object.entries({ checkMode, hint, clue, error, correct, selected, affected, bad }).forEach(([key, val]) => {
-                if (val) {
-                    classNames[i][j].push(styles[key]);
+            Object.entries({ checkMode, hint, clue, error, correct, selected, affected, bad, withNotes }).forEach(
+                ([key, val]) => {
+                    if (val) {
+                        classNames[i][j].push(styles[key]);
+                    }
                 }
-            });
+            );
 
             if (hint) {
                 classNames[i][j].push(error ? styles.error : styles.correct);

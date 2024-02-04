@@ -1,7 +1,7 @@
 import { Board, Coordinate, RawBoard } from '@/app/types';
 
 export const convertToBoard = (rawBoard: RawBoard): Board => {
-    return rawBoard.map(row => row.map(val => ({ clue: val !== 0, val })));
+    return rawBoard.map(row => row.map(val => ({ val, notes: [], clue: val !== 0 })));
 };
 
 export const getInclusiveRange = (lo: number, hi: number): number[] => {

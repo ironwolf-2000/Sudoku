@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@/app';
@@ -6,7 +6,7 @@ import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
-import { GameStatus, CHECK_MODE_TIMEOUT, LAPTOP_BREAKPOINT } from './const';
+import { GameStatus, CHECK_MODE_TIMEOUT } from './const';
 import {
     setBoard,
     setCheckMode,
@@ -16,13 +16,15 @@ import {
     setSolution,
 } from '@/features/gameGrid';
 import { createNewGame } from '@/algorithms';
-import { useWindowSize } from './hooks';
 import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
+import { LayoutType } from '@/app/const';
+import { useLayoutType } from '@/app/hooks';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
-    const { width: windowWidth } = useWindowSize();
+    const layoutType = useLayoutType();
+
     const { level, initialCheckCount, initialHintCount, sudokuType, boardSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
@@ -81,15 +83,18 @@ export const GamePage: React.FC = () => {
         return GameStatus.SUCCESS;
     }, [board, emptyCells.length, solution]);
 
-    useEffect(() => {
+    const startNewGame = useCallback(() => {
         const [board, solution] = createNewGame(sudokuType, cluesCount);
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
-        dispatch(setCheckMode(false));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
     }, [cluesCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
+
+    useEffect(() => {
+        startNewGame();
+    }, [startNewGame]);
 
     const handleSelectCell = (cell: Coordinate) => {
         dispatch(setHintCell(undefined));
@@ -135,6 +140,15 @@ export const GamePage: React.FC = () => {
         }
     };
 
+    const gameControlsProps = {
+        gameStatus,
+        selectedCell,
+        selectedValue,
+        onSelectValue: handleSelectValue,
+        onTriggerCheckMode: triggerCheckMode,
+        onShowHint: showHint,
+    };
+
     return (
         <Card className={styles.GamePage}>
             <div className={styles.Content}>
@@ -151,27 +165,9 @@ export const GamePage: React.FC = () => {
                         gameStatus={gameStatus}
                         checkMode={checkMode}
                     />
-                    {windowWidth < LAPTOP_BREAKPOINT && (
-                        <GameControls
-                            gameStatus={gameStatus}
-                            onSelectValue={handleSelectValue}
-                            onShowHint={showHint}
-                            onTriggerCheckMode={triggerCheckMode}
-                            selectedCell={selectedCell}
-                            selectedValue={selectedValue}
-                        />
-                    )}
+                    {layoutType === LayoutType.MOBILE && <GameControls {...gameControlsProps} />}
                 </div>
-                {windowWidth >= LAPTOP_BREAKPOINT && (
-                    <GameControls
-                        gameStatus={gameStatus}
-                        onSelectValue={handleSelectValue}
-                        onShowHint={showHint}
-                        onTriggerCheckMode={triggerCheckMode}
-                        selectedCell={selectedCell}
-                        selectedValue={selectedValue}
-                    />
-                )}
+                {layoutType === LayoutType.DESKTOP && <GameControls {...gameControlsProps} />}
             </div>
         </Card>
     );

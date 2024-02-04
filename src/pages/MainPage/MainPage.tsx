@@ -5,19 +5,48 @@ import classnames from 'classnames';
 import { PATHS, SudokuType } from '@/app/const';
 import styles from './MainPage.module.scss';
 import { Card, Icon, Stars } from '@/components';
-import doubleCheck from '@/assets/icons/double_check.svg';
+import check from '@/assets/icons/check.svg';
 import hint from '@/assets/icons/hint.svg';
+import pencil from '@/assets/icons/pencil.svg';
 import { RootState } from '@/app';
-import { incrementInitialCheckCount, incrementInitialHintCount, setSudokuType } from '@/features/gameSettings';
+import {
+    incrementInitialCheckCount,
+    incrementInitialHintCount,
+    setSudokuType,
+    toggleInitialWithNotes,
+} from '@/features/gameSettings';
 
 export const MainPage: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { initialCheckCount, initialHintCount, sudokuType } = useSelector((state: RootState) => state.gameSettings);
+    const { initialCheckCount, initialHintCount, initialWithNotes, sudokuType } = useSelector(
+        (state: RootState) => state.gameSettings
+    );
+
+    const extrasIcons = [
+        {
+            src: check,
+            badge: String(initialCheckCount),
+            label: 'checks',
+            onClick: () => dispatch(incrementInitialCheckCount()),
+        },
+        {
+            src: hint,
+            badge: String(initialHintCount),
+            label: 'hints',
+            onClick: () => dispatch(incrementInitialHintCount()),
+        },
+        {
+            src: pencil,
+            badge: String(initialWithNotes ? 'on' : 'off'),
+            label: 'notes',
+            onClick: () => dispatch(toggleInitialWithNotes()),
+        },
+    ];
 
     const sudokuTypes = [
-        [SudokuType.CLASSIC, 'Classic'],
-        [SudokuType.DIAGONALS, 'Diagonals'],
+        { type: SudokuType.CLASSIC, label: 'Classic' },
+        { type: SudokuType.DIAGONALS, label: 'Diagonals' },
     ] as const;
 
     return (
@@ -33,29 +62,18 @@ export const MainPage: React.FC = () => {
                             <Stars interactive />
                         </div>
                     </section>
-                    <section className={styles.Section}>
+                    <section className={classnames(styles.Section, styles.ExtrasSection)}>
                         <h2 className={styles.SectionTitle}>Extras:</h2>
                         <div className={styles.ExtrasContent}>
-                            <Icon
-                                src={doubleCheck}
-                                badge={String(initialCheckCount)}
-                                title="Tap to increase"
-                                label="check"
-                                onClick={() => dispatch(incrementInitialCheckCount())}
-                            />
-                            <Icon
-                                src={hint}
-                                badge={String(initialHintCount)}
-                                title="Tap to increase"
-                                label="hint"
-                                onClick={() => dispatch(incrementInitialHintCount())}
-                            />
+                            {extrasIcons.map(props => (
+                                <Icon key={props.label} title="Tap to change" withCaption {...props} />
+                            ))}
                         </div>
                     </section>
                     <section className={styles.Section}>
                         <h2 className={styles.SectionTitle}>Type:</h2>
                         <div className={styles.TypeContent}>
-                            {sudokuTypes.map(([type, label]) => (
+                            {sudokuTypes.map(({ type, label }) => (
                                 <button
                                     key={type}
                                     className={classnames(styles.TypeButton, sudokuType === type && styles.selected)}

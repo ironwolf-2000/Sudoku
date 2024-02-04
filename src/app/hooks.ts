@@ -1,13 +1,11 @@
 import { useLayoutEffect, useState } from 'react';
+import { LAPTOP_BREAKPOINT, LayoutType } from './const';
 
-export const useWindowSize = () => {
-    const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+export const useLayoutType = (): LayoutType => {
+    const [windowSize, setWindowSize] = useState(0);
 
     const handleSize = () => {
-        setWindowSize({
-            width: window.innerWidth,
-            height: window.innerHeight,
-        });
+        setWindowSize(window.innerWidth);
     };
 
     useLayoutEffect(() => {
@@ -18,5 +16,5 @@ export const useWindowSize = () => {
         return () => window.removeEventListener('resize', handleSize);
     }, []);
 
-    return windowSize;
+    return windowSize < LAPTOP_BREAKPOINT ? LayoutType.MOBILE : LayoutType.DESKTOP;
 };

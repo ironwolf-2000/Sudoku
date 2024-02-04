@@ -7,7 +7,6 @@ export interface IIconProps {
     label?: string;
     badge?: string;
     withCaption?: boolean;
-    captionVisible?: boolean;
     onHover?: () => void;
     onHoverEnd?: () => void;
     onClick?: () => void;

@@ -1,31 +1,30 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
 import { RootState } from '@/app';
 import { Icon } from '@/components';
 import { DigitButtons } from '..';
-import { GameStatus, LAPTOP_BREAKPOINT } from '../../const';
+import { GameStatus } from '../../const';
 import styles from './GameControls.module.scss';
 import { IGameControlsProps } from './types';
 import eraser from '@/assets/icons/eraser.svg';
 import hint from '@/assets/icons/hint.svg';
-import doubleCheck from '@/assets/icons/double_check.svg';
-import { updateSelectedBoardCell } from '@/features/gameGrid';
-import { useWindowSize } from '../../hooks';
+import check from '@/assets/icons/check.svg';
+import pencil from '@/assets/icons/pencil.svg';
+import { updateSelectedCellNotes, updateSelectedCellValue } from '@/features/gameGrid';
+import { toggleWithNotes } from '@/features/gameControls';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
     onSelectValue,
-    onShowHint,
     onTriggerCheckMode,
+    onShowHint,
     selectedCell,
     selectedValue,
 }) => {
-    const { width: windowWidth } = useWindowSize();
     const dispatch = useDispatch();
-    const { boardSize } = useSelector((state: RootState) => state.gameSettings);
-    const { checkCount, hintCount, gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { initialWithNotes, boardSize } = useSelector((state: RootState) => state.gameSettings);
+    const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
 
     const icons = [
         {
@@ -33,8 +32,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             disabled: gameStatus === GameStatus.SUCCESS || checkCount === 0,
             label: 'check',
             onClick: !gamePaused ? onTriggerCheckMode : undefined,
-            src: doubleCheck,
-            withCaption: true,
+            src: check,
         },
         {
             badge: String(hintCount),
@@ -42,19 +40,29 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             label: 'hint',
             onClick: !gamePaused ? onShowHint : undefined,
             src: hint,
-            withCaption: true,
+        },
+        {
+            badge: withNotes ? 'on' : 'off',
+            disabled: gameStatus === GameStatus.SUCCESS || !initialWithNotes,
+            label: 'notes',
+            onClick: !gamePaused ? () => dispatch(toggleWithNotes()) : undefined,
+            src: pencil,
         },
         {
             disabled: gameStatus === GameStatus.SUCCESS,
             label: 'erase',
-            onClick: !gamePaused ? () => dispatch(updateSelectedBoardCell(0)) : undefined,
+            onClick: !gamePaused ? () => dispatch(updateSelectedCellValue(0)) : undefined,
             src: eraser,
-            withCaption: true,
         },
     ];
 
-    const [hovered, setHovered] = useState<string | undefined>();
-    const narrowScreen = windowWidth < LAPTOP_BREAKPOINT;
+    const handleSetValue = (val: number) => {
+        if (!withNotes) {
+            dispatch(updateSelectedCellValue(val));
+        } else {
+            dispatch(updateSelectedCellNotes(val));
+        }
+    };
 
     return (
         <div className={styles.GameControls}>
@@ -63,10 +71,8 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                     <Icon
                         key={label}
                         className={classnames(styles.ActionButton, gamePaused && styles.disabled)}
-                        onHover={!narrowScreen ? () => setHovered(label) : undefined}
-                        onHoverEnd={!narrowScreen ? () => setHovered(undefined) : undefined}
                         label={label}
-                        captionVisible={narrowScreen || hovered === label}
+                        withCaption
                         {...props}
                     />
                 ))}
@@ -76,7 +82,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                 count={boardSize}
                 valueSetting={Boolean(selectedCell)}
                 selectedValue={selectedValue}
-                onSetValue={val => dispatch(updateSelectedBoardCell(val))}
+                onSetValue={handleSetValue}
                 onSelectValue={onSelectValue}
             />
         </div>

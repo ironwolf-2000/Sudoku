@@ -52,14 +52,28 @@ export const gameGridSlice = createSlice({
             state.selectedCell = undefined;
             state.checkMode = false;
         },
-        updateSelectedBoardCell: (state, action: PayloadAction<number>) => {
+        updateSelectedCellValue: (state, action: PayloadAction<number>) => {
             if (!state.selectedCell) {
                 return;
             }
 
             const val = action.payload;
             const [r, c] = state.selectedCell;
+
             state.board[r][c].val = val;
+            state.board[r][c].notes = [];
+        },
+        updateSelectedCellNotes: (state, action: PayloadAction<number>) => {
+            if (!state.selectedCell) {
+                return;
+            }
+
+            const val = action.payload;
+            const [r, c] = state.selectedCell;
+
+            if (!state.board[r][c].notes.includes(val)) {
+                state.board[r][c].notes.push(val);
+            }
         },
     },
 });
@@ -72,7 +86,8 @@ export const {
     setHintCell,
     setCheckMode,
     restartGame,
-    updateSelectedBoardCell,
+    updateSelectedCellValue,
+    updateSelectedCellNotes,
 } = gameGridSlice.actions;
 
 export default gameGridSlice.reducer;

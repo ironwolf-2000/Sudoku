@@ -1,5 +1,6 @@
 interface ICell {
     val: number;
+    notes: number[];
     clue?: boolean;
 }
 

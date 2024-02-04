@@ -12,7 +12,7 @@
 .ActionButtonContainer {
     display: grid;
     gap: 0.25rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin-bottom: 1rem;
 
     @media screen and (min-width: 1024px) {
@@ -23,7 +23,6 @@
 .ActionButton {
     flex-grow: 1;
     border-radius: 0.5rem;
-    color: var(--blue-darker);
 
     &.disabled {
         cursor: default;

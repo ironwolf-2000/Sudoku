@@ -25,7 +25,11 @@
     display: flex;
     align-items: center;
     column-gap: 1rem;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.ExtrasSection {
+    margin-bottom: 0.75rem;
 }
 
 .SectionTitle {
@@ -80,11 +84,6 @@
     text-transform: uppercase;
     transition: transform var(--transition-time);
     width: 12rem;
-
-    &.disabled {
-        cursor: default;
-        opacity: 0.5;
-    }
 
     &:not(&.disabled):active {
         box-shadow: 0 0.1rem 0 var(--blue-darker);

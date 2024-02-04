@@ -73,7 +73,7 @@ export const isBadCell = (sudokuType: SudokuType, board: Board, r0: number, c0: 
     const coordinates = getSelectedCoordinates(sudokuType, [r0, c0]);
 
     for (const [r, c] of coordinates) {
-        if ((r !== r0 || c !== c0) && board[r][c].val === board[r0][c0].val) {
+        if ((r !== r0 || c !== c0) && board[r][c].val !== 0 && board[r][c].val === board[r0][c0].val) {
             return true;
         }
     }
