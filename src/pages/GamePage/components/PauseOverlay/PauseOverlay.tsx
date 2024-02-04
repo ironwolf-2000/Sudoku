@@ -10,7 +10,7 @@ export const PauseOverlay = () => {
 
     return (
         <div className={styles.PauseOverlay}>
-            <Icon src={play} size="l" onClick={() => dispatch(toggleGamePaused())} />
+            <Icon src={play} size="l" label="play icon" onClick={() => dispatch(toggleGamePaused())} />
         </div>
     );
 };
