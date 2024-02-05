@@ -40,8 +40,12 @@ export const GamePage: React.FC = () => {
             return total - 3 ** level;
         }
 
-        if (level >= 4 && level <= 5) {
-            return total - level * 10;
+        if (level === 4) {
+            return 35;
+        }
+
+        if (level === 5) {
+            return 24;
         }
 
         return total;

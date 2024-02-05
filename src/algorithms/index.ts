@@ -13,19 +13,31 @@ const isValid = (sudokuType: SudokuType, board: RawBoard, r: number, c: number, 
     return valid;
 };
 
-export const solveSudoku = (sudokuType: SudokuType, board: RawBoard, emptyCells: Coordinate[]): RawBoard | null => {
-    const backtrack = (empty: Coordinate[], index: number) => {
-        if (index === empty.length) {
+const generateFilledBoard = (sudokuType: SudokuType): RawBoard | null => {
+    const board: RawBoard = [];
+    const emptyCells: Coordinate[] = [];
+
+    for (let r = 0; r < 9; r++) {
+        board.push([]);
+
+        for (let c = 0; c < 9; c++) {
+            board[r].push(0);
+            emptyCells.push([r, c]);
+        }
+    }
+
+    const backtrack = (index: number): RawBoard | null => {
+        if (index === emptyCells.length) {
             return board;
         }
 
-        const [r, c] = empty[index];
+        const [r, c] = emptyCells[index];
 
-        for (const k of getShuffledCopy(getInclusiveRange(1, 9))) {
-            if (isValid(sudokuType, board, r, c, k)) {
-                board[r][c] = k;
+        for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
+            if (isValid(sudokuType, board, r, c, val)) {
+                board[r][c] = val;
 
-                if (backtrack(empty, index + 1)) {
+                if (backtrack(index + 1)) {
                     return board;
                 }
 
@@ -36,87 +48,113 @@ export const solveSudoku = (sudokuType: SudokuType, board: RawBoard, emptyCells:
         return null;
     };
 
-    return backtrack(emptyCells, 0);
+    return backtrack(0);
 };
 
-export const generateSudoku = (sudokuType: SudokuType): RawBoard => {
-    let grid: RawBoard | null = null;
+const getAvailableValues = (board: RawBoard, r: number, c: number): Set<number> => {
+    const res = new Set(getInclusiveRange(1, board.length));
+    const r0 = Math.floor(r / 3) * 3;
+    const c0 = Math.floor(c / 3) * 3;
 
-    while (grid === null) {
-        try {
-            const board: RawBoard = [];
-            const emptyCells: Coordinate[] = [];
-
-            for (let i = 0; i < 9; i++) {
-                board.push([]);
-
-                for (let j = 0; j < 9; j++) {
-                    board[i].push(0);
-                    emptyCells.push([i, j]);
-                }
-            }
-
-            grid = solveSudoku(sudokuType, board, emptyCells);
-        } catch {
-            /* empty */
-        }
+    for (let i = 0; i < board.length; i++) {
+        res.delete(board[r][i]);
+        res.delete(board[i][c]);
+        res.delete(board[r0 + Math.floor(i / 3)][c0 + (i % 3)]);
     }
 
-    return grid;
+    return res;
 };
 
-const removeClues = (sudokuType: SudokuType, board: RawBoard, cluesCount: number): RawBoard => {
-    let filledCount = board.length ** 2;
-    const indices = getShuffledCopy(getInclusiveRange(0, filledCount));
+const isSolvable = (sudokuType: SudokuType, board: RawBoard): boolean => {
+    let solution = '';
 
-    while (filledCount > cluesCount) {
+    const solve = (board: RawBoard): boolean => {
+        const emptyCells = getEmptyCells(board);
+        let i = 0;
+
+        while (i < emptyCells.length) {
+            const [r, c] = emptyCells[i];
+            const values = getAvailableValues(board, r, c);
+
+            if (values.size === 0) {
+                return false;
+            }
+
+            if (values.size === 1) {
+                board[r][c] = values.values().next().value;
+                emptyCells.splice(i, 1);
+                i = -1;
+            }
+
+            i++;
+        }
+
+        if (emptyCells.length === 0) {
+            const res = board.map(row => row.join('')).join('');
+
+            if (solution && solution !== res) {
+                return false;
+            }
+
+            solution = res;
+            return true;
+        }
+
+        const [r, c] = emptyCells[0];
+
+        for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
+            if (isValid(sudokuType, board, r, c, val)) {
+                board[r][c] = val;
+
+                if (!solve(getDeepCopy(board))) {
+                    return false;
+                }
+
+                board[r][c] = 0;
+            }
+        }
+
+        return true;
+    };
+
+    return solve(getDeepCopy(board));
+};
+
+const removeClues = (sudokuType: SudokuType, board: RawBoard, target: number): RawBoard | null => {
+    let currentCount = board.length ** 2;
+    const indices = getShuffledCopy(getInclusiveRange(0, currentCount - 1));
+
+    while (currentCount > target) {
         const index = indices.pop();
-
         if (typeof index === 'undefined') {
-            throw new Error();
+            return null;
         }
 
         const r = Math.floor(index / board.length);
         const c = index % board.length;
 
-        if (board[r][c] === 0) {
-            continue;
-        }
-
         const previousValue = board[r][c];
         board[r][c] = 0;
-        filledCount--;
+        currentCount--;
 
-        try {
-            solveSudoku(sudokuType, getDeepCopy(board), getEmptyCells(board));
-        } catch {
+        if (!isSolvable(sudokuType, board)) {
             board[r][c] = previousValue;
-            filledCount++;
+            currentCount++;
         }
     }
 
     return board;
 };
 
-export const createNewGame = (sudokuType: SudokuType, cluesCount: number): [Board, Board] => {
-    let solution = null;
-
+export const createNewGame = (sudokuType: SudokuType, clueCount: number): [Board, Board] => {
+    let solution: RawBoard | null = null;
     while (solution === null) {
-        try {
-            solution = generateSudoku(sudokuType);
-        } catch {
-            /* empty */
-        }
+        solution = generateFilledBoard(sudokuType);
     }
 
     let board = null;
-
     while (board === null) {
-        try {
-            board = removeClues(sudokuType, getDeepCopy(solution), cluesCount);
-        } catch {
-            /* empty */
-        }
+        board = removeClues(sudokuType, getDeepCopy(solution), clueCount);
     }
 
     return [convertToBoard(board), convertToBoard(solution)];
