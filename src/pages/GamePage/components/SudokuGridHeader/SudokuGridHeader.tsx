@@ -96,7 +96,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         src={home}
                         title="Quit the game"
                         label="home"
-                        size="s"
                         onClick={() => handleModalOpen(ModalType.QUIT)}
                     />
                     <Icon
@@ -104,7 +103,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         src={restart}
                         title="Restart the game"
                         label="restart"
-                        size="s"
                         onClick={() => handleModalOpen(ModalType.RESTART)}
                     />
                 </div>

@@ -22,6 +22,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     onSelectValue,
     onTriggerCheckMode,
     onShowHint,
+    emptyCells,
     selectedCell,
     selectedValue,
 }) => {
@@ -41,7 +42,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
         },
         {
             badge: String(hintCount),
-            disabled: gameStatus === GameStatus.SUCCESS || hintCount === 0,
+            disabled: gameStatus === GameStatus.SUCCESS || hintCount === 0 || emptyCells.length === 0,
             label: 'hint',
             onClick: !gamePaused ? onShowHint : undefined,
             src: hint,

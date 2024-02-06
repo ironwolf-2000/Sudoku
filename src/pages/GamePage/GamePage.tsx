@@ -6,7 +6,7 @@ import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
-import { GameStatus, CHECK_MODE_TIMEOUT } from './const';
+import { CHECK_MODE_TIMEOUT, GameStatus } from './const';
 import {
     setBoard,
     setCheckMode,
@@ -20,6 +20,7 @@ import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } 
 import { Card } from '@/components';
 import { LayoutType } from '@/app/const';
 import { useLayoutType, useOutsideClick } from '@/app/hooks';
+import { randomChoice } from '@/algorithms/helpers';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
@@ -138,18 +139,8 @@ export const GamePage: React.FC = () => {
             return;
         }
 
-        let [r, c] = [-1, -1];
-
-        if (errorCells.length > 0) {
-            [r, c] = errorCells[Math.floor(Math.random() * errorCells.length)];
-        } else if (emptyCells.length > 0) {
-            [r, c] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-        }
-
-        if (r !== -1 && c !== -1) {
-            dispatch(setHintCell([r, c]));
-            dispatch(decrementHintCount());
-        }
+        dispatch(setHintCell(randomChoice(emptyCells)));
+        dispatch(decrementHintCount());
     };
 
     const handleOutsideClick = () => {
@@ -162,6 +153,7 @@ export const GamePage: React.FC = () => {
 
     const gameControlsProps = {
         gameStatus,
+        emptyCells,
         selectedCell,
         selectedValue,
         onSelectValue: handleSelectValue,

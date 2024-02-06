@@ -52,8 +52,12 @@
         background-color: var(--gray);
     }
 
-    &:not(.checkMode):not(.hint):not(.clue) {
+    &:not(.hint):not(.clue) {
         color: var(--blue-darker);
+    }
+
+    &.bad:not(.hint):not(.clue) {
+        color: var(--red);
     }
 
     &.affected:not(.checkMode) {
@@ -69,26 +73,26 @@
     }
 
     &.error {
-        &.hint,
-        &.checkMode {
+        &.hint {
             background-color: var(--red);
         }
     }
 
     &.correct {
-        &.hint,
-        &.checkMode {
+        &.hint {
             background-color: var(--green);
         }
     }
 
-    &.bad:not(.checkMode):not(.hint):not(.clue) {
-        color: var(--red);
-    }
-
-    &.withNotes:not(.checkMode):not(.hint) {
+    &.withNotes:not(.hint) {
         grid-template: repeat(3, 1fr) / repeat(3, 1fr);
         font-size: 0.65rem;
         padding: 0.1rem;
+    }
+}
+
+.CellNote {
+    &.hidden {
+        visibility: hidden;
     }
 }

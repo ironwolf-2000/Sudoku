@@ -2,6 +2,7 @@ interface ICell {
     val: number;
     notes: number[];
     clue?: boolean;
+    bad?: boolean;
 }
 
 export type Board = ICell[][];

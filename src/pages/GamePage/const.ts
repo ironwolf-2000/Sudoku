@@ -1,7 +1,7 @@
 export enum GameStatus {
-    SUCCESS,
-    FAILURE,
-    PENDING,
+    SUCCESS = 'SUCCESS',
+    FAILURE = 'FAILURE',
+    PENDING = 'PENDING',
 }
 
-export const CHECK_MODE_TIMEOUT = 2000;
+export const CHECK_MODE_TIMEOUT = 3000;

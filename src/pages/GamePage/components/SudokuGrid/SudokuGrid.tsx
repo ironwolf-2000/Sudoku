@@ -9,6 +9,7 @@ import { GameStatus } from '../../const';
 import { RootState } from '@/app';
 import { PauseOverlay } from '..';
 import styles from './SudokuGrid.module.scss';
+import { getInclusiveRange } from '@/algorithms/helpers';
 
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, errorCells, onSelectCell }) => {
     const { board, solution, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
@@ -25,7 +26,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
 
     const renderCell = (r: number, c: number) => {
         const cellValue = board[r][c].val || (hintCell?.[0] === r && hintCell?.[1] === c ? solution[r][c].val : 0);
-        const cellNotes = board[r][c].notes.length ? board[r][c].notes : null;
+        const cellNotes = board[r][c].notes;
 
         return (
             <div
@@ -33,7 +34,12 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
                 className={classnames(cellsClassNames[r][c])}
                 onClick={() => handleCellClick([r, c])}
             >
-                {cellValue || cellNotes?.map(el => <div key={el}>{el}</div>)}
+                {cellValue ||
+                    getInclusiveRange(1, board.length).map(el => (
+                        <div key={el} className={classnames(styles.CellNote, !cellNotes.includes(el) && styles.hidden)}>
+                            {el}
+                        </div>
+                    ))}
             </div>
         );
     };

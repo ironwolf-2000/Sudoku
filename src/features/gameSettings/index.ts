@@ -15,7 +15,7 @@ const initialState: GameSettingsState = {
     level: 1,
     initialCheckCount: 1,
     initialHintCount: 3,
-    initialWithNotes: false,
+    initialWithNotes: true,
     sudokuType: SudokuType.CLASSIC,
     boardSize: 9,
 };

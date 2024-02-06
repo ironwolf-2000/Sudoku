@@ -6,10 +6,10 @@ import { Board, Coordinate } from '@/app/types';
 interface GameGridState {
     board: Board;
     solution: Board;
+    checkMode: boolean;
     selectedValue?: number;
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
-    checkMode: boolean;
 }
 
 const initialState: GameGridState = {
@@ -38,13 +38,24 @@ export const gameGridSlice = createSlice({
             state.hintCell = action.payload;
         },
         setCheckMode: (state, action: PayloadAction<boolean>) => {
-            state.checkMode = action.payload;
+            const checkMode = action.payload;
+            state.checkMode = checkMode;
+
+            if (checkMode) {
+                for (let i = 0; i < state.board.length; i++) {
+                    for (let j = 0; j < state.board.length; j++) {
+                        if (state.board[i][j].val && state.board[i][j].val !== state.solution[i][j].val) {
+                            state.board[i][j].bad = true;
+                        }
+                    }
+                }
+            }
         },
         restartGame: state => {
             for (let i = 0; i < state.board.length; i++) {
                 for (let j = 0; j < state.board.length; j++) {
                     if (!state.board[i][j].clue) {
-                        state.board[i][j].val = 0;
+                        state.board[i][j] = { val: 0, notes: [], bad: false };
                     }
                 }
             }
@@ -60,8 +71,7 @@ export const gameGridSlice = createSlice({
             const val = action.payload;
             const [r, c] = state.selectedCell;
 
-            state.board[r][c].val = val;
-            state.board[r][c].notes = [];
+            state.board[r][c] = { val, notes: [], bad: false };
         },
         updateSelectedCellNotes: (state, action: PayloadAction<number>) => {
             if (!state.selectedCell) {
@@ -78,6 +88,9 @@ export const gameGridSlice = createSlice({
             } else {
                 state.board[r][c].notes.splice(itemIndex, 1);
             }
+
+            state.board[r][c].val = 0;
+            state.board[r][c].bad = false;
         },
     },
 });
