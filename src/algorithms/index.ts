@@ -65,10 +65,14 @@ const getAvailableValues = (board: RawBoard, r: number, c: number): Set<number> 
     return res;
 };
 
-const isSolvable = (sudokuType: SudokuType, board: RawBoard): boolean => {
-    let solution = '';
-
-    const solve = (board: RawBoard): boolean => {
+const hasMultipleSolutions = (
+    sudokuType: SudokuType,
+    board: RawBoard,
+    r0: number,
+    c0: number,
+    previousValue: number
+): boolean => {
+    const isSolvable = (board: RawBoard): boolean => {
         const emptyCells = getEmptyCells(board);
         let i = 0;
 
@@ -90,13 +94,6 @@ const isSolvable = (sudokuType: SudokuType, board: RawBoard): boolean => {
         }
 
         if (emptyCells.length === 0) {
-            const res = board.map(row => row.join('')).join('');
-
-            if (solution && solution !== res) {
-                return false;
-            }
-
-            solution = res;
             return true;
         }
 
@@ -106,18 +103,30 @@ const isSolvable = (sudokuType: SudokuType, board: RawBoard): boolean => {
             if (isValid(sudokuType, board, r, c, val)) {
                 board[r][c] = val;
 
-                if (!solve(getDeepCopy(board))) {
-                    return false;
+                if (isSolvable(getDeepCopy(board))) {
+                    return true;
                 }
 
                 board[r][c] = 0;
             }
         }
 
-        return true;
+        return false;
     };
 
-    return solve(getDeepCopy(board));
+    for (const val of getAvailableValues(board, r0, c0)) {
+        if (val !== previousValue) {
+            board[r0][c0] = val;
+
+            if (isSolvable(getDeepCopy(board))) {
+                return true;
+            }
+
+            board[r0][c0] = 0;
+        }
+    }
+
+    return false;
 };
 
 const removeClues = (sudokuType: SudokuType, board: RawBoard, target: number): RawBoard | null => {
@@ -137,7 +146,7 @@ const removeClues = (sudokuType: SudokuType, board: RawBoard, target: number): R
         board[r][c] = 0;
         currentCount--;
 
-        if (!isSolvable(sudokuType, board)) {
+        if (hasMultipleSolutions(sudokuType, board, r, c, previousValue)) {
             board[r][c] = previousValue;
             currentCount++;
         }

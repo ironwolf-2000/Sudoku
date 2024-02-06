@@ -34,22 +34,8 @@ export const GamePage: React.FC = () => {
         (state: RootState) => state.gameGrid
     );
 
-    const cluesCount = useMemo(() => {
-        const total = boardSize ** 2;
-
-        if (level >= 1 && level <= 3) {
-            return total - 3 ** level;
-        }
-
-        if (level === 4) {
-            return 35;
-        }
-
-        if (level === 5) {
-            return 24;
-        }
-
-        return total;
+    const clueCount = useMemo(() => {
+        return boardSize ** 2 - level * 11 - 2;
     }, [boardSize, level]);
 
     const emptyCells = useMemo(() => {
@@ -97,13 +83,13 @@ export const GamePage: React.FC = () => {
     }, [board, emptyCells.length, solution]);
 
     const startNewGame = useCallback(() => {
-        const [board, solution] = createNewGame(sudokuType, cluesCount);
+        const [board, solution] = createNewGame(sudokuType, clueCount);
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [cluesCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
+    }, [clueCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
 
     useEffect(() => {
         startNewGame();
