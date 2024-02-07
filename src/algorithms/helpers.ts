@@ -51,3 +51,31 @@ export const getEmptyCells = (board: RawBoard): Coordinate[] => {
 
     return res;
 };
+
+export const getAvailableValues = (board: RawBoard, r: number, c: number): Set<number> => {
+    const res = new Set(getInclusiveRange(1, board.length));
+    const r0 = Math.floor(r / 3) * 3;
+    const c0 = Math.floor(c / 3) * 3;
+
+    for (let i = 0; i < board.length; i++) {
+        res.delete(board[r][i]);
+        res.delete(board[i][c]);
+        res.delete(board[r0 + Math.floor(i / 3)][c0 + (i % 3)]);
+    }
+
+    return res;
+};
+
+export const generateInitialBoard = (boardSize: number): RawBoard => {
+    const res: RawBoard = [];
+
+    for (let r = 0; r < boardSize; r++) {
+        res.push([]);
+
+        for (let c = 0; c < boardSize; c++) {
+            res[r].push(0);
+        }
+    }
+
+    return res;
+};

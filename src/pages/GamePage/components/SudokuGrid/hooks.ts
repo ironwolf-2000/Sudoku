@@ -47,7 +47,7 @@ export const useCellsClassNames = (
             const error = hasCoordinate(errorCells, [i, j]);
             const correct = value && !clue && !error;
             const selected = (i === selectedCell?.[0] && j === selectedCell?.[1]) || value === selectedValue;
-            const affected = hasCoordinate(getSelectedCoordinates(sudokuType, selectedCell), [i, j]);
+            const affected = hasCoordinate(getSelectedCoordinates(sudokuType, board.length, selectedCell), [i, j]);
             const bad = board[i][j].bad || isBadCell(sudokuType, board, i, j);
             const withNotes = board[i][j].val === 0 && (!hintCell || hintCell[0] !== i || hintCell[1] !== j);
 

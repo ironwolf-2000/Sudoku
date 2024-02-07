@@ -83,13 +83,13 @@ export const GamePage: React.FC = () => {
     }, [board, emptyCells.length, solution]);
 
     const startNewGame = useCallback(() => {
-        const [board, solution] = createNewGame(sudokuType, clueCount);
+        const [board, solution] = createNewGame(sudokuType, boardSize, clueCount);
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [clueCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
+    }, [boardSize, clueCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
 
     useEffect(() => {
         startNewGame();

@@ -1,6 +1,7 @@
+import { SudokuType } from '@/app/const';
 import { RawBoard } from '@/app/types';
 
-export const isRowValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
+const isRowValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     for (let j = 0; j < board.length; j++) {
         if (c !== j && board[r][j] === val) {
             return false;
@@ -10,7 +11,7 @@ export const isRowValid = (board: RawBoard, r: number, c: number, val: number): 
     return true;
 };
 
-export const isColumnValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
+const isColumnValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     for (let i = 0; i < board.length; i++) {
         if (r !== i && board[i][c] === val) {
             return false;
@@ -20,7 +21,7 @@ export const isColumnValid = (board: RawBoard, r: number, c: number, val: number
     return true;
 };
 
-export const isBoxValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
+const isBoxValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     const K = Math.floor(Math.sqrt(board.length));
 
     const r0 = Math.floor(r / K) * K;
@@ -38,7 +39,7 @@ export const isBoxValid = (board: RawBoard, r: number, c: number, val: number): 
     return true;
 };
 
-export const areDiagonalsValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
+const areDiagonalsValid = (board: RawBoard, r: number, c: number, val: number): boolean => {
     for (let i = 0; i < board.length; i++) {
         const invalidMainDiagonal = r === c && r !== i && board[i][i] === val;
         const invalidAntiDiagonal = r + c === board.length - 1 && r !== i && board[i][board.length - 1 - i] === val;
@@ -49,4 +50,14 @@ export const areDiagonalsValid = (board: RawBoard, r: number, c: number, val: nu
     }
 
     return true;
+};
+
+export const isValid = (sudokuType: SudokuType, board: RawBoard, r: number, c: number, val: number): boolean => {
+    let valid = isRowValid(board, r, c, val) && isColumnValid(board, r, c, val) && isBoxValid(board, r, c, val);
+
+    if (sudokuType === SudokuType.DIAGONALS) {
+        valid = valid && areDiagonalsValid(board, r, c, val);
+    }
+
+    return valid;
 };

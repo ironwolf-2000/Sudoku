@@ -1,68 +1,57 @@
-import { RawBoard, Coordinate, Board } from '@/app/types';
-import { getShuffledCopy, getInclusiveRange, getEmptyCells, convertToBoard, getDeepCopy } from './helpers';
-import { isRowValid, isColumnValid, isBoxValid, areDiagonalsValid } from './validators';
+import { RawBoard, Board } from '@/app/types';
 import { SudokuType } from '@/app/const';
+import {
+    getShuffledCopy,
+    getInclusiveRange,
+    getEmptyCells,
+    convertToBoard,
+    getDeepCopy,
+    generateInitialBoard,
+    getAvailableValues,
+} from './helpers';
+import { isValid } from './validators';
 
-const isValid = (sudokuType: SudokuType, board: RawBoard, r: number, c: number, val: number): boolean => {
-    let valid = isRowValid(board, r, c, val) && isColumnValid(board, r, c, val) && isBoxValid(board, r, c, val);
+const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null => {
+    const emptyCells = getEmptyCells(board);
+    let i = 0;
 
-    if (sudokuType === SudokuType.DIAGONALS) {
-        valid = valid && areDiagonalsValid(board, r, c, val);
-    }
+    while (i < emptyCells.length) {
+        const [r, c] = emptyCells[i];
+        const values = getAvailableValues(board, r, c);
 
-    return valid;
-};
-
-const generateFilledBoard = (sudokuType: SudokuType): RawBoard | null => {
-    const board: RawBoard = [];
-    const emptyCells: Coordinate[] = [];
-
-    for (let r = 0; r < 9; r++) {
-        board.push([]);
-
-        for (let c = 0; c < 9; c++) {
-            board[r].push(0);
-            emptyCells.push([r, c]);
-        }
-    }
-
-    const backtrack = (index: number): RawBoard | null => {
-        if (index === emptyCells.length) {
-            return board;
+        if (values.size === 0) {
+            return null;
         }
 
-        const [r, c] = emptyCells[index];
+        if (values.size === 1) {
+            board[r][c] = values.values().next().value;
+            emptyCells.splice(i, 1);
+            i = -1;
+        }
 
-        for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
-            if (isValid(sudokuType, board, r, c, val)) {
-                board[r][c] = val;
+        i++;
+    }
 
-                if (backtrack(index + 1)) {
-                    return board;
-                }
+    if (emptyCells.length === 0) {
+        return board;
+    }
 
-                board[r][c] = 0;
+    const [r, c] = emptyCells[0];
+
+    for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
+        if (isValid(sudokuType, board, r, c, val)) {
+            board[r][c] = val;
+
+            const result = solveSudoku(sudokuType, getDeepCopy(board));
+            if (result) {
+                return result;
             }
+
+            board[r][c] = 0;
         }
-
-        return null;
-    };
-
-    return backtrack(0);
-};
-
-const getAvailableValues = (board: RawBoard, r: number, c: number): Set<number> => {
-    const res = new Set(getInclusiveRange(1, board.length));
-    const r0 = Math.floor(r / 3) * 3;
-    const c0 = Math.floor(c / 3) * 3;
-
-    for (let i = 0; i < board.length; i++) {
-        res.delete(board[r][i]);
-        res.delete(board[i][c]);
-        res.delete(board[r0 + Math.floor(i / 3)][c0 + (i % 3)]);
     }
 
-    return res;
+    return null;
 };
 
 const hasMultipleSolutions = (
@@ -72,53 +61,11 @@ const hasMultipleSolutions = (
     c0: number,
     previousValue: number
 ): boolean => {
-    const isSolvable = (board: RawBoard): boolean => {
-        const emptyCells = getEmptyCells(board);
-        let i = 0;
-
-        while (i < emptyCells.length) {
-            const [r, c] = emptyCells[i];
-            const values = getAvailableValues(board, r, c);
-
-            if (values.size === 0) {
-                return false;
-            }
-
-            if (values.size === 1) {
-                board[r][c] = values.values().next().value;
-                emptyCells.splice(i, 1);
-                i = -1;
-            }
-
-            i++;
-        }
-
-        if (emptyCells.length === 0) {
-            return true;
-        }
-
-        const [r, c] = emptyCells[0];
-
-        for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
-            if (isValid(sudokuType, board, r, c, val)) {
-                board[r][c] = val;
-
-                if (isSolvable(getDeepCopy(board))) {
-                    return true;
-                }
-
-                board[r][c] = 0;
-            }
-        }
-
-        return false;
-    };
-
     for (const val of getAvailableValues(board, r0, c0)) {
         if (val !== previousValue) {
             board[r0][c0] = val;
 
-            if (isSolvable(getDeepCopy(board))) {
+            if (solveSudoku(sudokuType, getDeepCopy(board))) {
                 return true;
             }
 
@@ -129,11 +76,11 @@ const hasMultipleSolutions = (
     return false;
 };
 
-const removeClues = (sudokuType: SudokuType, board: RawBoard, target: number): RawBoard | null => {
-    let currentCount = board.length ** 2;
-    const indices = getShuffledCopy(getInclusiveRange(0, currentCount - 1));
+const removeClues = (sudokuType: SudokuType, board: RawBoard, cluesToRemove: number): RawBoard | null => {
+    const indices = getShuffledCopy(getInclusiveRange(0, board.length ** 2 - 1));
+    let removedCount = 0;
 
-    while (currentCount > target) {
+    while (removedCount < cluesToRemove) {
         const index = indices.pop();
         if (typeof index === 'undefined') {
             return null;
@@ -144,26 +91,26 @@ const removeClues = (sudokuType: SudokuType, board: RawBoard, target: number): R
 
         const previousValue = board[r][c];
         board[r][c] = 0;
-        currentCount--;
+        removedCount++;
 
         if (hasMultipleSolutions(sudokuType, board, r, c, previousValue)) {
             board[r][c] = previousValue;
-            currentCount++;
+            removedCount--;
         }
     }
 
     return board;
 };
 
-export const createNewGame = (sudokuType: SudokuType, clueCount: number): [Board, Board] => {
+export const createNewGame = (sudokuType: SudokuType, boardSize: number, cluesToKeep: number): [Board, Board] => {
     let solution: RawBoard | null = null;
     while (solution === null) {
-        solution = generateFilledBoard(sudokuType);
+        solution = solveSudoku(sudokuType, generateInitialBoard(boardSize));
     }
 
     let board = null;
     while (board === null) {
-        board = removeClues(sudokuType, getDeepCopy(solution), clueCount);
+        board = removeClues(sudokuType, getDeepCopy(solution), boardSize ** 2 - cluesToKeep);
     }
 
     return [convertToBoard(board), convertToBoard(solution)];
