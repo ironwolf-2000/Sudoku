@@ -17,7 +17,7 @@ const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null =
 
     while (i < emptyCells.length) {
         const [r, c] = emptyCells[i];
-        const values = getAvailableValues(board, r, c);
+        const values = getAvailableValues(sudokuType, board, r, c);
 
         if (values.size === 0) {
             return null;
@@ -61,7 +61,7 @@ const hasMultipleSolutions = (
     c0: number,
     previousValue: number
 ): boolean => {
-    for (const val of getAvailableValues(board, r0, c0)) {
+    for (const val of getAvailableValues(sudokuType, board, r0, c0)) {
         if (val !== previousValue) {
             board[r0][c0] = val;
 

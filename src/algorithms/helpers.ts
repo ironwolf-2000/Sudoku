@@ -1,3 +1,4 @@
+import { SudokuType } from '@/app/const';
 import { Board, Coordinate, RawBoard } from '@/app/types';
 
 export const convertToBoard = (rawBoard: RawBoard): Board => {
@@ -52,15 +53,56 @@ export const getEmptyCells = (board: RawBoard): Coordinate[] => {
     return res;
 };
 
-export const getAvailableValues = (board: RawBoard, r: number, c: number): Set<number> => {
-    const res = new Set(getInclusiveRange(1, board.length));
-    const r0 = Math.floor(r / 3) * 3;
-    const c0 = Math.floor(c / 3) * 3;
+export const getCoordinatesFromCurrentBox = (board: RawBoard, r: number, c: number): Coordinate[] => {
+    const perfectSquare = board.length === 4 || board.length === 9;
+    const rowLength = perfectSquare ? Math.floor(Math.sqrt(board.length)) : 2;
+    const columnLength = perfectSquare ? rowLength : Math.floor(board.length / 2);
+
+    const r0 = Math.floor(r / rowLength) * rowLength;
+    const c0 = Math.floor(c / columnLength) * columnLength;
+    const res: Coordinate[] = [];
+
+    for (let i = r0; i < r0 + rowLength; i++) {
+        for (let j = c0; j < c0 + columnLength; j++) {
+            res.push([i, j]);
+        }
+    }
+
+    return res;
+};
+
+export const getCoordinatesFromCurrentDiagonals = (board: RawBoard, r: number, c: number): Coordinate[] => {
+    const res: Coordinate[] = [];
 
     for (let i = 0; i < board.length; i++) {
-        res.delete(board[r][i]);
-        res.delete(board[i][c]);
-        res.delete(board[r0 + Math.floor(i / 3)][c0 + (i % 3)]);
+        if (r === c) {
+            res.push([i, i]);
+        }
+
+        if (r + c === board.length - 1) {
+            res.push([i, board.length - 1 - i]);
+        }
+    }
+
+    return res;
+};
+
+export const getAvailableValues = (sudokuType: SudokuType, board: RawBoard, r0: number, c0: number): Set<number> => {
+    const res = new Set(getInclusiveRange(1, board.length));
+
+    for (let i = 0; i < board.length; i++) {
+        res.delete(board[r0][i]);
+        res.delete(board[i][c0]);
+    }
+
+    for (const [r, c] of getCoordinatesFromCurrentBox(board, r0, c0)) {
+        res.delete(board[r][c]);
+    }
+
+    if (sudokuType === SudokuType.DIAGONALS) {
+        for (const [r, c] of getCoordinatesFromCurrentDiagonals(board, r0, c0)) {
+            res.delete(board[r][c]);
+        }
     }
 
     return res;
