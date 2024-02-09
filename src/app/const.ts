@@ -4,6 +4,8 @@ export enum SudokuType {
     EVEN_ODD = 'EVEN_ODD',
 }
 
+export const BOARD_SIZES = [4, 6, 8, 9] as const;
+
 export const LAPTOP_BREAKPOINT = 1024;
 
 export enum LayoutType {

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { PATHS, SudokuType } from '@/app/const';
+import { BOARD_SIZES, PATHS, SudokuType } from '@/app/const';
 import styles from './MainPage.module.scss';
 import { Card, Icon, Stars } from '@/components';
 import check from '@/assets/icons/check.svg';
@@ -51,8 +51,6 @@ export const MainPage: React.FC = () => {
         { type: SudokuType.EVEN_ODD, label: 'Even-Odd' },
     ] as const;
 
-    const boardSizes = [4, 6, 8, 9];
-
     return (
         <Card className={styles.MainPage}>
             <div>
@@ -89,7 +87,7 @@ export const MainPage: React.FC = () => {
                     <section className={styles.Section}>
                         <h2 className={styles.SectionTitle}>Size:</h2>
                         <div className={classnames(styles.SectionContent, styles.SizeContent)}>
-                            {boardSizes.map(size => (
+                            {BOARD_SIZES.map(size => (
                                 <button
                                     key={size}
                                     className={classnames(styles.SizeButton, boardSize === size && styles.selected)}
@@ -103,7 +101,7 @@ export const MainPage: React.FC = () => {
                 </main>
                 <footer className={styles.Footer}>
                     <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME)}>
-                        New Game
+                        <span className={styles.PlayButtonText}>New Game</span>
                     </button>
                 </footer>
             </div>
