@@ -4,19 +4,18 @@ import { RootState } from '@/app';
 import { Coordinate } from '@/app/types';
 import { GameStatus } from '../../const';
 import styles from './SudokuGrid.module.scss';
-import { getSelectedCoordinates, getShadedCoordinates, hasCoordinate, isBadCell } from './helpers';
+import { getShadedCoordinates, hasCoordinate, isBadCell } from './helpers';
+import { getAffectedCoordinates } from '@/algorithms/helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
-    const classNames = [styles.Content, customClassName];
+    const { boardSize } = useSelector((state: RootState) => state.gameSettings);
+    const classNames = [styles.Content, styles[`size_${boardSize}`], customClassName];
 
-    const success = gameStatus === GameStatus.SUCCESS;
-    const failure = gameStatus === GameStatus.FAILURE;
-
-    if (!checkMode && success) {
+    if (!checkMode && gameStatus === GameStatus.SUCCESS) {
         classNames.push(styles.success);
     }
 
-    if (!checkMode && failure) {
+    if (!checkMode && gameStatus === GameStatus.FAILURE) {
         classNames.push(styles.failure);
     }
 
@@ -38,7 +37,7 @@ export const useCellsClassNames = (
         classNames.push([]);
 
         for (let j = 0; j < board.length; j++) {
-            classNames[i].push([styles.Cell]);
+            classNames[i].push([styles.Cell, styles[`size_${board.length}`]]);
             const value = board[i][j].val;
 
             const shaded = hasCoordinate(getShadedCoordinates(sudokuType, solution), [i, j]);
@@ -46,8 +45,17 @@ export const useCellsClassNames = (
             const clue = Boolean(board[i][j].clue);
             const error = hasCoordinate(errorCells, [i, j]);
             const correct = value && !clue && !error;
-            const selected = (i === selectedCell?.[0] && j === selectedCell?.[1]) || value === selectedValue;
-            const affected = hasCoordinate(getSelectedCoordinates(sudokuType, board.length, selectedCell), [i, j]);
+
+            let selected = value === selectedValue;
+            let affected = false;
+
+            if (selectedCell) {
+                const [r, c] = selectedCell;
+
+                selected = selected || (i === r && j === c);
+                affected = hasCoordinate(getAffectedCoordinates(sudokuType, board.length, r, c), [i, j]);
+            }
+
             const bad = board[i][j].bad || isBadCell(sudokuType, board, i, j);
             const withNotes = board[i][j].val === 0 && (!hintCell || hintCell[0] !== i || hintCell[1] !== j);
 

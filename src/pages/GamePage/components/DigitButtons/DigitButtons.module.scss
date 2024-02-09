@@ -1,6 +1,39 @@
 .DigitButtons {
     display: grid;
     width: 100%;
+    gap: 0.25rem;
+
+    &.count_4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+
+        @media screen and (min-width: 1024px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    &.count_6 {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+
+        @media screen and (min-width: 1024px) {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    &.count_8 {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+
+        @media screen and (min-width: 1024px) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+
+    &.count_9 {
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+
+        @media screen and (min-width: 1024px) {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
 }
 
 .Button {

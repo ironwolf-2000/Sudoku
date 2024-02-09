@@ -21,6 +21,7 @@ import { Card } from '@/components';
 import { LayoutType } from '@/app/const';
 import { useLayoutType, useOutsideClick } from '@/app/hooks';
 import { randomChoice } from '@/algorithms/helpers';
+import { INITIAL_CLUE_COUNT } from '@/algorithms/const';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
@@ -33,10 +34,6 @@ export const GamePage: React.FC = () => {
     const { board, solution, selectedValue, selectedCell, hintCell, checkMode } = useSelector(
         (state: RootState) => state.gameGrid
     );
-
-    const clueCount = useMemo(() => {
-        return boardSize ** 2 - level * 11 - 2;
-    }, [boardSize, level]);
 
     const emptyCells = useMemo(() => {
         const emptyCells: Coordinate[] = [];
@@ -83,13 +80,17 @@ export const GamePage: React.FC = () => {
     }, [board, emptyCells.length, solution]);
 
     const startNewGame = useCallback(() => {
-        const [board, solution] = createNewGame(sudokuType, boardSize, clueCount);
+        const [board, solution] = createNewGame(
+            sudokuType,
+            boardSize,
+            INITIAL_CLUE_COUNT[sudokuType][boardSize][level - 1]
+        );
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [boardSize, clueCount, dispatch, initialCheckCount, initialHintCount, sudokuType]);
+    }, [boardSize, dispatch, initialCheckCount, initialHintCount, level, sudokuType]);
 
     useEffect(() => {
         startNewGame();

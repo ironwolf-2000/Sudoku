@@ -28,7 +28,7 @@ export const DigitButtons: React.FC<IDigitButtonsProps> = ({
     };
 
     return (
-        <div className={classnames(styles.DigitButtons, className)}>
+        <div className={classnames(styles.DigitButtons, styles[`count_${count}`], className)}>
             {getInclusiveRange(1, count).map(val => (
                 <button
                     key={val}

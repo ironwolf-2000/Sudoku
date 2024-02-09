@@ -8,8 +8,8 @@ import {
     getDeepCopy,
     generateInitialBoard,
     getAvailableValues,
+    isValid,
 } from './helpers';
-import { isValid } from './validators';
 
 const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null => {
     const emptyCells = getEmptyCells(board);

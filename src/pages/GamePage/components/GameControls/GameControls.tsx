@@ -101,7 +101,6 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                 ))}
             </div>
             <DigitButtons
-                className={styles.DigitButtons}
                 count={boardSize}
                 gameStatus={gameStatus}
                 valueSetting={Boolean(selectedCell)}

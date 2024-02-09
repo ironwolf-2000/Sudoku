@@ -22,17 +22,14 @@
     width: 9rem;
 }
 
-.ExtrasContent {
+.SectionContent {
+    width: 17rem;
     display: flex;
-    column-gap: 3rem;
+    justify-content: space-between;
 }
 
-.TypeContent {
-    display: flex;
-    column-gap: 0.75rem;
-}
-
-.TypeButton {
+.TypeButton,
+.SizeButton {
     background-color: var(--blue-light);
     border: none;
     border-radius: 0.75rem;
@@ -50,6 +47,12 @@
         background-color: var(--blue-darker);
         color: var(--white);
     }
+}
+
+.SizeButton {
+    font-size: 1rem;
+    border-radius: 1rem;
+    padding: 0.5rem 0.75rem;
 }
 
 .Footer {
