@@ -18,7 +18,7 @@ export const Icon: React.FC<IIconProps> = ({
     className,
 }) => {
     return (
-        <button
+        <span
             className={classnames(styles.Icon, disabled && styles.disabled, styles[`size_${size}`], className)}
             onMouseOver={onHover}
             onMouseLeave={onHoverEnd}
@@ -33,6 +33,6 @@ export const Icon: React.FC<IIconProps> = ({
             {withCaption && (
                 <span className={classnames(styles.Caption, !captionVisible && styles.hidden)}>{label}</span>
             )}
-        </button>
+        </span>
     );
 };

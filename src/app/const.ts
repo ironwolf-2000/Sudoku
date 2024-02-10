@@ -4,7 +4,15 @@ export enum SudokuType {
     EVEN_ODD = 'EVEN_ODD',
 }
 
-export const BOARD_SIZES = [4, 6, 8, 9] as const;
+export const SUDOKU_TYPES = [SudokuType.CLASSIC, SudokuType.DIAGONALS, SudokuType.EVEN_ODD];
+
+export const sudokuTypeToLabel = {
+    [SudokuType.CLASSIC]: 'classic',
+    [SudokuType.DIAGONALS]: 'diagonals',
+    [SudokuType.EVEN_ODD]: 'even-odd',
+};
+
+export const BOARD_SIZES = [4, 6, 8, 9];
 
 export const LAPTOP_BREAKPOINT = 1024;
 

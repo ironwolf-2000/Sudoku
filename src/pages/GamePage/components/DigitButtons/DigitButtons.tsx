@@ -35,7 +35,8 @@ export const DigitButtons: React.FC<IDigitButtonsProps> = ({
                     className={classnames(
                         styles.Button,
                         selectedValue === val && styles.selected,
-                        disabled && styles.disabled
+                        disabled && styles.disabled,
+                        styles[`count_${count}`]
                     )}
                     disabled={disabled}
                     onClick={() => handleClick(val)}

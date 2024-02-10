@@ -1,13 +1,15 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { BOARD_SIZES, PATHS, SudokuType } from '@/app/const';
+import { BOARD_SIZES, LayoutType, PATHS, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
 import styles from './MainPage.module.scss';
-import { Card, Icon, Stars } from '@/components';
+import { Icon, Slider, Stars } from '@/components';
 import check from '@/assets/icons/check.svg';
 import hint from '@/assets/icons/hint.svg';
 import pencil from '@/assets/icons/pencil.svg';
+import arrowRight from '@/assets/icons/arrow_right.svg';
 import { RootState } from '@/app';
 import {
     incrementInitialCheckCount,
@@ -16,6 +18,8 @@ import {
     setSudokuType,
     toggleInitialWithNotes,
 } from '@/features/gameSettings';
+import { useLayoutType } from '@/app/hooks';
+import { ISliderProps } from '@/components/Slider/types';
 
 export const MainPage: React.FC = () => {
     const navigate = useNavigate();
@@ -24,87 +28,85 @@ export const MainPage: React.FC = () => {
         (state: RootState) => state.gameSettings
     );
 
-    const extrasIcons = [
-        {
-            src: check,
-            badge: String(initialCheckCount),
-            label: 'checks',
-            onClick: () => dispatch(incrementInitialCheckCount()),
-        },
-        {
-            src: hint,
-            badge: String(initialHintCount),
-            label: 'hints',
-            onClick: () => dispatch(incrementInitialHintCount()),
-        },
-        {
-            src: pencil,
-            badge: String(initialWithNotes ? 'on' : 'off'),
-            label: 'notes',
-            onClick: () => dispatch(toggleInitialWithNotes()),
-        },
-    ];
+    const layoutType = useLayoutType();
 
-    const sudokuTypes = [
-        { type: SudokuType.CLASSIC, label: 'Classic' },
-        { type: SudokuType.DIAGONALS, label: 'Diagonals' },
-        { type: SudokuType.EVEN_ODD, label: 'Even-Odd' },
-    ] as const;
+    const sudokuTypes: ISliderProps['items'] = useMemo(() => {
+        return SUDOKU_TYPES.map(type => ({
+            label: sudokuTypeToLabel[type],
+            onItemClick: () => dispatch(setSudokuType(type)),
+        }));
+    }, [dispatch]);
+
+    const boardSizes: ISliderProps['items'] = useMemo(() => {
+        return BOARD_SIZES.map(size => ({
+            label: `${size}×${size}`,
+            onItemClick: () => dispatch(setBoardSize(size)),
+        }));
+    }, [dispatch]);
+
+    const helpIcons = useMemo(
+        () => [
+            {
+                src: check,
+                badge: String(initialCheckCount),
+                label: 'checks',
+                onClick: () => dispatch(incrementInitialCheckCount()),
+            },
+            {
+                src: hint,
+                badge: String(initialHintCount),
+                label: 'hints',
+                onClick: () => dispatch(incrementInitialHintCount()),
+            },
+            {
+                src: pencil,
+                badge: String(initialWithNotes ? 'on' : 'off'),
+                label: 'notes',
+                onClick: () => dispatch(toggleInitialWithNotes()),
+            },
+        ],
+        [dispatch, initialCheckCount, initialHintCount, initialWithNotes]
+    );
 
     return (
-        <Card className={styles.MainPage}>
-            <div>
-                <h1 className={styles.Title}>Sudoku Game</h1>
-                <main className={styles.Body}>
-                    <section className={styles.Section}>
-                        <h2 className={styles.SectionTitle}>Difficulty:</h2>
-                        <div className={styles.SectionContent}>
-                            <Stars interactive />
-                        </div>
-                    </section>
-                    <section className={styles.Section}>
-                        <h2 className={styles.SectionTitle}>Extras:</h2>
-                        <div className={classnames(styles.SectionContent, styles.ExtrasContent)}>
-                            {extrasIcons.map(props => (
-                                <Icon key={props.label} title="Tap to change" withCaption captionVisible {...props} />
-                            ))}
-                        </div>
-                    </section>
-                    <section className={styles.Section}>
-                        <h2 className={styles.SectionTitle}>Type:</h2>
-                        <div className={classnames(styles.SectionContent, styles.TypeContent)}>
-                            {sudokuTypes.map(({ type, label }) => (
-                                <button
-                                    key={type}
-                                    className={classnames(styles.TypeButton, sudokuType === type && styles.selected)}
-                                    onClick={() => dispatch(setSudokuType(SudokuType[type]))}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-                    <section className={styles.Section}>
-                        <h2 className={styles.SectionTitle}>Size:</h2>
-                        <div className={classnames(styles.SectionContent, styles.SizeContent)}>
-                            {BOARD_SIZES.map(size => (
-                                <button
-                                    key={size}
-                                    className={classnames(styles.SizeButton, boardSize === size && styles.selected)}
-                                    onClick={() => dispatch(setBoardSize(size))}
-                                >
-                                    {size}x{size}
-                                </button>
-                            ))}
-                        </div>
-                    </section>
-                </main>
-                <footer className={styles.Footer}>
-                    <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME)}>
-                        <span className={styles.PlayButtonText}>New Game</span>
-                    </button>
-                </footer>
-            </div>
-        </Card>
+        <div className={styles.MainPage}>
+            <h1 className={styles.Title}>Sudoku Game</h1>
+            <main className={styles.Body}>
+                <section className={styles.Section}>
+                    <h2 className={styles.SectionTitle}>Game Type</h2>
+                    <Slider
+                        items={sudokuTypes}
+                        sliderItemClass={styles.GameTypeItem}
+                        selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)}
+                    />
+                </section>
+                <section className={styles.Section}>
+                    <h2 className={styles.SectionTitle}>Board Size</h2>
+                    <Slider
+                        items={boardSizes}
+                        sliderItemClass={styles.BoardSizeItem}
+                        selectedIndex={BOARD_SIZES.indexOf(boardSize)}
+                    />
+                </section>
+                <section className={classnames(styles.Section, styles.horizontal)}>
+                    <h2 className={styles.SectionTitle}>Help:</h2>
+                    <div className={classnames(styles.SectionContent, styles.HelpContent)}>
+                        {helpIcons.map(props => (
+                            <Icon key={props.label} withCaption captionVisible {...props} />
+                        ))}
+                    </div>
+                </section>
+                <section className={classnames(styles.Section, styles.horizontal)}>
+                    <h2 className={styles.SectionTitle}>Difficulty:</h2>
+                    <div className={styles.SectionContent}>
+                        <Stars interactive />
+                    </div>
+                </section>
+                <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME)}>
+                    <span className={styles.PlayButtonText}>New Game</span>
+                    {layoutType === LayoutType.DESKTOP && <Icon src={arrowRight} size="s" label="arrow right" />}
+                </button>
+            </main>
+        </div>
     );
 };
