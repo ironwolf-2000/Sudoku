@@ -38,22 +38,21 @@ export const useCellsClassNames = (
 
         for (let j = 0; j < board.length; j++) {
             classNames[i].push([styles.Cell, styles[`size_${board.length}`]]);
-            const value = board[i][j].val;
 
             const shaded = hasCoordinate(getShadedCoordinates(sudokuType, solution), [i, j]);
             const hint = hintCell?.[0] === i && hintCell?.[1] === j;
             const clue = Boolean(board[i][j].clue);
             const error = hasCoordinate(errorCells, [i, j]);
-            const correct = value && !clue && !error;
+            const correct = board[i][j].val && !clue && !error;
 
-            let selected = value === selectedValue;
+            const selected = board[i][j].val === selectedValue || (i === selectedCell?.[0] && j === selectedCell?.[1]);
             let affected = false;
 
-            if (selectedCell) {
-                const [r, c] = selectedCell;
-
-                selected = selected || (i === r && j === c);
-                affected = hasCoordinate(getAffectedCoordinates(sudokuType, board.length, r, c), [i, j]);
+            if (selectedCell && board[selectedCell[0]][selectedCell[1]].val === 0) {
+                affected = hasCoordinate(
+                    getAffectedCoordinates(sudokuType, board.length, selectedCell[0], selectedCell[1]),
+                    [i, j]
+                );
             }
 
             const bad = board[i][j].bad || isBadCell(sudokuType, board, i, j);

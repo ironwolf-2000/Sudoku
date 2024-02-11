@@ -8,6 +8,9 @@ import styles from './GamePage.module.scss';
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
 import { CHECK_MODE_TIMEOUT, GameStatus } from './const';
 import {
+    resetHintCell,
+    resetSelectedCell,
+    resetSelectedValue,
     setBoard,
     setCheckMode,
     setHintCell,
@@ -31,9 +34,7 @@ export const GamePage: React.FC = () => {
         (state: RootState) => state.gameSettings
     );
 
-    const { board, solution, selectedValue, selectedCell, hintCell, checkMode } = useSelector(
-        (state: RootState) => state.gameGrid
-    );
+    const { board, solution, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
 
     const emptyCells = useMemo(() => {
         const emptyCells: Coordinate[] = [];
@@ -96,23 +97,22 @@ export const GamePage: React.FC = () => {
         startNewGame();
     }, [startNewGame]);
 
-    const handleSelectCell = (cell: Coordinate) => {
-        dispatch(setHintCell(undefined));
+    const handleSetCell = (cell: Coordinate) => {
+        dispatch(resetHintCell());
 
-        if (selectedCell?.[0] === cell[0] && selectedCell?.[1] === cell[1]) {
-            dispatch(setSelectedCell(undefined));
+        const [r, c] = cell;
+
+        if (board[r][c].val === 0) {
+            dispatch(resetSelectedValue());
         } else {
-            dispatch(setSelectedCell(cell));
-            dispatch(setSelectedValue(undefined));
+            dispatch(setSelectedValue(board[r][c].val));
         }
-    };
 
-    const handleSelectValue = (val: number) => {
-        dispatch(setSelectedValue(val === selectedValue ? undefined : val));
+        dispatch(setSelectedCell(cell));
     };
 
     const triggerCheckMode = () => {
-        if (checkMode) {
+        if (gameStatus === GameStatus.SUCCESS || checkMode) {
             return;
         }
 
@@ -122,7 +122,7 @@ export const GamePage: React.FC = () => {
     };
 
     const showHint = () => {
-        if (checkMode || hintCell) {
+        if (gameStatus === GameStatus.SUCCESS || checkMode || hintCell) {
             return;
         }
 
@@ -131,9 +131,9 @@ export const GamePage: React.FC = () => {
     };
 
     const handleOutsideClick = () => {
-        dispatch(setHintCell(undefined));
-        dispatch(setSelectedCell(undefined));
-        dispatch(setSelectedValue(undefined));
+        dispatch(resetHintCell());
+        dispatch(resetSelectedCell());
+        dispatch(resetSelectedValue());
     };
 
     const contentRef = useOutsideClick<HTMLDivElement>(handleOutsideClick);
@@ -141,9 +141,6 @@ export const GamePage: React.FC = () => {
     const gameControlsProps = {
         gameStatus,
         emptyCells,
-        selectedCell,
-        selectedValue,
-        onSelectValue: handleSelectValue,
         onTriggerCheckMode: triggerCheckMode,
         onShowHint: showHint,
     };
@@ -153,7 +150,7 @@ export const GamePage: React.FC = () => {
             <div className={styles.Content} ref={contentRef}>
                 <div>
                     <SudokuGridHeader gameStatus={gameStatus} />
-                    <SudokuGrid gameStatus={gameStatus} errorCells={errorCells} onSelectCell={handleSelectCell} />
+                    <SudokuGrid gameStatus={gameStatus} errorCells={errorCells} onSelectCell={handleSetCell} />
                     {layoutType === LayoutType.MOBILE && <GameControls {...gameControlsProps} />}
                 </div>
                 {layoutType === LayoutType.DESKTOP && <GameControls {...gameControlsProps} />}

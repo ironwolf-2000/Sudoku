@@ -98,7 +98,7 @@ export const MainPage: React.FC = () => {
                         <Stars interactive />
                     </div>
                 </section>
-                <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME)}>
+                <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME, { replace: true })}>
                     <span className={styles.PlayButtonText}>New Game</span>
                     {layoutType === LayoutType.DESKTOP && <Icon src={arrowRight} size="s" label="arrow right" />}
                 </button>

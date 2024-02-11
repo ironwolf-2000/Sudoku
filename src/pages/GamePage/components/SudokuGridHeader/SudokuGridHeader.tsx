@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
-import { restartGame, setHintCell, setSelectedValue } from '@/features/gameGrid';
+import { resetHintCell, resetSelectedValue, restartGame } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused } from '@/features/gameControls';
 import { LayoutType, PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
@@ -56,14 +56,14 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
 
         if (apply) {
             dispatch(restartGame());
-            dispatch(setHintCell(undefined));
-            dispatch(setSelectedValue(undefined));
+            dispatch(resetHintCell());
+            dispatch(resetSelectedValue());
             dispatch(setCheckCount(initialCheckCount));
             dispatch(setHintCount(initialHintCount));
             setGameTime(0);
 
             if (modalType === ModalType.QUIT || modalType === ModalType.GAME_COMPLETED) {
-                navigate(PATHS.MAIN);
+                navigate(PATHS.MAIN, { replace: true });
             }
         }
     };

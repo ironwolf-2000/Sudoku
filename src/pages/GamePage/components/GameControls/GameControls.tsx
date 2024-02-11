@@ -12,25 +12,60 @@ import eraser from '@/assets/icons/eraser.svg';
 import hint from '@/assets/icons/hint.svg';
 import check from '@/assets/icons/check.svg';
 import pencil from '@/assets/icons/pencil.svg';
-import { updateSelectedCellNotes, updateSelectedCellValue } from '@/features/gameGrid';
 import { toggleWithNotes } from '@/features/gameControls';
 import { useLayoutType } from '@/app/hooks';
 import { LayoutType } from '@/app/const';
+import { resetSelectedValue, setSelectedValue, updateCellNotes, updateCellValue } from '@/features/gameGrid';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
-    onSelectValue,
     onTriggerCheckMode,
     onShowHint,
     emptyCells,
-    selectedCell,
-    selectedValue,
 }) => {
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
     const { initialWithNotes, boardSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { board, selectedCell } = useSelector((state: RootState) => state.gameGrid);
+
+    const [hoveredIcon, setHoveredIcon] = useState('');
+
+    const handleIconHover = (label: string) => {
+        if (layoutType === LayoutType.DESKTOP) {
+            setHoveredIcon(label);
+        }
+    };
+
+    const handleIconHoverEnd = () => {
+        if (layoutType === LayoutType.DESKTOP) {
+            setHoveredIcon('');
+        }
+    };
+
+    const handleSetValue = (val: number) => {
+        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue) {
+            return;
+        }
+
+        if (!withNotes) {
+            dispatch(updateCellValue(val));
+            dispatch(setSelectedValue(val));
+        } else {
+            dispatch(updateCellNotes(val));
+            dispatch(resetSelectedValue());
+        }
+    };
+
+    const handleErase = () => {
+        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue) {
+            return;
+        }
+
+        dispatch(updateCellValue(0));
+        dispatch(resetSelectedValue());
+    };
 
     const icons = [
         {
@@ -57,32 +92,10 @@ export const GameControls: React.FC<IGameControlsProps> = ({
         {
             disabled: gameStatus === GameStatus.SUCCESS,
             label: 'erase',
-            onClick: !gamePaused ? () => dispatch(updateSelectedCellValue(0)) : undefined,
+            onClick: !gamePaused ? handleErase : undefined,
             src: eraser,
         },
     ];
-
-    const [hoveredIcon, setHoveredIcon] = useState('');
-
-    const handleSetValue = (val: number) => {
-        if (!withNotes) {
-            dispatch(updateSelectedCellValue(val));
-        } else {
-            dispatch(updateSelectedCellNotes(val));
-        }
-    };
-
-    const handleIconHover = (label: string) => {
-        if (layoutType === LayoutType.DESKTOP) {
-            setHoveredIcon(label);
-        }
-    };
-
-    const handleIconHoverEnd = () => {
-        if (layoutType === LayoutType.DESKTOP) {
-            setHoveredIcon('');
-        }
-    };
 
     return (
         <div className={styles.GameControls}>
@@ -100,14 +113,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                     />
                 ))}
             </div>
-            <DigitButtons
-                count={boardSize}
-                gameStatus={gameStatus}
-                valueSetting={Boolean(selectedCell)}
-                selectedValue={selectedValue}
-                onSetValue={handleSetValue}
-                onSelectValue={onSelectValue}
-            />
+            <DigitButtons count={boardSize} gameStatus={gameStatus} onSetValue={handleSetValue} />
         </div>
     );
 };

@@ -11,7 +11,7 @@ export const getInclusiveRange = (lo: number, hi: number): number[] => {
         .map((_, i) => i + lo);
 };
 
-export const randomChoice = <T>(array: T[]): T | undefined => {
+export const randomChoice = <T>(array: T[]): T => {
     return array[Math.floor(Math.random() * array.length)];
 };
 

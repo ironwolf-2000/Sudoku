@@ -23,7 +23,19 @@
         grid-template-columns: repeat(8, minmax(0, 1fr));
 
         @media screen and (min-width: 1024px) {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+
+            .Button:nth-child(-1n + 6) {
+                grid-column: span 2;
+            }
+
+            .Button:nth-last-child(2) {
+                grid-column: 2 / span 2;
+            }
+
+            .Button:nth-last-child(1) {
+                grid-column: 4 / span 2;
+            }
         }
     }
 
@@ -70,7 +82,7 @@
         font-size: 1.25rem;
 
         @media screen and (min-width: 1024px) {
-            height: 4rem;
+            height: 5rem;
             font-size: 1.5rem;
         }
     }
@@ -88,7 +100,6 @@
     &:not(.disabled) {
         cursor: pointer;
 
-        &.selected,
         &:hover,
         &:focus {
             background-color: var(--blue-dark);

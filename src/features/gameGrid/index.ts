@@ -28,14 +28,23 @@ export const gameGridSlice = createSlice({
         setSolution: (state, action: PayloadAction<Board>) => {
             state.solution = action.payload;
         },
-        setSelectedValue: (state, action: PayloadAction<number | undefined>) => {
+        setSelectedValue: (state, action: PayloadAction<number>) => {
             state.selectedValue = action.payload;
         },
-        setSelectedCell: (state, action: PayloadAction<Coordinate | undefined>) => {
+        resetSelectedValue: state => {
+            state.selectedValue = undefined;
+        },
+        setSelectedCell: (state, action: PayloadAction<Coordinate>) => {
             state.selectedCell = action.payload;
         },
-        setHintCell: (state, action: PayloadAction<Coordinate | undefined>) => {
+        resetSelectedCell: state => {
+            state.selectedCell = undefined;
+        },
+        setHintCell: (state, action: PayloadAction<Coordinate>) => {
             state.hintCell = action.payload;
+        },
+        resetHintCell: state => {
+            state.hintCell = undefined;
         },
         setCheckMode: (state, action: PayloadAction<boolean>) => {
             const checkMode = action.payload;
@@ -63,23 +72,29 @@ export const gameGridSlice = createSlice({
             state.selectedCell = undefined;
             state.checkMode = false;
         },
-        updateSelectedCellValue: (state, action: PayloadAction<number>) => {
+        updateCellValue: (state, action: PayloadAction<number>) => {
             if (!state.selectedCell) {
                 return;
             }
 
-            const val = action.payload;
             const [r, c] = state.selectedCell;
+            const val = action.payload;
 
-            state.board[r][c] = { val, notes: [], bad: false };
+            if (!state.board[r][c].clue) {
+                state.board[r][c] = { val, notes: [], bad: false };
+            }
         },
-        updateSelectedCellNotes: (state, action: PayloadAction<number>) => {
+        updateCellNotes: (state, action: PayloadAction<number>) => {
             if (!state.selectedCell) {
                 return;
             }
 
             const val = action.payload;
             const [r, c] = state.selectedCell;
+
+            if (state.board[r][c].clue) {
+                return;
+            }
 
             const itemIndex = state.board[r][c].notes.indexOf(val);
 
@@ -99,12 +114,15 @@ export const {
     setBoard,
     setSolution,
     setSelectedValue,
+    resetSelectedValue,
     setSelectedCell,
+    resetSelectedCell,
     setHintCell,
+    resetHintCell,
     setCheckMode,
     restartGame,
-    updateSelectedCellValue,
-    updateSelectedCellNotes,
+    updateCellValue,
+    updateCellNotes,
 } = gameGridSlice.actions;
 
 export default gameGridSlice.reducer;

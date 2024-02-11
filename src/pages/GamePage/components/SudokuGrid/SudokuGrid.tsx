@@ -19,7 +19,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
     const cellsClassNames = useCellsClassNames(gameStatus, errorCells, hintCell, checkMode);
 
     const handleCellClick = (cell: Coordinate) => {
-        if (gameStatus !== GameStatus.SUCCESS && !checkMode && !board[cell[0]][cell[1]].clue) {
+        if (gameStatus !== GameStatus.SUCCESS && !checkMode) {
             onSelectCell(cell);
         }
     };
@@ -35,9 +35,12 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
                 onClick={() => handleCellClick([r, c])}
             >
                 {cellValue ||
-                    getInclusiveRange(1, board.length).map(el => (
-                        <div key={el} className={classnames(styles.CellNote, !cellNotes.includes(el) && styles.hidden)}>
-                            {el}
+                    getInclusiveRange(1, board.length).map(val => (
+                        <div
+                            key={val}
+                            className={classnames(styles.CellNote, !cellNotes.includes(val) && styles.hidden)}
+                        >
+                            {val}
                         </div>
                     ))}
             </div>
