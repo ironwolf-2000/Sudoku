@@ -1,7 +1,7 @@
 .MainPage {
     position: relative;
     width: 100%;
-    min-height: 46rem;
+    min-height: 47rem;
 
     @media screen and (min-width: 1024px) {
         min-height: auto;
@@ -60,12 +60,8 @@
     }
 }
 
-.GameTypeItem {
-    font-size: 0.9rem;
-}
-
 .BoardSizeItem {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 }
 
 .PlayButton {
@@ -90,7 +86,7 @@
 
     left: calc(50% - 7rem);
     right: auto;
-    bottom: -6rem;
+    bottom: -7rem;
     top: auto;
 
     @media screen and (min-width: 1024px) {

@@ -31,4 +31,10 @@
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
+    user-select: none;
+    cursor: pointer;
+
+    @media screen and (min-width: 1024px) {
+        cursor: default;
+    }
 }

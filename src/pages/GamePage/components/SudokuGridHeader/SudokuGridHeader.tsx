@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Icon, Modal, Stars } from '@/components';
 import { restartGame, setHintCell, setSelectedValue } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused } from '@/features/gameControls';
-import { PATHS } from '@/app/const';
+import { LayoutType, PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
 import pause from '@/assets/icons/pause.svg';
@@ -16,12 +16,15 @@ import { GameStatus } from '../../const';
 import { ISudokuGridHeaderProps } from './types';
 import { GAME_COMPLETED_MODAL_DELAY, GAME_TIMEOUT, MODAL_DATA, ModalType } from './const';
 import { getFormattedTime } from './helpers';
+import { useLayoutType } from '@/app/hooks';
 
 export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.gameSettings);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+
+    const layoutType = useLayoutType();
 
     const [modalVisible, setModalVisible] = useState<Record<ModalType, boolean>>({
         [ModalType.QUIT]: false,
@@ -87,6 +90,10 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         return getFormattedTime(gameTime);
     }, [gameTime]);
 
+    const handleTimeClick = () => {
+        dispatch(toggleGamePaused());
+    };
+
     return (
         <>
             <div className={styles.SudokuGridHeader}>
@@ -107,14 +114,14 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                     />
                 </div>
                 <Stars className={styles.Stars} size="s" />
-                <div className={styles.Time}>
+                <div className={styles.Time} onClick={layoutType === LayoutType.MOBILE ? handleTimeClick : undefined}>
                     <span>{formattedGameTime}</span>
                     <Icon
                         src={gamePaused || gameStatus === GameStatus.SUCCESS ? play : pause}
                         label={gamePaused || gameStatus === GameStatus.SUCCESS ? 'play' : 'pause'}
                         size="s"
                         disabled={gameStatus === GameStatus.SUCCESS}
-                        onClick={() => dispatch(toggleGamePaused())}
+                        onClick={layoutType === LayoutType.DESKTOP ? handleTimeClick : undefined}
                     />
                 </div>
             </div>

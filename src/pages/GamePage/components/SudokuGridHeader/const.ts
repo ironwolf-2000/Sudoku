@@ -30,7 +30,7 @@ export const MODAL_DATA = [
     {
         modalType: ModalType.GAME_COMPLETED,
         title: 'Game completed!',
-        text: 'Congratulations! You successfully completed the Sudoku challenge.',
+        text: 'Congratulations! You successfully completed this Sudoku challenge.',
         applyButtonLabel: 'Home page',
         withCloseButton: false,
     },

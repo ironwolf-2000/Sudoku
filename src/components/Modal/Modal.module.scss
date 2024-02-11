@@ -61,8 +61,13 @@
 
 .Footer {
     display: flex;
-    column-gap: 0.5rem;
     justify-content: flex-end;
+
+    column-gap: 0.5rem;
+
+    @media screen and (min-width: 1024px) {
+        column-gap: 0.5rem;
+    }
 
     &.withOneElement {
         justify-content: center;
@@ -72,17 +77,25 @@
 .Button {
     border: none;
     outline: none;
-    padding: 0.5rem 1rem;
     border: 0.125rem solid var(--black);
     border-radius: 1rem;
     cursor: pointer;
     text-transform: uppercase;
     font-weight: bold;
+    background-color: transparent;
+    color: var(--black);
     transition:
         background-color var(--transition-time),
         color var(--transition-time);
-    background-color: transparent;
-    color: var(--black);
+    user-select: none;
+
+    width: 50%;
+    padding: 1rem;
+
+    @media screen and (min-width: 1024px) {
+        width: auto;
+        padding: 0.5rem 1rem;
+    }
 
     &:hover,
     &:focus {

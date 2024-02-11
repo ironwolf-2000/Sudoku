@@ -74,11 +74,7 @@ export const MainPage: React.FC = () => {
             <main className={styles.Body}>
                 <section className={styles.Section}>
                     <h2 className={styles.SectionTitle}>Game Type</h2>
-                    <Slider
-                        items={sudokuTypes}
-                        sliderItemClass={styles.GameTypeItem}
-                        selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)}
-                    />
+                    <Slider items={sudokuTypes} selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)} />
                 </section>
                 <section className={styles.Section}>
                     <h2 className={styles.SectionTitle}>Board Size</h2>
