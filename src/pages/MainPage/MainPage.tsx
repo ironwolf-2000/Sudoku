@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { BOARD_SIZES, LayoutType, PATHS, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
+import { BOARD_SIZES, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
 import styles from './MainPage.module.scss';
 import { Icon, Slider, Stars } from '@/components';
 import check from '@/assets/icons/check.svg';
 import hint from '@/assets/icons/hint.svg';
 import pencil from '@/assets/icons/pencil.svg';
-import arrowRight from '@/assets/icons/arrow_right.svg';
 import { RootState } from '@/app';
 import {
     incrementInitialCheckCount,
@@ -18,17 +16,14 @@ import {
     setSudokuType,
     toggleInitialWithNotes,
 } from '@/features/gameSettings';
-import { useLayoutType } from '@/app/hooks';
 import { ISliderProps } from '@/components/Slider/types';
+import { PlayButton } from './components';
 
 export const MainPage: React.FC = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount, initialWithNotes, sudokuType, boardSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
-
-    const layoutType = useLayoutType();
 
     const sudokuTypes: ISliderProps['items'] = useMemo(() => {
         return SUDOKU_TYPES.map(type => ({
@@ -98,10 +93,7 @@ export const MainPage: React.FC = () => {
                         <Stars interactive />
                     </div>
                 </section>
-                <button className={styles.PlayButton} onClick={() => navigate(PATHS.GAME, { replace: true })}>
-                    <span className={styles.PlayButtonText}>New Game</span>
-                    {layoutType === LayoutType.DESKTOP && <Icon src={arrowRight} size="s" label="arrow right" />}
-                </button>
+                <PlayButton />
             </main>
         </div>
     );

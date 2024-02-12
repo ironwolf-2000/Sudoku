@@ -1,0 +1,72 @@
+.PlayButton {
+    align-items: center;
+    background-color: var(--blue-light);
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0.5rem 2rem var(--blue-light);
+    column-gap: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    font-size: 1.5rem;
+    font-weight: bold;
+    height: 4.5rem;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+    text-transform: uppercase;
+    transition: transform var(--transition-time);
+    user-select: none;
+    width: 14rem;
+
+    left: calc(50% - 7rem);
+    right: auto;
+    bottom: -7rem;
+    top: auto;
+
+    @media screen and (min-width: 1024px) {
+        left: auto;
+        right: -17rem;
+        bottom: auto;
+        top: calc(50% - 2rem);
+
+        &:focus,
+        &:hover {
+            transform: translateX(0.25rem);
+        }
+    }
+
+    &:active {
+        cursor: wait;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 150%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                60deg,
+                transparent,
+                transparent 0.75rem,
+                var(--blue) 0.75rem,
+                var(--blue) 1.5rem
+            );
+            animation: loading 1s infinite linear;
+        }
+    }
+}
+
+.PlayButtonText {
+    position: relative;
+    color: var(--black);
+}
+
+@keyframes loading {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-1.75rem);
+    }
+}
