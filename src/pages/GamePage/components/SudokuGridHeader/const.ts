@@ -24,7 +24,7 @@ export const MODAL_DATA = [
         modalType: ModalType.TIME_OVER,
         title: 'Time is over!',
         text: 'Uh-oh! The clock has run out on this Sudoku challenge. The game will now be restarted.',
-        applyButtonLabel: 'Understood',
+        applyButtonLabel: 'Close',
         withCloseButton: false,
     },
     {

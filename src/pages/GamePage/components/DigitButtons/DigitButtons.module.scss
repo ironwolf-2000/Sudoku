@@ -59,17 +59,27 @@
 
     &.count_4 {
         height: 4rem;
-        font-size: 1.5rem;
+        font-size: 1.75rem;
 
         @media screen and (min-width: 1024px) {
             height: 6rem;
-            font-size: 2rem;
+            font-size: 2.25rem;
         }
     }
 
     &.count_6 {
         height: 3.5rem;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+
+        @media screen and (min-width: 1024px) {
+            height: 5rem;
+            font-size: 2rem;
+        }
+    }
+
+    &.count_8 {
+        height: 3rem;
+        font-size: 1.4rem;
 
         @media screen and (min-width: 1024px) {
             height: 5rem;
@@ -77,23 +87,13 @@
         }
     }
 
-    &.count_8 {
-        height: 3rem;
-        font-size: 1.25rem;
-
-        @media screen and (min-width: 1024px) {
-            height: 5rem;
-            font-size: 1.5rem;
-        }
-    }
-
     &.count_9 {
         height: 3rem;
-        font-size: 1.25rem;
+        font-size: 1.4rem;
 
         @media screen and (min-width: 1024px) {
             height: 5rem;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
         }
     }
 

@@ -49,3 +49,17 @@ h6 {
 #__next {
     isolation: isolate;
 }
+
+@font-face {
+    font-family: 'Pacifico';
+    src:
+        local('Pacifico'),
+        url('@/assets/fonts/Pacifico-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'PTMono';
+    src:
+        local('PTMono'),
+        url('@/assets/fonts/PTMono-Regular.ttf') format('truetype');
+}

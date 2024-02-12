@@ -37,10 +37,9 @@
 }
 
 .Cell {
-    align-items: center;
     background-color: var(--gray-lighter);
     display: grid;
-    font-weight: bold;
+    font-family: 'Pacifico', cursive;
     justify-items: center;
     user-select: none;
 
@@ -81,7 +80,7 @@
     }
 
     &.size_4 {
-        font-size: 2.5rem;
+        font-size: 3.5rem;
         width: 6rem;
         height: 6rem;
 
@@ -98,13 +97,13 @@
 
         &.withNotes:not(.hint) {
             grid-template: repeat(2, 1fr) / repeat(2, 1fr);
-            font-size: 1rem;
-            padding: 0.5rem;
+            font-size: 1.25rem;
+            padding: 0.75rem;
         }
     }
 
     &.size_6 {
-        font-size: 2rem;
+        font-size: 2.5rem;
         width: 4rem;
         height: 4rem;
 
@@ -124,12 +123,12 @@
         &.withNotes:not(.hint) {
             grid-template: repeat(2, 1fr) / repeat(3, 1fr);
             font-size: 0.9rem;
-            padding: 0.5rem;
+            padding: 0.5rem 0.25rem;
         }
     }
 
     &.size_8 {
-        font-size: 1.5rem;
+        font-size: 2rem;
         width: 3.25rem;
         height: 3.25rem;
 
@@ -150,8 +149,8 @@
 
         &.withNotes:not(.hint) {
             grid-template: repeat(3, 1fr) / repeat(6, 1fr);
-            font-size: 0.65rem;
-            padding: 0.15rem;
+            font-size: 0.6rem;
+            padding: 0.1rem;
 
             .CellNote:nth-child(-1n + 6) {
                 grid-column: span 2;
@@ -168,7 +167,7 @@
     }
 
     &.size_9 {
-        font-size: 1.5rem;
+        font-size: 2rem;
         width: 3rem;
         height: 3rem;
 
@@ -190,7 +189,7 @@
 
         &.withNotes:not(.hint) {
             grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             padding: 0.1rem;
         }
     }

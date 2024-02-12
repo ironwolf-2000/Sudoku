@@ -3,7 +3,7 @@ import { SudokuType } from '@/app/const';
 export const INITIAL_CLUE_COUNT: Record<SudokuType, Record<number, number[]>> = {
     [SudokuType.CLASSIC]: {
         4: [10, 8, 6, 5, 4],
-        6: [14, 12, 11, 10, 8],
+        6: [14, 12, 11, 10, 9],
         8: [27, 24, 21, 19, 17],
         9: [36, 32, 28, 26, 23],
     },
