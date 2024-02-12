@@ -44,9 +44,9 @@ export const useCellsClassNames = (
             const clue = Boolean(board[i][j].clue);
             const error = hasCoordinate(errorCells, [i, j]);
             const correct = board[i][j].val && !clue && !error;
+            const selected = i === selectedCell?.[0] && j === selectedCell?.[1];
 
-            const selected = board[i][j].val === selectedValue || (i === selectedCell?.[0] && j === selectedCell?.[1]);
-            let affected = false;
+            let affected = board[i][j].val === selectedValue;
 
             if (selectedCell && board[selectedCell[0]][selectedCell[1]].val === 0) {
                 affected = hasCoordinate(

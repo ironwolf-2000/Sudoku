@@ -30,6 +30,7 @@
     padding: 2rem;
     border-radius: 1rem;
     background-color: var(--blue-lighter);
+    position: relative;
 
     &.show {
         animation: slide-up var(--transition-time) ease-out forwards;
@@ -40,11 +41,17 @@
     }
 }
 
+.CrossIcon {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+}
+
 .Title {
     text-transform: uppercase;
     text-align: center;
     font-weight: bold;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     color: var(--black);
     font-size: 2.25rem;
 

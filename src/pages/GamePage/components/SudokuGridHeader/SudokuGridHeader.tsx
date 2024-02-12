@@ -62,7 +62,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
             dispatch(setHintCount(initialHintCount));
             setGameTime(0);
 
-            if (modalType === ModalType.QUIT || modalType === ModalType.GAME_COMPLETED) {
+            if (modalType === ModalType.QUIT) {
                 navigate(PATHS.MAIN, { replace: true });
             }
         }

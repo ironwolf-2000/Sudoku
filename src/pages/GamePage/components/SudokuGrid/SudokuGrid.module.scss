@@ -61,7 +61,7 @@
     }
 
     &.selected:not(.checkMode) {
-        background-color: var(--blue);
+        background-color: var(--blue-dark);
     }
 
     &.clue.checkMode {

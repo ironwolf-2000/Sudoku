@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import classnames from 'classnames';
 
+import cross from '@/assets/icons/cross.svg';
+import { Icon } from '@/components/Icon';
 import { IModalProps } from './types';
 import styles from './Modal.module.scss';
 
@@ -18,15 +20,22 @@ export const Modal: React.FC<IModalProps> = ({ children, title, visible, applyBu
         return () => document.body.classList.remove('no-scroll');
     }, [visible]);
 
-    const onModalClose = (callback: () => void) => {
+    const onModalClose = (callback?: () => void) => {
         setAnimationClassName(styles.hide);
         setTimeout(() => setModalVisible(false), 200);
-        callback();
+        callback?.();
     };
 
     return (
         <div className={classnames(styles.Modal, !modalVisible && styles.hidden, animationClassName)}>
             <div className={classnames(styles.Content, animationClassName)}>
+                <Icon
+                    className={styles.CrossIcon}
+                    src={cross}
+                    label="cross icon"
+                    size="s"
+                    onClick={() => onModalClose(onClose)}
+                />
                 <header className={styles.Title}>{title}</header>
                 <div className={styles.Body}>{children}</div>
                 <footer className={classnames(styles.Footer, !onClose && styles.withOneElement)}>
