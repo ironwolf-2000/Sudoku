@@ -11,7 +11,8 @@ import { IGameControlsProps } from './types';
 import eraser from '@/assets/icons/eraser.svg';
 import hint from '@/assets/icons/hint.svg';
 import check from '@/assets/icons/check.svg';
-import pencil from '@/assets/icons/pencil.svg';
+import notes from '@/assets/icons/notes.svg';
+import notesOutline from '@/assets/icons/notes_outline.svg';
 import { toggleWithNotes } from '@/features/gameControls';
 import { useLayoutType } from '@/app/hooks';
 import { LayoutType } from '@/app/const';
@@ -74,7 +75,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             disabled: gameStatus === GameStatus.SUCCESS || !initialWithNotes,
             label: 'notes',
             onClick: !gamePaused ? () => dispatch(toggleWithNotes()) : undefined,
-            src: pencil,
+            src: withNotes ? notes : notesOutline,
         },
         {
             disabled: gameStatus === GameStatus.SUCCESS,

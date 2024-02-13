@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Icon, Modal, Stars } from '@/components';
 import { resetHintCell, resetSelectedValue, restartGame } from '@/features/gameGrid';
-import { setCheckCount, setHintCount, toggleGamePaused } from '@/features/gameControls';
+import { setCheckCount, setHintCount, toggleGamePaused, toggleWithNotes } from '@/features/gameControls';
 import { LayoutType, PATHS } from '@/app/const';
 import home from '@/assets/icons/home.svg';
 import restart from '@/assets/icons/restart.svg';
@@ -14,7 +14,7 @@ import styles from './SudokuGridHeader.module.scss';
 import { RootState } from '@/app';
 import { GameStatus } from '../../const';
 import { ISudokuGridHeaderProps } from './types';
-import { GAME_COMPLETED_MODAL_DELAY, GAME_TIMEOUT, MODAL_DATA, ModalType } from './const';
+import { GAME_TIMEOUT, MODAL_DATA, ModalType } from './const';
 import { getFormattedTime } from './helpers';
 import { useLayoutType } from '@/app/hooks';
 
@@ -22,7 +22,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.gameSettings);
-    const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { gamePaused, withNotes } = useSelector((state: RootState) => state.gameControls);
 
     const layoutType = useLayoutType();
 
@@ -30,7 +30,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         [ModalType.QUIT]: false,
         [ModalType.RESTART]: false,
         [ModalType.TIME_OVER]: false,
-        [ModalType.GAME_COMPLETED]: false,
     });
 
     const [gameTime, setGameTime] = useState(0);
@@ -62,6 +61,10 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
             dispatch(setHintCount(initialHintCount));
             setGameTime(0);
 
+            if (withNotes) {
+                dispatch(toggleWithNotes());
+            }
+
             if (modalType === ModalType.QUIT) {
                 navigate(PATHS.MAIN, { replace: true });
             }
@@ -79,12 +82,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
 
         return () => clearTimeout(gameTimeTimeoutRef.current);
     }, [gameTime, gamePaused, gameStatus, handleModalOpen]);
-
-    useEffect(() => {
-        if (gameStatus === GameStatus.SUCCESS) {
-            setTimeout(() => handleModalOpen(ModalType.GAME_COMPLETED), GAME_COMPLETED_MODAL_DELAY);
-        }
-    }, [gameStatus, handleModalOpen]);
 
     const formattedGameTime = useMemo(() => {
         return getFormattedTime(gameTime);

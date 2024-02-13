@@ -10,8 +10,23 @@
     padding: 0;
     user-select: none;
 
+    .Caption {
+        color: var(--blue-darker);
+        font-weight: bold;
+        transition: opacity var(--transition-time);
+        opacity: 1;
+
+        &.hidden {
+            opacity: 0;
+        }
+    }
+
     &:focus-visible {
         outline: 0.125rem dashed var(--black);
+
+        .Caption {
+            opacity: 1;
+        }
     }
 
     &.translucent {
@@ -76,14 +91,4 @@
 
 .Image {
     width: auto;
-}
-
-.Caption {
-    color: var(--blue-darker);
-    font-weight: bold;
-    transition: opacity var(--transition-time);
-
-    &.hidden {
-        opacity: 0;
-    }
 }

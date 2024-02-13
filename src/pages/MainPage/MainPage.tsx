@@ -7,7 +7,8 @@ import styles from './MainPage.module.scss';
 import { Icon, Slider, Stars } from '@/components';
 import check from '@/assets/icons/check.svg';
 import hint from '@/assets/icons/hint.svg';
-import pencil from '@/assets/icons/pencil.svg';
+import notes from '@/assets/icons/notes.svg';
+import notesOutline from '@/assets/icons/notes_outline.svg';
 import { RootState } from '@/app';
 import {
     incrementInitialCheckCount,
@@ -54,7 +55,7 @@ export const MainPage: React.FC = () => {
                 onClick: () => dispatch(incrementInitialHintCount()),
             },
             {
-                src: pencil,
+                src: initialWithNotes ? notes : notesOutline,
                 badge: String(initialWithNotes ? 'on' : 'off'),
                 label: 'notes',
                 onClick: () => dispatch(toggleInitialWithNotes()),

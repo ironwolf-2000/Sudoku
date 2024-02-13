@@ -29,6 +29,10 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (checkMode || withOverlay) {
+                return;
+            }
+
             if (/\d/.test(event.key)) {
                 onSetValue(Number(event.key));
             } else if (event.key.startsWith('Arrow')) {
@@ -56,7 +60,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [board.length, currentCell, onSetValue]);
+    }, [board.length, checkMode, currentCell, onSetValue, withOverlay]);
 
     useEffect(() => {
         if (gameStatus !== GameStatus.SUCCESS && !checkMode && currentCell) {
@@ -73,7 +77,6 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
                 key={r * board.length + c}
                 className={classnames(cellsClassNames[r][c])}
                 onClick={() => setCurrentCell([r, c])}
-                tabIndex={!withOverlay ? 0 : -1}
             >
                 {cellValue ||
                     getInclusiveRange(1, board.length).map(val => (

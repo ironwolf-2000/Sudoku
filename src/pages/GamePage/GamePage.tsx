@@ -99,33 +99,39 @@ export const GamePage: React.FC = () => {
         startNewGame();
     }, [startNewGame]);
 
-    const handleSetCell = (cell: Coordinate) => {
-        dispatch(resetHintCell());
+    const handleSetCell = useCallback(
+        (cell: Coordinate) => {
+            dispatch(resetHintCell());
 
-        const [r, c] = cell;
+            const [r, c] = cell;
 
-        if (board[r][c].val === 0) {
-            dispatch(resetSelectedValue());
-        } else {
-            dispatch(setSelectedValue(board[r][c].val));
-        }
+            if (board[r][c].val === 0) {
+                dispatch(resetSelectedValue());
+            } else {
+                dispatch(setSelectedValue(board[r][c].val));
+            }
 
-        dispatch(setSelectedCell(cell));
-    };
+            dispatch(setSelectedCell(cell));
+        },
+        [board, dispatch]
+    );
 
-    const handleSetValue = (val: number) => {
-        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue || val > board.length) {
-            return;
-        }
+    const handleSetValue = useCallback(
+        (val: number) => {
+            if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue || val > board.length) {
+                return;
+            }
 
-        if (!withNotes) {
-            dispatch(updateCellValue(val));
-            dispatch(setSelectedValue(val));
-        } else {
-            dispatch(updateCellNotes(val));
-            dispatch(resetSelectedValue());
-        }
-    };
+            if (!withNotes) {
+                dispatch(updateCellValue(val));
+                dispatch(setSelectedValue(val));
+            } else {
+                dispatch(updateCellNotes(val));
+                dispatch(resetSelectedValue());
+            }
+        },
+        [board, dispatch, selectedCell, withNotes]
+    );
 
     const triggerCheckMode = () => {
         if (gameStatus === GameStatus.SUCCESS || checkMode) {

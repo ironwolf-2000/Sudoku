@@ -5,8 +5,8 @@ import classnames from 'classnames';
 import { RootState } from '@/app';
 import { TOTAL_LEVEL_COUNT } from '@/app/const';
 import { setLevel } from '@/features/gameSettings';
-import starFilled from '@/assets/icons/star_filled.svg';
-import starEmpty from '@/assets/icons/star_empty.svg';
+import star from '@/assets/icons/star_filled.svg';
+import starOutline from '@/assets/icons/star_outline.svg';
 import { Icon } from '..';
 import { IStarsProps } from './types';
 import styles from './Stars.module.scss';
@@ -36,9 +36,9 @@ export const Stars: React.FC<IStarsProps> = ({ className, interactive, size = 'm
                     return (
                         <Icon
                             key={i}
-                            src={filled ? starFilled : starEmpty}
+                            src={filled ? star : starOutline}
                             size={size}
-                            label={filled ? 'filled star' : 'empty star'}
+                            label={filled ? 'filled star' : 'star outline'}
                             {...extraProps}
                         />
                     );

@@ -2,7 +2,6 @@ export enum ModalType {
     QUIT = 'QUIT',
     RESTART = 'RESTART',
     TIME_OVER = 'TIME_OVER',
-    GAME_COMPLETED = 'GAME_COMPLETED',
 }
 
 export const MODAL_DATA = [
@@ -27,15 +26,6 @@ export const MODAL_DATA = [
         applyButtonLabel: 'Close',
         withCloseButton: false,
     },
-    {
-        modalType: ModalType.GAME_COMPLETED,
-        title: 'Game completed!',
-        text: 'Congratulations! You successfully completed this Sudoku challenge.',
-        applyButtonLabel: 'Close',
-        withCloseButton: false,
-    },
 ] as const;
 
 export const GAME_TIMEOUT = 7200;
-
-export const GAME_COMPLETED_MODAL_DELAY = 1500;
