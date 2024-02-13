@@ -17,6 +17,8 @@ import {
     setSelectedCell,
     setSelectedValue,
     setSolution,
+    updateCellNotes,
+    updateCellValue,
 } from '@/features/gameGrid';
 import { createNewGame } from '@/algorithms';
 import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
@@ -30,11 +32,11 @@ export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
+    const { withNotes } = useSelector((state: RootState) => state.gameControls);
+    const { board, solution, selectedCell, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
     const { level, initialCheckCount, initialHintCount, sudokuType, boardSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
-
-    const { board, solution, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
 
     const emptyCells = useMemo(() => {
         const emptyCells: Coordinate[] = [];
@@ -111,6 +113,20 @@ export const GamePage: React.FC = () => {
         dispatch(setSelectedCell(cell));
     };
 
+    const handleSetValue = (val: number) => {
+        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue || val > board.length) {
+            return;
+        }
+
+        if (!withNotes) {
+            dispatch(updateCellValue(val));
+            dispatch(setSelectedValue(val));
+        } else {
+            dispatch(updateCellNotes(val));
+            dispatch(resetSelectedValue());
+        }
+    };
+
     const triggerCheckMode = () => {
         if (gameStatus === GameStatus.SUCCESS || checkMode) {
             return;
@@ -143,6 +159,7 @@ export const GamePage: React.FC = () => {
         emptyCells,
         onTriggerCheckMode: triggerCheckMode,
         onShowHint: showHint,
+        onSetValue: handleSetValue,
     };
 
     return (
@@ -150,7 +167,12 @@ export const GamePage: React.FC = () => {
             <div className={styles.Content} ref={contentRef}>
                 <div>
                     <SudokuGridHeader gameStatus={gameStatus} />
-                    <SudokuGrid gameStatus={gameStatus} errorCells={errorCells} onSelectCell={handleSetCell} />
+                    <SudokuGrid
+                        gameStatus={gameStatus}
+                        errorCells={errorCells}
+                        onSelectCell={handleSetCell}
+                        onSetValue={handleSetValue}
+                    />
                     {layoutType === LayoutType.MOBILE && <GameControls {...gameControlsProps} />}
                 </div>
                 {layoutType === LayoutType.DESKTOP && <GameControls {...gameControlsProps} />}

@@ -42,6 +42,7 @@
     font-family: 'Pacifico', cursive;
     justify-items: center;
     user-select: none;
+    outline: none;
 
     &.shaded {
         background-color: var(--gray);

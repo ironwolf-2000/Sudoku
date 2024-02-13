@@ -15,12 +15,13 @@ import pencil from '@/assets/icons/pencil.svg';
 import { toggleWithNotes } from '@/features/gameControls';
 import { useLayoutType } from '@/app/hooks';
 import { LayoutType } from '@/app/const';
-import { resetSelectedValue, setSelectedValue, updateCellNotes, updateCellValue } from '@/features/gameGrid';
+import { resetSelectedValue, updateCellValue } from '@/features/gameGrid';
 
 export const GameControls: React.FC<IGameControlsProps> = ({
     gameStatus,
     onTriggerCheckMode,
     onShowHint,
+    onSetValue,
     emptyCells,
 }) => {
     const dispatch = useDispatch();
@@ -41,20 +42,6 @@ export const GameControls: React.FC<IGameControlsProps> = ({
     const handleIconHoverEnd = () => {
         if (layoutType === LayoutType.DESKTOP) {
             setHoveredIcon('');
-        }
-    };
-
-    const handleSetValue = (val: number) => {
-        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue) {
-            return;
-        }
-
-        if (!withNotes) {
-            dispatch(updateCellValue(val));
-            dispatch(setSelectedValue(val));
-        } else {
-            dispatch(updateCellNotes(val));
-            dispatch(resetSelectedValue());
         }
     };
 
@@ -113,7 +100,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({
                     />
                 ))}
             </div>
-            <DigitButtons count={boardSize} gameStatus={gameStatus} onSetValue={handleSetValue} />
+            <DigitButtons count={boardSize} gameStatus={gameStatus} onSetValue={onSetValue} />
         </div>
     );
 };

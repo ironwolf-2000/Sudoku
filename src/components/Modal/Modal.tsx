@@ -1,24 +1,30 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import classnames from 'classnames';
 
 import cross from '@/assets/icons/cross.svg';
+import { setWithOverlay } from '@/features/appSettings';
 import { Icon } from '@/components/Icon';
 import { IModalProps } from './types';
 import styles from './Modal.module.scss';
 
 export const Modal: React.FC<IModalProps> = ({ children, title, visible, applyButtonLabel, onApply, onClose }) => {
+    const dispatch = useDispatch();
+
     const [modalVisible, setModalVisible] = useState(visible);
     const [animationClassName, setAnimationClassName] = useState<string | undefined>();
 
     useEffect(() => {
         if (visible) {
-            document.body.classList.add('no-scroll');
+            dispatch(setWithOverlay(true));
             setAnimationClassName(styles.show);
             setModalVisible(true);
         }
 
-        return () => document.body.classList.remove('no-scroll');
-    }, [visible]);
+        return () => {
+            dispatch(setWithOverlay(false));
+        };
+    }, [dispatch, visible]);
 
     const onModalClose = (callback?: () => void) => {
         setAnimationClassName(styles.hide);

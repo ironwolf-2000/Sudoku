@@ -39,7 +39,7 @@ html {
 body {
     height: 100%;
 
-    &.no-scroll {
+    &.with-overlay {
         overflow: hidden;
     }
 }

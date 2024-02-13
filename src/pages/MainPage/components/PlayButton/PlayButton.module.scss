@@ -55,6 +55,10 @@
             animation: loading 1s infinite linear;
         }
     }
+
+    &:focus-visible {
+        outline: 0.125rem dashed var(--black);
+    }
 }
 
 .PlayButtonText {

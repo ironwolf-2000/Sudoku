@@ -6,4 +6,5 @@ export interface ISudokuGridProps {
     gameStatus: GameStatus;
     errorCells: Coordinate[];
     onSelectCell: (cell: Coordinate) => void;
+    onSetValue: (val: number) => void;
 }

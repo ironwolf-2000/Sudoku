@@ -6,4 +6,5 @@ export interface IGameControlsProps {
     emptyCells: Coordinate[];
     onTriggerCheckMode: () => void;
     onShowHint: () => void;
+    onSetValue: (val: number) => void;
 }
