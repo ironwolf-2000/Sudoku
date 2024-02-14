@@ -11,25 +11,19 @@ import { PauseOverlay } from '..';
 import styles from './SudokuGrid.module.scss';
 import { getInclusiveRange } from '@/algorithms/helpers';
 
-export const SudokuGrid: React.FC<ISudokuGridProps> = ({
-    className,
-    gameStatus,
-    errorCells,
-    onSelectCell,
-    onSetValue,
-}) => {
+export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, onSelectCell, onSetValue }) => {
     const { withOverlay } = useSelector((state: RootState) => state.appSettings);
-    const { board, solution, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
+    const { board, solution, hintCell } = useSelector((state: RootState) => state.gameGrid);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
 
     const [currentCell, setCurrentCell] = useState<Coordinate | null>(null);
 
-    const gridClassNames = useGridClassNames(gameStatus, checkMode, className);
-    const cellsClassNames = useCellsClassNames(gameStatus, errorCells, hintCell, checkMode);
+    const gridClassNames = useGridClassNames(gameStatus, className);
+    const cellsClassNames = useCellsClassNames(gameStatus, hintCell);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (checkMode || withOverlay) {
+            if (withOverlay) {
                 return;
             }
 
@@ -60,13 +54,13 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [board.length, checkMode, currentCell, onSetValue, withOverlay]);
+    }, [board.length, currentCell, onSetValue, withOverlay]);
 
     useEffect(() => {
-        if (gameStatus !== GameStatus.SUCCESS && !checkMode && currentCell) {
+        if (gameStatus !== GameStatus.SUCCESS && currentCell) {
             onSelectCell(currentCell);
         }
-    }, [checkMode, currentCell, gameStatus, onSelectCell]);
+    }, [currentCell, gameStatus, onSelectCell]);
 
     const renderCell = (r: number, c: number) => {
         const cellValue = board[r][c].val || (hintCell?.[0] === r && hintCell?.[1] === c ? solution[r][c].val : 0);

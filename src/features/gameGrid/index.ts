@@ -6,7 +6,6 @@ import { Board, Coordinate } from '@/app/types';
 interface GameGridState {
     board: Board;
     solution: Board;
-    checkMode: boolean;
     selectedValue?: number;
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
@@ -15,7 +14,6 @@ interface GameGridState {
 const initialState: GameGridState = {
     board: [],
     solution: [],
-    checkMode: false,
 };
 
 export const gameGridSlice = createSlice({
@@ -46,31 +44,25 @@ export const gameGridSlice = createSlice({
         resetHintCell: state => {
             state.hintCell = undefined;
         },
-        setCheckMode: (state, action: PayloadAction<boolean>) => {
-            const checkMode = action.payload;
-            state.checkMode = checkMode;
-
-            if (checkMode) {
-                for (let i = 0; i < state.board.length; i++) {
-                    for (let j = 0; j < state.board.length; j++) {
-                        if (state.board[i][j].val && state.board[i][j].val !== state.solution[i][j].val) {
-                            state.board[i][j].bad = true;
-                        }
-                    }
-                }
-            }
-        },
         restartGame: state => {
             for (let i = 0; i < state.board.length; i++) {
                 for (let j = 0; j < state.board.length; j++) {
                     if (!state.board[i][j].clue) {
-                        state.board[i][j] = { val: 0, notes: [], bad: false };
+                        state.board[i][j] = { val: 0, notes: [] };
                     }
                 }
             }
 
             state.selectedCell = undefined;
-            state.checkMode = false;
+        },
+        clearBoardErrors: state => {
+            for (let i = 0; i < state.board.length; i++) {
+                for (let j = 0; j < state.board.length; j++) {
+                    if (state.board[i][j].val && state.board[i][j].val !== state.solution[i][j].val) {
+                        state.board[i][j] = { val: 0, notes: [] };
+                    }
+                }
+            }
         },
         updateCellValue: (state, action: PayloadAction<number>) => {
             if (!state.selectedCell) {
@@ -81,7 +73,7 @@ export const gameGridSlice = createSlice({
             const val = action.payload;
 
             if (!state.board[r][c].clue) {
-                state.board[r][c] = { val, notes: [], bad: false };
+                state.board[r][c] = { val, notes: [] };
             }
         },
         updateCellNotes: (state, action: PayloadAction<number>) => {
@@ -105,7 +97,6 @@ export const gameGridSlice = createSlice({
             }
 
             state.board[r][c].val = 0;
-            state.board[r][c].bad = false;
         },
     },
 });
@@ -119,8 +110,8 @@ export const {
     resetSelectedCell,
     setHintCell,
     resetHintCell,
-    setCheckMode,
     restartGame,
+    clearBoardErrors,
     updateCellValue,
     updateCellNotes,
 } = gameGridSlice.actions;

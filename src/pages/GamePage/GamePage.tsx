@@ -6,14 +6,12 @@ import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
 
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
-import { CHECK_MODE_TIMEOUT, GameStatus } from './const';
+import { GameStatus } from './const';
 import {
     resetHintCell,
     resetSelectedCell,
     resetSelectedValue,
     setBoard,
-    setCheckMode,
-    setHintCell,
     setSelectedCell,
     setSelectedValue,
     setSolution,
@@ -21,11 +19,10 @@ import {
     updateCellValue,
 } from '@/features/gameGrid';
 import { createNewGame } from '@/algorithms';
-import { decrementCheckCount, decrementHintCount, setCheckCount, setHintCount } from '@/features/gameControls';
+import { setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
 import { LayoutType } from '@/app/const';
 import { useLayoutType, useOutsideClick } from '@/app/hooks';
-import { randomChoice } from '@/algorithms/helpers';
 import { INITIAL_CLUE_COUNT } from '@/algorithms/const';
 
 export const GamePage: React.FC = () => {
@@ -33,7 +30,7 @@ export const GamePage: React.FC = () => {
     const layoutType = useLayoutType();
 
     const { withNotes } = useSelector((state: RootState) => state.gameControls);
-    const { board, solution, selectedCell, hintCell, checkMode } = useSelector((state: RootState) => state.gameGrid);
+    const { board, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
     const { level, initialCheckCount, initialHintCount, sudokuType, boardSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
@@ -51,20 +48,6 @@ export const GamePage: React.FC = () => {
 
         return emptyCells;
     }, [board]);
-
-    const errorCells = useMemo(() => {
-        const errorCells: Coordinate[] = [];
-
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j].val !== 0 && board[i][j].val !== solution[i][j].val) {
-                    errorCells.push([i, j]);
-                }
-            }
-        }
-
-        return errorCells;
-    }, [board, solution]);
 
     const gameStatus = useMemo(() => {
         if (board.length === 0 || emptyCells.length > 0) {
@@ -133,25 +116,6 @@ export const GamePage: React.FC = () => {
         [board, dispatch, selectedCell, withNotes]
     );
 
-    const triggerCheckMode = () => {
-        if (gameStatus === GameStatus.SUCCESS || checkMode) {
-            return;
-        }
-
-        dispatch(setCheckMode(true));
-        setTimeout(() => dispatch(setCheckMode(false)), CHECK_MODE_TIMEOUT);
-        dispatch(decrementCheckCount());
-    };
-
-    const showHint = () => {
-        if (gameStatus === GameStatus.SUCCESS || checkMode || hintCell) {
-            return;
-        }
-
-        dispatch(setHintCell(randomChoice(emptyCells)));
-        dispatch(decrementHintCount());
-    };
-
     const handleOutsideClick = () => {
         dispatch(resetHintCell());
         dispatch(resetSelectedCell());
@@ -163,8 +127,6 @@ export const GamePage: React.FC = () => {
     const gameControlsProps = {
         gameStatus,
         emptyCells,
-        onTriggerCheckMode: triggerCheckMode,
-        onShowHint: showHint,
         onSetValue: handleSetValue,
     };
 
@@ -173,12 +135,7 @@ export const GamePage: React.FC = () => {
             <div className={styles.Content} ref={contentRef}>
                 <div>
                     <SudokuGridHeader gameStatus={gameStatus} />
-                    <SudokuGrid
-                        gameStatus={gameStatus}
-                        errorCells={errorCells}
-                        onSelectCell={handleSetCell}
-                        onSetValue={handleSetValue}
-                    />
+                    <SudokuGrid gameStatus={gameStatus} onSelectCell={handleSetCell} onSetValue={handleSetValue} />
                     {layoutType === LayoutType.MOBILE && <GameControls {...gameControlsProps} />}
                 </div>
                 {layoutType === LayoutType.DESKTOP && <GameControls {...gameControlsProps} />}

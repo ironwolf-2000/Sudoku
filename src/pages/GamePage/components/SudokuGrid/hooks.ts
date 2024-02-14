@@ -7,27 +7,22 @@ import styles from './SudokuGrid.module.scss';
 import { getShadedCoordinates, hasCoordinate, isBadCell } from './helpers';
 import { getAffectedCoordinates } from '@/algorithms/helpers';
 
-export const useGridClassNames = (gameStatus: GameStatus, checkMode?: boolean, customClassName?: string) => {
+export const useGridClassNames = (gameStatus: GameStatus, customClassName?: string) => {
     const { boardSize } = useSelector((state: RootState) => state.gameSettings);
     const classNames = [styles.Content, styles[`size_${boardSize}`], customClassName];
 
-    if (!checkMode && gameStatus === GameStatus.SUCCESS) {
+    if (gameStatus === GameStatus.SUCCESS) {
         classNames.push(styles.success);
     }
 
-    if (!checkMode && gameStatus === GameStatus.FAILURE) {
+    if (gameStatus === GameStatus.FAILURE) {
         classNames.push(styles.failure);
     }
 
     return classNames;
 };
 
-export const useCellsClassNames = (
-    gameStatus: GameStatus,
-    errorCells: Coordinate[],
-    hintCell?: Coordinate,
-    checkMode?: boolean
-) => {
+export const useCellsClassNames = (gameStatus: GameStatus, hintCell?: Coordinate) => {
     const { board, solution, selectedCell, selectedValue } = useSelector((state: RootState) => state.gameGrid);
     const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
 
@@ -42,8 +37,6 @@ export const useCellsClassNames = (
             const shaded = hasCoordinate(getShadedCoordinates(sudokuType, solution), [i, j]);
             const hint = hintCell?.[0] === i && hintCell?.[1] === j;
             const clue = Boolean(board[i][j].clue);
-            const error = hasCoordinate(errorCells, [i, j]);
-            const correct = board[i][j].val && !clue && !error;
             const selected = i === selectedCell?.[0] && j === selectedCell?.[1];
 
             let affected = board[i][j].val === selectedValue;
@@ -55,29 +48,22 @@ export const useCellsClassNames = (
                 );
             }
 
-            const bad = board[i][j].bad || isBadCell(sudokuType, board, i, j);
-            const withNotes = board[i][j].val === 0 && (!hintCell || hintCell[0] !== i || hintCell[1] !== j);
+            const bad = isBadCell(sudokuType, board, i, j);
+            const withNotes = board[i][j].val === 0 && (hintCell?.[0] !== i || hintCell?.[1] !== j);
 
             Object.entries({
-                checkMode,
                 shaded,
                 hint,
                 clue,
-                error,
-                correct,
                 selected,
                 affected,
                 bad,
                 withNotes,
             }).forEach(([key, val]) => {
-                if ((gameStatus !== GameStatus.SUCCESS || key === 'shaded' || key === 'checkMode') && val) {
+                if ((gameStatus !== GameStatus.SUCCESS || key === 'shaded') && val) {
                     classNames[i][j].push(styles[key]);
                 }
             });
-
-            if (hint) {
-                classNames[i][j].push(error ? styles.error : styles.correct);
-            }
         }
     }
 

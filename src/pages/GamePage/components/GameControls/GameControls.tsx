@@ -13,24 +13,19 @@ import hint from '@/assets/icons/hint.svg';
 import check from '@/assets/icons/check.svg';
 import notes from '@/assets/icons/notes.svg';
 import notesOutline from '@/assets/icons/notes_outline.svg';
-import { toggleWithNotes } from '@/features/gameControls';
+import { decrementCheckCount, decrementHintCount, toggleWithNotes } from '@/features/gameControls';
 import { useLayoutType } from '@/app/hooks';
 import { LayoutType } from '@/app/const';
-import { resetSelectedValue, updateCellValue } from '@/features/gameGrid';
+import { clearBoardErrors, resetSelectedValue, setHintCell, updateCellValue } from '@/features/gameGrid';
+import { randomChoice } from '@/algorithms/helpers';
 
-export const GameControls: React.FC<IGameControlsProps> = ({
-    gameStatus,
-    onTriggerCheckMode,
-    onShowHint,
-    onSetValue,
-    emptyCells,
-}) => {
+export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetValue, emptyCells }) => {
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
     const { initialWithNotes, boardSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
-    const { board, selectedCell } = useSelector((state: RootState) => state.gameGrid);
+    const { board, selectedCell, hintCell } = useSelector((state: RootState) => state.gameGrid);
 
     const [hoveredIcon, setHoveredIcon] = useState('');
 
@@ -44,6 +39,20 @@ export const GameControls: React.FC<IGameControlsProps> = ({
         if (layoutType === LayoutType.DESKTOP) {
             setHoveredIcon('');
         }
+    };
+
+    const handleCheckBoard = () => {
+        dispatch(clearBoardErrors());
+        dispatch(decrementCheckCount());
+    };
+
+    const handleShowHint = () => {
+        if (gameStatus === GameStatus.SUCCESS || hintCell) {
+            return;
+        }
+
+        dispatch(setHintCell(randomChoice(emptyCells)));
+        dispatch(decrementHintCount());
     };
 
     const handleErase = () => {
@@ -60,14 +69,14 @@ export const GameControls: React.FC<IGameControlsProps> = ({
             badge: String(checkCount),
             disabled: gameStatus === GameStatus.SUCCESS || checkCount === 0,
             label: 'check',
-            onClick: !gamePaused ? onTriggerCheckMode : undefined,
+            onClick: !gamePaused ? handleCheckBoard : undefined,
             src: check,
         },
         {
             badge: String(hintCount),
             disabled: gameStatus === GameStatus.SUCCESS || hintCount === 0 || emptyCells.length === 0,
             label: 'hint',
-            onClick: !gamePaused ? onShowHint : undefined,
+            onClick: !gamePaused ? handleShowHint : undefined,
             src: hint,
         },
         {

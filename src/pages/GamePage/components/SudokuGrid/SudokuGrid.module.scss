@@ -44,40 +44,28 @@
     user-select: none;
     outline: none;
 
+    &:not(.clue):not(.hint) {
+        color: var(--blue-darker);
+    }
+
+    &.bad:not(.clue) {
+        color: var(--red);
+    }
+
     &.shaded {
         background-color: var(--gray);
     }
 
-    &:not(.hint):not(.clue) {
-        color: var(--blue-darker);
-    }
-
-    &.bad:not(.hint):not(.clue) {
-        color: var(--red);
-    }
-
-    &.affected:not(.checkMode) {
+    &.affected {
         background-color: var(--blue-light);
     }
 
-    &.selected:not(.checkMode) {
+    &.selected {
         background-color: var(--blue-dark);
     }
 
-    &.clue.checkMode {
-        background-color: var(--blue-dark);
-    }
-
-    &.error {
-        &.hint {
-            background-color: var(--red);
-        }
-    }
-
-    &.correct {
-        &.hint {
-            background-color: var(--green);
-        }
+    &.hint {
+        background-color: var(--green);
     }
 
     &.size_4 {

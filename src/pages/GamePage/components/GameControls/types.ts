@@ -4,7 +4,5 @@ import { GameStatus } from '../../const';
 export interface IGameControlsProps {
     gameStatus: GameStatus;
     emptyCells: Coordinate[];
-    onTriggerCheckMode: () => void;
-    onShowHint: () => void;
     onSetValue: (val: number) => void;
 }

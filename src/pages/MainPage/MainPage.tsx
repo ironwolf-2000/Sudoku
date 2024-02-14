@@ -69,7 +69,7 @@ export const MainPage: React.FC = () => {
             <h1 className={styles.Title}>Sudoku Game</h1>
             <main className={styles.Body}>
                 <section className={styles.Section}>
-                    <h2 className={styles.SectionTitle}>Game Type</h2>
+                    <h2 className={styles.SectionTitle}>Game Mode</h2>
                     <Slider items={sudokuTypes} selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)} />
                 </section>
                 <section className={styles.Section}>
