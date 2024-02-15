@@ -6,7 +6,7 @@ import { Icon, Modal, Stars } from '@/components';
 import { resetHintCell, resetSelectedValue, restartGame } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused, toggleWithNotes } from '@/features/gameControls';
 import { LayoutType, PATHS } from '@/app/const';
-import home from '@/assets/icons/home.svg';
+import leave from '@/assets/icons/leave.svg';
 import restart from '@/assets/icons/restart.svg';
 import pause from '@/assets/icons/pause.svg';
 import play from '@/assets/icons/play.svg';
@@ -88,7 +88,9 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
     }, [gameTime]);
 
     const handleTimeClick = () => {
-        dispatch(toggleGamePaused());
+        if (gameStatus !== GameStatus.SUCCESS) {
+            dispatch(toggleGamePaused());
+        }
     };
 
     return (
@@ -97,9 +99,9 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                 <div className={styles.ButtonContainer}>
                     <Icon
                         className={styles.IconButton}
-                        src={home}
+                        src={leave}
                         title="Quit the game"
-                        label="home"
+                        label="leave"
                         onClick={() => handleModalOpen(ModalType.QUIT)}
                     />
                     <Icon
@@ -116,9 +118,8 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                     <Icon
                         src={gamePaused || gameStatus === GameStatus.SUCCESS ? play : pause}
                         label={gamePaused || gameStatus === GameStatus.SUCCESS ? 'play' : 'pause'}
-                        size="s"
-                        disabled={gameStatus === GameStatus.SUCCESS}
                         onClick={layoutType === LayoutType.DESKTOP ? handleTimeClick : undefined}
+                        size="s"
                     />
                 </div>
             </div>

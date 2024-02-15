@@ -12,7 +12,7 @@
     width: max-content;
 
     &.success {
-        background-color: var(--green);
+        animation: grid-success ease-out forwards 4s;
     }
 
     &.failure {
@@ -52,6 +52,10 @@
         color: var(--red);
     }
 
+    &.Cell.success {
+        animation: cell-success ease-out forwards 4s;
+    }
+
     &.shaded {
         background-color: var(--gray);
     }
@@ -65,7 +69,7 @@
     }
 
     &.hint {
-        background-color: var(--green);
+        animation: flicker 2s linear infinite;
     }
 
     &.size_4 {
@@ -187,5 +191,32 @@
 .CellNote {
     &.hidden {
         visibility: hidden;
+    }
+}
+
+@keyframes flicker {
+    0%,
+    15%,
+    85%,
+    100% {
+        background-color: var(--gray-lighter);
+        color: var(--gray-lighter);
+    }
+    35%,
+    65% {
+        background-color: var(--green);
+        color: var(--black);
+    }
+}
+
+@keyframes grid-success {
+    100% {
+        background-color: var(--green);
+    }
+}
+
+@keyframes cell-success {
+    100% {
+        color: var(--green);
     }
 }

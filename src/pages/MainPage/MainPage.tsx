@@ -66,7 +66,7 @@ export const MainPage: React.FC = () => {
 
     return (
         <div className={styles.MainPage}>
-            <h1 className={styles.Title}>Sudoku Game</h1>
+            <h1 className={styles.Title}>Sudoku Games</h1>
             <main className={styles.Body}>
                 <section className={styles.Section}>
                     <h2 className={styles.SectionTitle}>Game Mode</h2>

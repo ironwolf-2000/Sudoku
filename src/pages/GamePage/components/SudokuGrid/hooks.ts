@@ -64,6 +64,10 @@ export const useCellsClassNames = (gameStatus: GameStatus, hintCell?: Coordinate
                     classNames[i][j].push(styles[key]);
                 }
             });
+
+            if (gameStatus === GameStatus.SUCCESS) {
+                classNames[i][j].push(styles.success);
+            }
         }
     }
 
