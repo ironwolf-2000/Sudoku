@@ -8,7 +8,7 @@ interface GameSettingsState {
     initialHintCount: number;
     initialWithNotes: boolean;
     sudokuType: SudokuType;
-    boardSize: number;
+    gridSize: number;
 }
 
 const initialState: GameSettingsState = {
@@ -17,7 +17,7 @@ const initialState: GameSettingsState = {
     initialHintCount: 3,
     initialWithNotes: true,
     sudokuType: SudokuType.CLASSIC,
-    boardSize: 9,
+    gridSize: 9,
 };
 
 const MAX_CHECK_COUNT = 3;
@@ -42,8 +42,8 @@ export const gameSettingsSlice = createSlice({
         setSudokuType: (state, action: PayloadAction<SudokuType>) => {
             state.sudokuType = action.payload;
         },
-        setBoardSize: (state, action: PayloadAction<number>) => {
-            state.boardSize = action.payload;
+        setGridSize: (state, action: PayloadAction<number>) => {
+            state.gridSize = action.payload;
         },
     },
 });
@@ -54,7 +54,7 @@ export const {
     incrementInitialHintCount,
     toggleInitialWithNotes,
     setSudokuType,
-    setBoardSize,
+    setGridSize,
 } = gameSettingsSlice.actions;
 
 export default gameSettingsSlice.reducer;

@@ -23,7 +23,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
-    const { initialWithNotes, boardSize } = useSelector((state: RootState) => state.gameSettings);
+    const { initialWithNotes, gridSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
     const { board, selectedCell, hintCell } = useSelector((state: RootState) => state.gameGrid);
 
@@ -110,7 +110,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
                     />
                 ))}
             </div>
-            <DigitButtons count={boardSize} gameStatus={gameStatus} onSetValue={onSetValue} />
+            <DigitButtons count={gridSize} gameStatus={gameStatus} onSetValue={onSetValue} />
         </div>
     );
 };

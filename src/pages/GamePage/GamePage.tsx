@@ -31,7 +31,7 @@ export const GamePage: React.FC = () => {
 
     const { withNotes } = useSelector((state: RootState) => state.gameControls);
     const { board, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
-    const { level, initialCheckCount, initialHintCount, sudokuType, boardSize } = useSelector(
+    const { level, initialCheckCount, initialHintCount, sudokuType, gridSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
 
@@ -68,15 +68,15 @@ export const GamePage: React.FC = () => {
     const startNewGame = useCallback(() => {
         const [board, solution] = createNewGame(
             sudokuType,
-            boardSize,
-            INITIAL_CLUE_COUNT[sudokuType][boardSize][level - 1]
+            gridSize,
+            INITIAL_CLUE_COUNT[sudokuType][gridSize][level - 1]
         );
 
         dispatch(setBoard(board));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [boardSize, dispatch, initialCheckCount, initialHintCount, level, sudokuType]);
+    }, [gridSize, dispatch, initialCheckCount, initialHintCount, level, sudokuType]);
 
     useEffect(() => {
         startNewGame();

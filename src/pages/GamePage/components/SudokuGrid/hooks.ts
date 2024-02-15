@@ -8,8 +8,8 @@ import { getShadedCoordinates, hasCoordinate, isBadCell } from './helpers';
 import { getAffectedCoordinates } from '@/algorithms/helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, customClassName?: string) => {
-    const { boardSize } = useSelector((state: RootState) => state.gameSettings);
-    const classNames = [styles.Content, styles[`size_${boardSize}`], customClassName];
+    const { gridSize } = useSelector((state: RootState) => state.gameSettings);
+    const classNames = [styles.Content, styles[`size_${gridSize}`], customClassName];
 
     if (gameStatus === GameStatus.SUCCESS) {
         classNames.push(styles.success);

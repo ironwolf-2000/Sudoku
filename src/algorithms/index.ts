@@ -102,15 +102,15 @@ const removeClues = (sudokuType: SudokuType, board: RawBoard, cluesToRemove: num
     return board;
 };
 
-export const createNewGame = (sudokuType: SudokuType, boardSize: number, cluesToKeep: number): [Board, Board] => {
+export const createNewGame = (sudokuType: SudokuType, gridSize: number, cluesToKeep: number): [Board, Board] => {
     let solution: RawBoard | null = null;
     while (solution === null) {
-        solution = solveSudoku(sudokuType, generateInitialBoard(boardSize));
+        solution = solveSudoku(sudokuType, generateInitialBoard(gridSize));
     }
 
     let board = null;
     while (board === null) {
-        board = removeClues(sudokuType, getDeepCopy(solution), boardSize ** 2 - cluesToKeep);
+        board = removeClues(sudokuType, getDeepCopy(solution), gridSize ** 2 - cluesToKeep);
     }
 
     return [convertToBoard(board), convertToBoard(solution)];

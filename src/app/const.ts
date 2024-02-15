@@ -12,7 +12,7 @@ export const sudokuTypeToLabel = {
     [SudokuType.EVEN_ODD]: 'even-odd',
 };
 
-export const BOARD_SIZES = [4, 6, 8, 9];
+export const GRID_SIZES = [4, 6, 8, 9];
 
 export const LAPTOP_BREAKPOINT = 1024;
 

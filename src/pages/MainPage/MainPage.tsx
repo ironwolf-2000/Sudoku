@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { BOARD_SIZES, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
+import { GRID_SIZES, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
 import styles from './MainPage.module.scss';
 import { Icon, Slider, Stars } from '@/components';
 import check from '@/assets/icons/check.svg';
@@ -13,7 +13,7 @@ import { RootState } from '@/app';
 import {
     incrementInitialCheckCount,
     incrementInitialHintCount,
-    setBoardSize,
+    setGridSize,
     setSudokuType,
     toggleInitialWithNotes,
 } from '@/features/gameSettings';
@@ -22,7 +22,7 @@ import { PlayButton } from './components';
 
 export const MainPage: React.FC = () => {
     const dispatch = useDispatch();
-    const { initialCheckCount, initialHintCount, initialWithNotes, sudokuType, boardSize } = useSelector(
+    const { initialCheckCount, initialHintCount, initialWithNotes, sudokuType, gridSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
 
@@ -33,10 +33,10 @@ export const MainPage: React.FC = () => {
         }));
     }, [dispatch]);
 
-    const boardSizes: ISliderProps['items'] = useMemo(() => {
-        return BOARD_SIZES.map(size => ({
+    const gridSizes: ISliderProps['items'] = useMemo(() => {
+        return GRID_SIZES.map(size => ({
             label: `${size}×${size}`,
-            onItemClick: () => dispatch(setBoardSize(size)),
+            onItemClick: () => dispatch(setGridSize(size)),
         }));
     }, [dispatch]);
 
@@ -73,11 +73,11 @@ export const MainPage: React.FC = () => {
                     <Slider items={sudokuTypes} selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)} />
                 </section>
                 <section className={styles.Section}>
-                    <h2 className={styles.SectionTitle}>Board Size</h2>
+                    <h2 className={styles.SectionTitle}>Grid Size</h2>
                     <Slider
-                        items={boardSizes}
-                        sliderItemClass={styles.BoardSizeItem}
-                        selectedIndex={BOARD_SIZES.indexOf(boardSize)}
+                        items={gridSizes}
+                        sliderItemClass={styles.GridSizeItem}
+                        selectedIndex={GRID_SIZES.indexOf(gridSize)}
                     />
                 </section>
                 <section className={classnames(styles.Section, styles.horizontal)}>

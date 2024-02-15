@@ -53,30 +53,30 @@ export const getEmptyCells = (board: RawBoard): Coordinate[] => {
     return res;
 };
 
-const getCoordinatesFromCurrentRow = (boardSize: number, r: number): Coordinate[] => {
+const getCoordinatesFromCurrentRow = (gridSize: number, r: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
-    for (let i = 0; i < boardSize; i++) {
+    for (let i = 0; i < gridSize; i++) {
         res.push([r, i]);
     }
 
     return res;
 };
 
-const getCoordinatesFromCurrentColumn = (boardSize: number, c: number): Coordinate[] => {
+const getCoordinatesFromCurrentColumn = (gridSize: number, c: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
-    for (let i = 0; i < boardSize; i++) {
+    for (let i = 0; i < gridSize; i++) {
         res.push([i, c]);
     }
 
     return res;
 };
 
-const getCoordinatesFromCurrentBox = (boardSize: number, r: number, c: number): Coordinate[] => {
-    const perfectSquare = boardSize === 4 || boardSize === 9;
-    const rowLength = perfectSquare ? Math.floor(Math.sqrt(boardSize)) : 2;
-    const columnLength = perfectSquare ? rowLength : Math.floor(boardSize / 2);
+const getCoordinatesFromCurrentBox = (gridSize: number, r: number, c: number): Coordinate[] => {
+    const perfectSquare = gridSize === 4 || gridSize === 9;
+    const rowLength = perfectSquare ? Math.floor(Math.sqrt(gridSize)) : 2;
+    const columnLength = perfectSquare ? rowLength : Math.floor(gridSize / 2);
 
     const r0 = Math.floor(r / rowLength) * rowLength;
     const c0 = Math.floor(c / columnLength) * columnLength;
@@ -91,16 +91,16 @@ const getCoordinatesFromCurrentBox = (boardSize: number, r: number, c: number): 
     return res;
 };
 
-const getCoordinatesFromCurrentDiagonals = (boardSize: number, r: number, c: number): Coordinate[] => {
+const getCoordinatesFromCurrentDiagonals = (gridSize: number, r: number, c: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
-    for (let i = 0; i < boardSize; i++) {
+    for (let i = 0; i < gridSize; i++) {
         if (r === c) {
             res.push([i, i]);
         }
 
-        if (r + c === boardSize - 1) {
-            res.push([i, boardSize - 1 - i]);
+        if (r + c === gridSize - 1) {
+            res.push([i, gridSize - 1 - i]);
         }
     }
 
@@ -109,18 +109,18 @@ const getCoordinatesFromCurrentDiagonals = (boardSize: number, r: number, c: num
 
 export const getAffectedCoordinates = (
     sudokuType: SudokuType,
-    boardSize: number,
+    gridSize: number,
     r0: number,
     c0: number
 ): Coordinate[] => {
     const res = [
-        ...getCoordinatesFromCurrentRow(boardSize, r0),
-        ...getCoordinatesFromCurrentColumn(boardSize, c0),
-        ...getCoordinatesFromCurrentBox(boardSize, r0, c0),
+        ...getCoordinatesFromCurrentRow(gridSize, r0),
+        ...getCoordinatesFromCurrentColumn(gridSize, c0),
+        ...getCoordinatesFromCurrentBox(gridSize, r0, c0),
     ];
 
     if (sudokuType === SudokuType.DIAGONALS) {
-        res.push(...getCoordinatesFromCurrentDiagonals(boardSize, r0, c0));
+        res.push(...getCoordinatesFromCurrentDiagonals(gridSize, r0, c0));
     }
 
     return res;
@@ -146,13 +146,13 @@ export const isValid = (sudokuType: SudokuType, board: RawBoard, r0: number, c0:
     return true;
 };
 
-export const generateInitialBoard = (boardSize: number): RawBoard => {
+export const generateInitialBoard = (gridSize: number): RawBoard => {
     const res: RawBoard = [];
 
-    for (let r = 0; r < boardSize; r++) {
+    for (let r = 0; r < gridSize; r++) {
         res.push([]);
 
-        for (let c = 0; c < boardSize; c++) {
+        for (let c = 0; c < gridSize; c++) {
             res[r].push(0);
         }
     }
