@@ -15,10 +15,27 @@ export const Modal: React.FC<IModalProps> = ({ children, title, visible, applyBu
     const [animationClassName, setAnimationClassName] = useState<string | undefined>();
 
     useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                onClose?.();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose]);
+
+    useEffect(() => {
         if (visible) {
-            dispatch(setWithOverlay(true));
             setAnimationClassName(styles.show);
+            dispatch(setWithOverlay(true));
             setModalVisible(true);
+        } else {
+            setAnimationClassName(styles.hide);
+            setTimeout(() => setModalVisible(false), 200);
         }
 
         return () => {
@@ -26,31 +43,19 @@ export const Modal: React.FC<IModalProps> = ({ children, title, visible, applyBu
         };
     }, [dispatch, visible]);
 
-    const onModalClose = (callback?: () => void) => {
-        setAnimationClassName(styles.hide);
-        setTimeout(() => setModalVisible(false), 200);
-        callback?.();
-    };
-
     return (
         <div className={classnames(styles.Modal, !modalVisible && styles.hidden, animationClassName)}>
             <div className={classnames(styles.Content, animationClassName)}>
-                <Icon
-                    className={styles.CrossIcon}
-                    src={cross}
-                    label="cross icon"
-                    size="s"
-                    onClick={() => onModalClose(onClose)}
-                />
+                <Icon className={styles.CrossIcon} src={cross} label="cross icon" size="s" onClick={onClose} />
                 <header className={styles.Title}>{title}</header>
                 <div className={styles.Body}>{children}</div>
                 <footer className={classnames(styles.Footer, !onClose && styles.withOneElement)}>
                     {onClose && (
-                        <button className={styles.Button} onClick={() => onModalClose(onClose)}>
+                        <button className={styles.Button} onClick={onClose}>
                             Cancel
                         </button>
                     )}
-                    <button className={styles.Button} onClick={() => onModalClose(onApply)}>
+                    <button className={styles.Button} onClick={onApply}>
                         {applyButtonLabel}
                     </button>
                 </footer>

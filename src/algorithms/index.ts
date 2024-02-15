@@ -1,30 +1,30 @@
-import { RawBoard, Board } from '@/app/types';
+import { RawGrid, Grid } from '@/app/types';
 import { SudokuType } from '@/app/const';
 import {
     getShuffledCopy,
     getInclusiveRange,
     getEmptyCells,
-    convertToBoard,
+    convertToGrid,
     getDeepCopy,
-    generateInitialBoard,
+    generateInitialGrid,
     getAvailableValues,
     isValid,
 } from './helpers';
 
-const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null => {
-    const emptyCells = getEmptyCells(board);
+const solveSudoku = (sudokuType: SudokuType, grid: RawGrid): RawGrid | null => {
+    const emptyCells = getEmptyCells(grid);
     let i = 0;
 
     while (i < emptyCells.length) {
         const [r, c] = emptyCells[i];
-        const values = getAvailableValues(sudokuType, board, r, c);
+        const values = getAvailableValues(sudokuType, grid, r, c);
 
         if (values.size === 0) {
             return null;
         }
 
         if (values.size === 1) {
-            board[r][c] = values.values().next().value;
+            grid[r][c] = values.values().next().value;
             emptyCells.splice(i, 1);
             i = -1;
         }
@@ -33,21 +33,21 @@ const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null =
     }
 
     if (emptyCells.length === 0) {
-        return board;
+        return grid;
     }
 
     const [r, c] = emptyCells[0];
 
-    for (const val of getShuffledCopy(getInclusiveRange(1, board.length))) {
-        if (isValid(sudokuType, board, r, c, val)) {
-            board[r][c] = val;
+    for (const val of getShuffledCopy(getInclusiveRange(1, grid.length))) {
+        if (isValid(sudokuType, grid, r, c, val)) {
+            grid[r][c] = val;
 
-            const result = solveSudoku(sudokuType, getDeepCopy(board));
+            const result = solveSudoku(sudokuType, getDeepCopy(grid));
             if (result) {
                 return result;
             }
 
-            board[r][c] = 0;
+            grid[r][c] = 0;
         }
     }
 
@@ -56,28 +56,28 @@ const solveSudoku = (sudokuType: SudokuType, board: RawBoard): RawBoard | null =
 
 const hasMultipleSolutions = (
     sudokuType: SudokuType,
-    board: RawBoard,
+    grid: RawGrid,
     r0: number,
     c0: number,
     previousValue: number
 ): boolean => {
-    for (const val of getAvailableValues(sudokuType, board, r0, c0)) {
+    for (const val of getAvailableValues(sudokuType, grid, r0, c0)) {
         if (val !== previousValue) {
-            board[r0][c0] = val;
+            grid[r0][c0] = val;
 
-            if (solveSudoku(sudokuType, getDeepCopy(board))) {
+            if (solveSudoku(sudokuType, getDeepCopy(grid))) {
                 return true;
             }
 
-            board[r0][c0] = 0;
+            grid[r0][c0] = 0;
         }
     }
 
     return false;
 };
 
-const removeClues = (sudokuType: SudokuType, board: RawBoard, cluesToRemove: number): RawBoard | null => {
-    const indices = getShuffledCopy(getInclusiveRange(0, board.length ** 2 - 1));
+const removeClues = (sudokuType: SudokuType, grid: RawGrid, cluesToRemove: number): RawGrid | null => {
+    const indices = getShuffledCopy(getInclusiveRange(0, grid.length ** 2 - 1));
     let removedCount = 0;
 
     while (removedCount < cluesToRemove) {
@@ -86,32 +86,32 @@ const removeClues = (sudokuType: SudokuType, board: RawBoard, cluesToRemove: num
             return null;
         }
 
-        const r = Math.floor(index / board.length);
-        const c = index % board.length;
+        const r = Math.floor(index / grid.length);
+        const c = index % grid.length;
 
-        const previousValue = board[r][c];
-        board[r][c] = 0;
+        const previousValue = grid[r][c];
+        grid[r][c] = 0;
         removedCount++;
 
-        if (hasMultipleSolutions(sudokuType, board, r, c, previousValue)) {
-            board[r][c] = previousValue;
+        if (hasMultipleSolutions(sudokuType, grid, r, c, previousValue)) {
+            grid[r][c] = previousValue;
             removedCount--;
         }
     }
 
-    return board;
+    return grid;
 };
 
-export const createNewGame = (sudokuType: SudokuType, gridSize: number, cluesToKeep: number): [Board, Board] => {
-    let solution: RawBoard | null = null;
+export const createNewGame = (sudokuType: SudokuType, gridSize: number, cluesToKeep: number): [Grid, Grid] => {
+    let solution: RawGrid | null = null;
     while (solution === null) {
-        solution = solveSudoku(sudokuType, generateInitialBoard(gridSize));
+        solution = solveSudoku(sudokuType, generateInitialGrid(gridSize));
     }
 
-    let board = null;
-    while (board === null) {
-        board = removeClues(sudokuType, getDeepCopy(solution), gridSize ** 2 - cluesToKeep);
+    let grid = null;
+    while (grid === null) {
+        grid = removeClues(sudokuType, getDeepCopy(solution), gridSize ** 2 - cluesToKeep);
     }
 
-    return [convertToBoard(board), convertToBoard(solution)];
+    return [convertToGrid(grid), convertToGrid(solution)];
 };

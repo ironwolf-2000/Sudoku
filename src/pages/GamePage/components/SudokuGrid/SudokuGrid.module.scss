@@ -69,7 +69,7 @@
     }
 
     &.hint {
-        animation: flicker 2s linear infinite;
+        animation: flicker 1.5s linear infinite;
     }
 
     &.size_4 {
@@ -196,15 +196,13 @@
 
 @keyframes flicker {
     0%,
-    15%,
-    85%,
+    10%,
+    90%,
     100% {
-        background-color: var(--gray-lighter);
-        color: var(--gray-lighter);
+        color: transparent;
     }
-    35%,
-    65% {
-        background-color: var(--green);
+    40%,
+    60% {
         color: var(--black);
     }
 }

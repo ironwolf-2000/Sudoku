@@ -15,7 +15,7 @@ export const MODAL_DATA = [
     {
         modalType: ModalType.RESTART,
         title: 'Restart the game?',
-        text: 'Restarting will set you back to the beginning of the same Sudoku board.',
+        text: 'Restarting will set you back to the beginning of the same Sudoku grid.',
         applyButtonLabel: 'Restart',
         withCloseButton: true,
     },

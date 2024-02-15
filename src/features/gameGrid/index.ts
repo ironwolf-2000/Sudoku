@@ -1,18 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import { Board, Coordinate } from '@/app/types';
+import { Grid, Coordinate } from '@/app/types';
 
 interface GameGridState {
-    board: Board;
-    solution: Board;
+    grid: Grid;
+    solution: Grid;
     selectedValue?: number;
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
 }
 
 const initialState: GameGridState = {
-    board: [],
+    grid: [],
     solution: [],
 };
 
@@ -20,10 +20,10 @@ export const gameGridSlice = createSlice({
     name: 'gameGrid',
     initialState,
     reducers: {
-        setBoard: (state, action: PayloadAction<Board>) => {
-            state.board = action.payload;
+        setGrid: (state, action: PayloadAction<Grid>) => {
+            state.grid = action.payload;
         },
-        setSolution: (state, action: PayloadAction<Board>) => {
+        setSolution: (state, action: PayloadAction<Grid>) => {
             state.solution = action.payload;
         },
         setSelectedValue: (state, action: PayloadAction<number>) => {
@@ -45,21 +45,21 @@ export const gameGridSlice = createSlice({
             state.hintCell = undefined;
         },
         restartGame: state => {
-            for (let i = 0; i < state.board.length; i++) {
-                for (let j = 0; j < state.board.length; j++) {
-                    if (!state.board[i][j].clue) {
-                        state.board[i][j] = { val: 0, notes: [] };
+            for (let i = 0; i < state.grid.length; i++) {
+                for (let j = 0; j < state.grid.length; j++) {
+                    if (!state.grid[i][j].clue) {
+                        state.grid[i][j] = { val: 0, notes: [] };
                     }
                 }
             }
 
             state.selectedCell = undefined;
         },
-        clearBoardErrors: state => {
-            for (let i = 0; i < state.board.length; i++) {
-                for (let j = 0; j < state.board.length; j++) {
-                    if (state.board[i][j].val && state.board[i][j].val !== state.solution[i][j].val) {
-                        state.board[i][j] = { val: 0, notes: [] };
+        clearGridErrors: state => {
+            for (let i = 0; i < state.grid.length; i++) {
+                for (let j = 0; j < state.grid.length; j++) {
+                    if (state.grid[i][j].val && state.grid[i][j].val !== state.solution[i][j].val) {
+                        state.grid[i][j] = { val: 0, notes: [] };
                     }
                 }
             }
@@ -72,8 +72,8 @@ export const gameGridSlice = createSlice({
             const [r, c] = state.selectedCell;
             const val = action.payload;
 
-            if (!state.board[r][c].clue) {
-                state.board[r][c] = { val, notes: [] };
+            if (!state.grid[r][c].clue) {
+                state.grid[r][c] = { val, notes: [] };
             }
         },
         updateCellNotes: (state, action: PayloadAction<number>) => {
@@ -84,25 +84,25 @@ export const gameGridSlice = createSlice({
             const val = action.payload;
             const [r, c] = state.selectedCell;
 
-            if (state.board[r][c].clue) {
+            if (state.grid[r][c].clue) {
                 return;
             }
 
-            const itemIndex = state.board[r][c].notes.indexOf(val);
+            const itemIndex = state.grid[r][c].notes.indexOf(val);
 
             if (itemIndex === -1) {
-                state.board[r][c].notes.push(val);
+                state.grid[r][c].notes.push(val);
             } else {
-                state.board[r][c].notes.splice(itemIndex, 1);
+                state.grid[r][c].notes.splice(itemIndex, 1);
             }
 
-            state.board[r][c].val = 0;
+            state.grid[r][c].val = 0;
         },
     },
 });
 
 export const {
-    setBoard,
+    setGrid,
     setSolution,
     setSelectedValue,
     resetSelectedValue,
@@ -111,7 +111,7 @@ export const {
     setHintCell,
     resetHintCell,
     restartGame,
-    clearBoardErrors,
+    clearGridErrors,
     updateCellValue,
     updateCellNotes,
 } = gameGridSlice.actions;

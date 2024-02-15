@@ -1,8 +1,8 @@
 import { SudokuType } from '@/app/const';
-import { Board, Coordinate, RawBoard } from '@/app/types';
+import { Grid, Coordinate, RawGrid } from '@/app/types';
 
-export const convertToBoard = (rawBoard: RawBoard): Board => {
-    return rawBoard.map(row => row.map(val => ({ val, notes: [], clue: val !== 0 })));
+export const convertToGrid = (rawGrid: RawGrid): Grid => {
+    return rawGrid.map(row => row.map(val => ({ val, notes: [], clue: val !== 0 })));
 };
 
 export const getInclusiveRange = (lo: number, hi: number): number[] => {
@@ -39,12 +39,12 @@ export const getDeepCopy = (element: any): any => {
     return res;
 };
 
-export const getEmptyCells = (board: RawBoard): Coordinate[] => {
+export const getEmptyCells = (grid: RawGrid): Coordinate[] => {
     const res: Coordinate[] = [];
 
-    for (let r = 0; r < board.length; r++) {
-        for (let c = 0; c < board[r].length; c++) {
-            if (board[r][c] === 0) {
+    for (let r = 0; r < grid.length; r++) {
+        for (let c = 0; c < grid[r].length; c++) {
+            if (grid[r][c] === 0) {
                 res.push([r, c]);
             }
         }
@@ -126,19 +126,19 @@ export const getAffectedCoordinates = (
     return res;
 };
 
-export const getAvailableValues = (sudokuType: SudokuType, board: RawBoard, r0: number, c0: number): Set<number> => {
-    const res = new Set(getInclusiveRange(1, board.length));
+export const getAvailableValues = (sudokuType: SudokuType, grid: RawGrid, r0: number, c0: number): Set<number> => {
+    const res = new Set(getInclusiveRange(1, grid.length));
 
-    for (const [r, c] of getAffectedCoordinates(sudokuType, board.length, r0, c0)) {
-        res.delete(board[r][c]);
+    for (const [r, c] of getAffectedCoordinates(sudokuType, grid.length, r0, c0)) {
+        res.delete(grid[r][c]);
     }
 
     return res;
 };
 
-export const isValid = (sudokuType: SudokuType, board: RawBoard, r0: number, c0: number, val: number): boolean => {
-    for (const [r, c] of getAffectedCoordinates(sudokuType, board.length, r0, c0)) {
-        if ((r !== r0 || c !== c0) && board[r][c] === val) {
+export const isValid = (sudokuType: SudokuType, grid: RawGrid, r0: number, c0: number, val: number): boolean => {
+    for (const [r, c] of getAffectedCoordinates(sudokuType, grid.length, r0, c0)) {
+        if ((r !== r0 || c !== c0) && grid[r][c] === val) {
             return false;
         }
     }
@@ -146,8 +146,8 @@ export const isValid = (sudokuType: SudokuType, board: RawBoard, r0: number, c0:
     return true;
 };
 
-export const generateInitialBoard = (gridSize: number): RawBoard => {
-    const res: RawBoard = [];
+export const generateInitialGrid = (gridSize: number): RawGrid => {
+    const res: RawGrid = [];
 
     for (let r = 0; r < gridSize; r++) {
         res.push([]);

@@ -13,7 +13,7 @@ import { getInclusiveRange } from '@/algorithms/helpers';
 
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, onSelectCell, onSetValue }) => {
     const { withOverlay } = useSelector((state: RootState) => state.appSettings);
-    const { board, solution, hintCell } = useSelector((state: RootState) => state.gameGrid);
+    const { grid, solution, hintCell } = useSelector((state: RootState) => state.gameGrid);
     const { gamePaused } = useSelector((state: RootState) => state.gameControls);
 
     const [currentCell, setCurrentCell] = useState<Coordinate | null>(null);
@@ -40,11 +40,11 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
                 if (event.key.endsWith('Up')) {
                     setCurrentCell([Math.max(r - 1, 0), c]);
                 } else if (event.key.endsWith('Down')) {
-                    setCurrentCell([Math.min(r + 1, board.length - 1), c]);
+                    setCurrentCell([Math.min(r + 1, grid.length - 1), c]);
                 } else if (event.key.endsWith('Left')) {
                     setCurrentCell([r, Math.max(c - 1, 0)]);
                 } else if (event.key.endsWith('Right')) {
-                    setCurrentCell([r, Math.min(c + 1, board.length - 1)]);
+                    setCurrentCell([r, Math.min(c + 1, grid.length - 1)]);
                 }
             }
         };
@@ -54,7 +54,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [board.length, currentCell, onSetValue, withOverlay]);
+    }, [grid.length, currentCell, onSetValue, withOverlay]);
 
     useEffect(() => {
         if (gameStatus !== GameStatus.SUCCESS && currentCell) {
@@ -63,17 +63,17 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
     }, [currentCell, gameStatus, onSelectCell]);
 
     const renderCell = (r: number, c: number) => {
-        const cellValue = board[r][c].val || (hintCell?.[0] === r && hintCell?.[1] === c ? solution[r][c].val : 0);
-        const cellNotes = board[r][c].notes;
+        const cellValue = grid[r][c].val || (hintCell?.[0] === r && hintCell?.[1] === c ? solution[r][c].val : 0);
+        const cellNotes = grid[r][c].notes;
 
         return (
             <div
-                key={r * board.length + c}
+                key={r * grid.length + c}
                 className={classnames(cellsClassNames[r][c])}
                 onClick={() => setCurrentCell([r, c])}
             >
                 {cellValue ||
-                    getInclusiveRange(1, board.length).map(val => (
+                    getInclusiveRange(1, grid.length).map(val => (
                         <div
                             key={val}
                             className={classnames(styles.CellNote, !cellNotes.includes(val) && styles.hidden)}
@@ -89,7 +89,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
         <div className={styles.SudokuGrid}>
             {gamePaused && <PauseOverlay />}
             <div className={classnames(gridClassNames)}>
-                {board.map((row, r) => (
+                {grid.map((row, r) => (
                     <React.Fragment key={r}>{row.map((_, c) => renderCell(r, c))}</React.Fragment>
                 ))}
             </div>

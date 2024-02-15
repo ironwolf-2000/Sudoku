@@ -11,7 +11,7 @@ import {
     resetHintCell,
     resetSelectedCell,
     resetSelectedValue,
-    setBoard,
+    setGrid,
     setSelectedCell,
     setSelectedValue,
     setSolution,
@@ -30,7 +30,7 @@ export const GamePage: React.FC = () => {
     const layoutType = useLayoutType();
 
     const { withNotes } = useSelector((state: RootState) => state.gameControls);
-    const { board, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
+    const { grid, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
     const { level, initialCheckCount, initialHintCount, sudokuType, gridSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
@@ -38,41 +38,41 @@ export const GamePage: React.FC = () => {
     const emptyCells = useMemo(() => {
         const emptyCells: Coordinate[] = [];
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j].val === 0) {
+        for (let i = 0; i < grid.length; i++) {
+            for (let j = 0; j < grid.length; j++) {
+                if (grid[i][j].val === 0) {
                     emptyCells.push([i, j]);
                 }
             }
         }
 
         return emptyCells;
-    }, [board]);
+    }, [grid]);
 
     const gameStatus = useMemo(() => {
-        if (board.length === 0 || emptyCells.length > 0) {
+        if (grid.length === 0 || emptyCells.length > 0) {
             return GameStatus.PENDING;
         }
 
-        for (let i = 0; i < board.length; i++) {
-            for (let j = 0; j < board.length; j++) {
-                if (board[i][j].val !== solution[i][j].val) {
+        for (let i = 0; i < grid.length; i++) {
+            for (let j = 0; j < grid.length; j++) {
+                if (grid[i][j].val !== solution[i][j].val) {
                     return GameStatus.FAILURE;
                 }
             }
         }
 
         return GameStatus.SUCCESS;
-    }, [board, emptyCells.length, solution]);
+    }, [grid, emptyCells.length, solution]);
 
     const startNewGame = useCallback(() => {
-        const [board, solution] = createNewGame(
+        const [grid, solution] = createNewGame(
             sudokuType,
             gridSize,
             INITIAL_CLUE_COUNT[sudokuType][gridSize][level - 1]
         );
 
-        dispatch(setBoard(board));
+        dispatch(setGrid(grid));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
@@ -88,20 +88,20 @@ export const GamePage: React.FC = () => {
 
             const [r, c] = cell;
 
-            if (board[r][c].val === 0) {
+            if (grid[r][c].val === 0) {
                 dispatch(resetSelectedValue());
             } else {
-                dispatch(setSelectedValue(board[r][c].val));
+                dispatch(setSelectedValue(grid[r][c].val));
             }
 
             dispatch(setSelectedCell(cell));
         },
-        [board, dispatch]
+        [grid, dispatch]
     );
 
     const handleSetValue = useCallback(
         (val: number) => {
-            if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue || val > board.length) {
+            if (!selectedCell || grid[selectedCell[0]][selectedCell[1]].clue || val > grid.length) {
                 return;
             }
 
@@ -113,7 +113,7 @@ export const GamePage: React.FC = () => {
                 dispatch(resetSelectedValue());
             }
         },
-        [board, dispatch, selectedCell, withNotes]
+        [grid, dispatch, selectedCell, withNotes]
     );
 
     const handleOutsideClick = () => {

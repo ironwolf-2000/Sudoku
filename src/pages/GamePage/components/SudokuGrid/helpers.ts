@@ -1,10 +1,10 @@
 import { getAffectedCoordinates } from '@/algorithms/helpers';
 import { SudokuType } from '@/app/const';
-import { Board, Coordinate } from '@/app/types';
+import { Grid, Coordinate } from '@/app/types';
 
-export const isBadCell = (sudokuType: SudokuType, board: Board, r0: number, c0: number) => {
-    for (const [r, c] of getAffectedCoordinates(sudokuType, board.length, r0, c0)) {
-        if ((r !== r0 || c !== c0) && board[r][c].val !== 0 && board[r][c].val === board[r0][c0].val) {
+export const isBadCell = (sudokuType: SudokuType, grid: Grid, r0: number, c0: number) => {
+    for (const [r, c] of getAffectedCoordinates(sudokuType, grid.length, r0, c0)) {
+        if ((r !== r0 || c !== c0) && grid[r][c].val !== 0 && grid[r][c].val === grid[r0][c0].val) {
             return true;
         }
     }
@@ -12,7 +12,7 @@ export const isBadCell = (sudokuType: SudokuType, board: Board, r0: number, c0: 
     return false;
 };
 
-export const getShadedCoordinates = (sudokuType: SudokuType, solution: Board): Coordinate[] => {
+export const getShadedCoordinates = (sudokuType: SudokuType, solution: Grid): Coordinate[] => {
     const res: Coordinate[] = [];
 
     if (sudokuType === SudokuType.DIAGONALS) {

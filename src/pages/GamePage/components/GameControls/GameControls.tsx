@@ -16,7 +16,7 @@ import notesOutline from '@/assets/icons/notes_outline.svg';
 import { decrementCheckCount, decrementHintCount, toggleWithNotes } from '@/features/gameControls';
 import { useLayoutType } from '@/app/hooks';
 import { LayoutType } from '@/app/const';
-import { clearBoardErrors, resetSelectedValue, setHintCell, updateCellValue } from '@/features/gameGrid';
+import { clearGridErrors, resetSelectedValue, setHintCell, updateCellValue } from '@/features/gameGrid';
 import { randomChoice } from '@/algorithms/helpers';
 
 export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetValue, emptyCells }) => {
@@ -25,7 +25,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
 
     const { initialWithNotes, gridSize } = useSelector((state: RootState) => state.gameSettings);
     const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
-    const { board, selectedCell, hintCell } = useSelector((state: RootState) => state.gameGrid);
+    const { grid, selectedCell, hintCell } = useSelector((state: RootState) => state.gameGrid);
 
     const [hoveredIcon, setHoveredIcon] = useState('');
 
@@ -41,8 +41,8 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
         }
     };
 
-    const handleCheckBoard = () => {
-        dispatch(clearBoardErrors());
+    const handleCheckGrid = () => {
+        dispatch(clearGridErrors());
         dispatch(decrementCheckCount());
     };
 
@@ -56,7 +56,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
     };
 
     const handleErase = () => {
-        if (!selectedCell || board[selectedCell[0]][selectedCell[1]].clue) {
+        if (!selectedCell || grid[selectedCell[0]][selectedCell[1]].clue) {
             return;
         }
 
@@ -69,7 +69,7 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
             badge: String(checkCount),
             disabled: gameStatus === GameStatus.SUCCESS || checkCount === 0,
             label: 'check',
-            onClick: !gamePaused ? handleCheckBoard : undefined,
+            onClick: !gamePaused ? handleCheckGrid : undefined,
             src: check,
         },
         {

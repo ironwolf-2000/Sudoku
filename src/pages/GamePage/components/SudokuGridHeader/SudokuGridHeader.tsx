@@ -26,18 +26,14 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
 
     const layoutType = useLayoutType();
 
-    const [modalVisible, setModalVisible] = useState<Record<ModalType, boolean>>({
-        [ModalType.QUIT]: false,
-        [ModalType.RESTART]: false,
-        [ModalType.TIME_OVER]: false,
-    });
+    const [currentModalType, setCurrentModalType] = useState<ModalType | null>(null);
 
     const [gameTime, setGameTime] = useState(0);
     const gameTimeTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
     const handleModalOpen = useCallback(
         (modalType: ModalType) => {
-            setModalVisible(prev => ({ ...prev, [modalType]: true }));
+            setCurrentModalType(modalType);
 
             if (!gamePaused) {
                 dispatch(toggleGamePaused());
@@ -46,30 +42,36 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
         [dispatch, gamePaused]
     );
 
-    const handleModalClose = (modalType: ModalType, apply: boolean) => {
+    const handleModalClose = useCallback(() => {
+        if (!currentModalType) {
+            return;
+        }
+
         if (gamePaused) {
             dispatch(toggleGamePaused());
         }
 
-        setModalVisible(prev => ({ ...prev, [modalType]: false }));
+        setCurrentModalType(null);
+    }, [currentModalType, dispatch, gamePaused]);
 
-        if (apply) {
-            dispatch(restartGame());
-            dispatch(resetHintCell());
-            dispatch(resetSelectedValue());
-            dispatch(setCheckCount(initialCheckCount));
-            dispatch(setHintCount(initialHintCount));
-            setGameTime(0);
+    const handleModalApply = useCallback(() => {
+        handleModalClose();
 
-            if (withNotes) {
-                dispatch(toggleWithNotes());
-            }
+        dispatch(restartGame());
+        dispatch(resetHintCell());
+        dispatch(resetSelectedValue());
+        dispatch(setCheckCount(initialCheckCount));
+        dispatch(setHintCount(initialHintCount));
+        setGameTime(0);
 
-            if (modalType === ModalType.QUIT) {
-                navigate(PATHS.MAIN, { replace: true });
-            }
+        if (withNotes) {
+            dispatch(toggleWithNotes());
         }
-    };
+
+        if (currentModalType === ModalType.QUIT) {
+            navigate(PATHS.MAIN, { replace: true });
+        }
+    }, [currentModalType, dispatch, handleModalClose, initialCheckCount, initialHintCount, navigate, withNotes]);
 
     useEffect(() => {
         if (!gamePaused && gameStatus !== GameStatus.SUCCESS) {
@@ -126,11 +128,11 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
             {MODAL_DATA.map(({ modalType, title, applyButtonLabel, text, withCloseButton }) => (
                 <Modal
                     key={modalType}
-                    visible={modalVisible[modalType]}
+                    visible={modalType === currentModalType}
                     title={title}
                     applyButtonLabel={applyButtonLabel}
-                    onApply={() => handleModalClose(modalType, true)}
-                    onClose={withCloseButton ? () => handleModalClose(modalType, false) : undefined}
+                    onApply={handleModalApply}
+                    onClose={withCloseButton ? handleModalClose : undefined}
                 >
                     {text}
                 </Modal>

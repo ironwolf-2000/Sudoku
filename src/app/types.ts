@@ -4,8 +4,8 @@ interface ICell {
     clue?: boolean;
 }
 
-export type Board = ICell[][];
+export type Grid = ICell[][];
 
-export type RawBoard = ICell['val'][][];
+export type RawGrid = ICell['val'][][];
 
 export type Coordinate = [number, number];
