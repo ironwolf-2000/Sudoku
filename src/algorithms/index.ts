@@ -1,4 +1,4 @@
-import { RawGrid, Grid } from '@/app/types';
+import { RawGrid, Grid, Coordinate } from '@/app/types';
 import { SudokuType } from '@/app/const';
 import {
     getShuffledCopy,
@@ -76,26 +76,68 @@ const hasMultipleSolutions = (
     return false;
 };
 
+const getUniqueMirroredCoordinates = (gridSize: number, r0: number, c0: number): Coordinate[] => {
+    const unique = new Set(
+        [
+            [r0, c0],
+            [gridSize - r0 - 1, gridSize - c0 - 1],
+            [gridSize - r0 - 1, c0],
+            [r0, gridSize - c0 - 1],
+        ].map(([r, c]) => `${r} ${c}`)
+    );
+
+    return Array.from(unique).reduce((acc, cur) => {
+        const [r, c] = cur.split(' ').map(Number);
+        acc.push([r, c]);
+
+        return acc;
+    }, [] as Coordinate[]);
+};
+
 const removeClues = (sudokuType: SudokuType, grid: RawGrid, cluesToRemove: number): RawGrid | null => {
-    const indices = getShuffledCopy(getInclusiveRange(0, grid.length ** 2 - 1));
+    const total = grid.length ** 2;
+    let indices = getShuffledCopy(getInclusiveRange(0, total - 1));
+
     let removedCount = 0;
+    let step = 4;
 
     while (removedCount < cluesToRemove) {
-        const index = indices.pop();
+        const index = indices[0];
         if (typeof index === 'undefined') {
             return null;
         }
 
-        const r = Math.floor(index / grid.length);
-        const c = index % grid.length;
+        const r0 = Math.floor(index / grid.length);
+        const c0 = index % grid.length;
 
-        const previousValue = grid[r][c];
-        grid[r][c] = 0;
-        removedCount++;
+        const coordinates = getUniqueMirroredCoordinates(grid.length, r0, c0).slice(0, step);
+        const removeList = coordinates.map(([r, c]) => r * grid.length + c);
+        indices = indices.filter(el => !removeList.includes(el));
 
-        if (hasMultipleSolutions(sudokuType, grid, r, c, previousValue)) {
-            grid[r][c] = previousValue;
-            removedCount--;
+        const values = coordinates.map(([r, c]) => grid[r][c]);
+
+        for (let i = 0; i < coordinates.length; i++) {
+            const [r, c] = coordinates[i];
+            grid[r][c] = 0;
+        }
+
+        if (coordinates.some(([r, c], i) => hasMultipleSolutions(sudokuType, grid, r, c, values[i]))) {
+            for (let i = 0; i < coordinates.length; i++) {
+                const [r, c] = coordinates[i];
+                grid[r][c] = values[i];
+            }
+
+            continue;
+        }
+
+        removedCount += coordinates.length;
+
+        while (
+            step > cluesToRemove - removedCount ||
+            (step === 4 && removedCount > 0.4 * total) ||
+            (step === 2 && removedCount > 0.6 * total)
+        ) {
+            step = Math.floor(step / 2);
         }
     }
 
