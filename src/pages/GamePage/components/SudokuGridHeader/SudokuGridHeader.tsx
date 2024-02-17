@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Icon, Modal, Stars } from '@/components';
+import { Icon, Modal } from '@/components';
 import { resetHintCell, resetSelectedValue, restartGame } from '@/features/gameGrid';
 import { setCheckCount, setHintCount, toggleGamePaused, toggleWithNotes } from '@/features/gameControls';
 import { LayoutType, PATHS } from '@/app/const';
@@ -68,7 +68,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
             dispatch(toggleWithNotes());
         }
 
-        if (currentModalType === ModalType.QUIT) {
+        if (currentModalType === ModalType.LEAVE) {
             navigate(PATHS.MAIN, { replace: true });
         }
     }, [currentModalType, dispatch, handleModalClose, initialCheckCount, initialHintCount, navigate, withNotes]);
@@ -104,7 +104,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         src={leave}
                         title="Quit the game"
                         label="leave"
-                        onClick={() => handleModalOpen(ModalType.QUIT)}
+                        onClick={() => handleModalOpen(ModalType.LEAVE)}
                     />
                     <Icon
                         className={styles.IconButton}
@@ -114,7 +114,6 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         onClick={() => handleModalOpen(ModalType.RESTART)}
                     />
                 </div>
-                <Stars className={styles.Stars} size="s" />
                 <div className={styles.Time} onClick={layoutType === LayoutType.MOBILE ? handleTimeClick : undefined}>
                     <span>{formattedGameTime}</span>
                     <Icon

@@ -1,20 +1,20 @@
 export enum ModalType {
-    QUIT = 'QUIT',
+    LEAVE = 'LEAVE',
     RESTART = 'RESTART',
     TIME_OVER = 'TIME_OVER',
 }
 
 export const MODAL_DATA = [
     {
-        modalType: ModalType.QUIT,
-        title: 'Quit the game?',
+        modalType: ModalType.LEAVE,
+        title: 'Leave?',
         text: 'This action will result in the loss of your current game progress.',
-        applyButtonLabel: 'Quit',
+        applyButtonLabel: 'Leave',
         withCloseButton: true,
     },
     {
         modalType: ModalType.RESTART,
-        title: 'Restart the game?',
+        title: 'Start over?',
         text: 'Restarting will set you back to the beginning of the same Sudoku grid.',
         applyButtonLabel: 'Restart',
         withCloseButton: true,

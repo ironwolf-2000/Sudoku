@@ -102,6 +102,14 @@ const removeClues = (sudokuType: SudokuType, grid: RawGrid, cluesToRemove: numbe
     let step = 4;
 
     while (removedCount < cluesToRemove) {
+        while (
+            step > cluesToRemove - removedCount ||
+            (step === 4 && removedCount > 0.4 * total) ||
+            (step === 2 && removedCount > 0.6 * total)
+        ) {
+            step = Math.floor(step / 2);
+        }
+
         const index = indices[0];
         if (typeof index === 'undefined') {
             return null;
@@ -131,14 +139,6 @@ const removeClues = (sudokuType: SudokuType, grid: RawGrid, cluesToRemove: numbe
         }
 
         removedCount += coordinates.length;
-
-        while (
-            step > cluesToRemove - removedCount ||
-            (step === 4 && removedCount > 0.4 * total) ||
-            (step === 2 && removedCount > 0.6 * total)
-        ) {
-            step = Math.floor(step / 2);
-        }
     }
 
     return grid;

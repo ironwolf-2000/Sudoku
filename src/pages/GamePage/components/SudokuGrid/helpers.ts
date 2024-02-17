@@ -15,7 +15,7 @@ export const isBadCell = (sudokuType: SudokuType, grid: Grid, r0: number, c0: nu
 export const getShadedCoordinates = (sudokuType: SudokuType, solution: Grid): Coordinate[] => {
     const res: Coordinate[] = [];
 
-    if (sudokuType === SudokuType.DIAGONALS) {
+    if (sudokuType === SudokuType.DIAGONAL) {
         for (let i = 0; i < solution.length; i++) {
             res.push([i, i]);
             res.push([i, solution.length - 1 - i]);

@@ -1,7 +1,5 @@
 .MainPage {
     position: relative;
-    width: 100%;
-    min-height: 47rem;
 
     @media screen and (min-width: 1024px) {
         min-height: auto;
@@ -36,6 +34,18 @@
         margin-bottom: 0.75rem;
         text-transform: uppercase;
         text-align: center;
+
+        font-size: 1.75rem;
+
+        @media screen and (min-width: 1024px) {
+            font-size: 1.5rem;
+        }
+    }
+
+    .SectionContent {
+        display: flex;
+        column-gap: 3rem;
+        margin-left: auto;
     }
 
     &.horizontal {
@@ -45,21 +55,29 @@
         margin-top: 2.5rem;
 
         .SectionTitle {
+            width: 6rem;
             margin-bottom: 0;
+            text-align: left;
+        }
+
+        .SectionContent {
+            margin-left: 0;
         }
     }
 }
 
-.SectionContent {
-    display: flex;
-    column-gap: 3rem;
-    margin-left: auto;
+.GameModeItem {
+    font-size: 1.25rem;
 
-    &.HelpContent {
-        margin-right: 1.5rem;
+    @media screen and (min-width: 1024px) {
+        font-size: 1rem;
     }
 }
 
 .GridSizeItem {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
+
+    @media screen and (min-width: 1024px) {
+        font-size: 1.25rem;
+    }
 }

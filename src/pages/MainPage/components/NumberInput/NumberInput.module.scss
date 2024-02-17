@@ -1,0 +1,60 @@
+.NumberInput {
+    align-items: center;
+    border-radius: 1rem;
+    display: flex;
+    overflow: hidden;
+
+    height: 5rem;
+
+    @media screen and (min-width: 1024px) {
+        height: 4rem;
+    }
+}
+
+.Button {
+    background-color: var(--blue-darker);
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: bold;
+    outline: none;
+    text-transform: uppercase;
+    width: 3.5rem;
+    height: 100%;
+    user-select: none;
+
+    &:focus-visible {
+        background-color: var(--black);
+    }
+
+    .Minus {
+        font-size: 2.5rem;
+        position: relative;
+        top: -0.125rem;
+    }
+
+    &.left {
+        border-radius: 1rem 0 0 1rem;
+    }
+
+    &.right {
+        border-radius: 0 1rem 1rem 0;
+    }
+}
+
+.Input {
+    background-color: var(--blue-light);
+    border: none;
+    color: var(--black);
+    font-size: 1.75rem;
+    font-weight: bold;
+    height: 100%;
+    outline: none;
+    text-align: center;
+    width: 6rem;
+
+    &::selection {
+        background-color: transparent;
+    }
+}

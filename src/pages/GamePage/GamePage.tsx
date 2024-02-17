@@ -23,7 +23,6 @@ import { setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
 import { LayoutType } from '@/app/const';
 import { useLayoutType, useOutsideClick } from '@/app/hooks';
-import { INITIAL_CLUE_COUNT } from '@/algorithms/const';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
@@ -31,7 +30,7 @@ export const GamePage: React.FC = () => {
 
     const { withNotes } = useSelector((state: RootState) => state.gameControls);
     const { grid, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
-    const { level, initialCheckCount, initialHintCount, sudokuType, gridSize } = useSelector(
+    const { initialCheckCount, initialHintCount, initialClueCount, sudokuType, gridSize } = useSelector(
         (state: RootState) => state.gameSettings
     );
 
@@ -66,17 +65,13 @@ export const GamePage: React.FC = () => {
     }, [grid, emptyCells.length, solution]);
 
     const startNewGame = useCallback(() => {
-        const [grid, solution] = createNewGame(
-            sudokuType,
-            gridSize,
-            INITIAL_CLUE_COUNT[sudokuType][gridSize][level - 1]
-        );
+        const [grid, solution] = createNewGame(sudokuType, gridSize, initialClueCount[sudokuType][gridSize]);
 
         dispatch(setGrid(grid));
         dispatch(setSolution(solution));
         dispatch(setCheckCount(initialCheckCount));
         dispatch(setHintCount(initialHintCount));
-    }, [gridSize, dispatch, initialCheckCount, initialHintCount, level, sudokuType]);
+    }, [sudokuType, gridSize, initialClueCount, dispatch, initialCheckCount, initialHintCount]);
 
     useEffect(() => {
         startNewGame();

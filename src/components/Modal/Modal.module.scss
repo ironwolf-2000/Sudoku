@@ -27,7 +27,7 @@
 .Content {
     max-width: calc(min(100vw, 720px) - 2rem);
     z-index: 3;
-    padding: 2rem;
+    padding: 3rem 2rem 2rem;
     border-radius: 1rem;
     background-color: var(--blue-lighter);
     position: relative;
@@ -52,13 +52,9 @@
     text-transform: uppercase;
     text-align: center;
     font-weight: bold;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
     color: var(--black);
-    font-size: 2.25rem;
-
-    @media screen and (min-width: 1024px) {
-        font-size: 2.5rem;
-    }
+    font-size: 2.5rem;
 }
 
 .Body {
@@ -92,10 +88,12 @@
         color var(--transition-time);
     user-select: none;
 
+    font-size: 1.25rem;
     height: 4rem;
     width: 50%;
 
     @media screen and (min-width: 1024px) {
+        font-size: 1rem;
         height: 3.5rem;
         width: 8.5rem;
     }

@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 
-import { GRID_SIZES, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
+import { GRID_SIZES, MINIMUM_CLUE_COUNT, SUDOKU_TYPES, sudokuTypeToLabel } from '@/app/const';
 import styles from './MainPage.module.scss';
-import { Icon, Slider, Stars } from '@/components';
+import { Icon, Slider } from '@/components';
 import check from '@/assets/icons/check.svg';
 import hint from '@/assets/icons/hint.svg';
 import notes from '@/assets/icons/notes.svg';
@@ -14,17 +14,17 @@ import {
     incrementInitialCheckCount,
     incrementInitialHintCount,
     setGridSize,
+    setInitialClueCount,
     setSudokuType,
     toggleInitialWithNotes,
 } from '@/features/gameSettings';
 import { ISliderProps } from '@/components/Slider/types';
-import { PlayButton } from './components';
+import { NumberInput, PlayButton } from './components';
 
 export const MainPage: React.FC = () => {
     const dispatch = useDispatch();
-    const { initialCheckCount, initialHintCount, initialWithNotes, sudokuType, gridSize } = useSelector(
-        (state: RootState) => state.gameSettings
-    );
+    const { initialCheckCount, initialHintCount, initialWithNotes, initialClueCount, sudokuType, gridSize } =
+        useSelector((state: RootState) => state.gameSettings);
 
     const sudokuTypes: ISliderProps['items'] = useMemo(() => {
         return SUDOKU_TYPES.map(type => ({
@@ -70,7 +70,11 @@ export const MainPage: React.FC = () => {
             <main className={styles.Body}>
                 <section className={styles.Section}>
                     <h2 className={styles.SectionTitle}>Game Mode</h2>
-                    <Slider items={sudokuTypes} selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)} />
+                    <Slider
+                        items={sudokuTypes}
+                        sliderItemClass={styles.GameModeItem}
+                        selectedIndex={SUDOKU_TYPES.indexOf(sudokuType)}
+                    />
                 </section>
                 <section className={styles.Section}>
                     <h2 className={styles.SectionTitle}>Grid Size</h2>
@@ -89,13 +93,18 @@ export const MainPage: React.FC = () => {
                     </div>
                 </section>
                 <section className={classnames(styles.Section, styles.horizontal)}>
-                    <h2 className={styles.SectionTitle}>Difficulty:</h2>
+                    <h2 className={styles.SectionTitle}>Clues:</h2>
                     <div className={styles.SectionContent}>
-                        <Stars interactive />
+                        <NumberInput
+                            min={MINIMUM_CLUE_COUNT[sudokuType][gridSize]}
+                            max={gridSize ** 2 - 1}
+                            value={initialClueCount[sudokuType][gridSize]}
+                            onChange={(value: number) => dispatch(setInitialClueCount({ sudokuType, gridSize, value }))}
+                        />
                     </div>
                 </section>
-                <PlayButton />
             </main>
+            <PlayButton />
         </div>
     );
 };

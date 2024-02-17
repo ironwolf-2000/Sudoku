@@ -119,7 +119,7 @@ export const getAffectedCoordinates = (
         ...getCoordinatesFromCurrentBox(gridSize, r0, c0),
     ];
 
-    if (sudokuType === SudokuType.DIAGONALS) {
+    if (sudokuType === SudokuType.DIAGONAL) {
         res.push(...getCoordinatesFromCurrentDiagonals(gridSize, r0, c0));
     }
 
