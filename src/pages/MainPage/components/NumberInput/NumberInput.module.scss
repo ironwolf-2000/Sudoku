@@ -20,9 +20,14 @@
     font-weight: bold;
     outline: none;
     text-transform: uppercase;
-    width: 3.5rem;
     height: 100%;
     user-select: none;
+
+    width: 3.5rem;
+
+    @media screen and (min-width: 1024px) {
+        width: 3rem;
+    }
 
     &:focus-visible {
         background-color: var(--black);
@@ -47,12 +52,19 @@
     background-color: var(--blue-light);
     border: none;
     color: var(--black);
-    font-size: 1.75rem;
     font-weight: bold;
     height: 100%;
     outline: none;
     text-align: center;
+    font-family: 'PTMono', monospace;
+
+    font-size: 1.75rem;
     width: 6rem;
+
+    @media screen and (min-width: 1024px) {
+        font-size: 1.5rem;
+        width: 5rem;
+    }
 
     &::selection {
         background-color: transparent;

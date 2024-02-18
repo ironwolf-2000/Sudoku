@@ -1,6 +1,6 @@
 # Sudoku Games
 
-A classic Sudoku game offering a range of game modes and difficulty levels. Developed using React and Redux, with all algorithms for grid generation and uniqueness checks implemented from scratch.
+A classic Sudoku game offering a range of game modes and preset clues. Developed using React and Redux, with all algorithms for grid generation and uniqueness checks implemented from scratch.
 
 ## Table Of Contents
 
@@ -37,7 +37,7 @@ Each game mode offers four different grid sizes: 4x4, 6x6, 8x8, and 9x9.
 
 ### Difficulty
 
-There are five difficulty levels available for each combination of game mode and grid size.
+The level of difficulty is determined flexibly based on the initial number of clues present in the Sudoku grid.
 
 ### Other functions
 
