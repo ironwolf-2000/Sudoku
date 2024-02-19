@@ -10,7 +10,7 @@ const initialState: AppSettingsState = {
 };
 
 export const appSettingsSlice = createSlice({
-    name: 'gameSettings',
+    name: 'mainSetup',
     initialState,
     reducers: {
         setWithOverlay: (state, action: PayloadAction<boolean>) => {

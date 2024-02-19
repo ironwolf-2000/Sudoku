@@ -23,9 +23,10 @@ export const GameControls: React.FC<IGameControlsProps> = ({ gameStatus, onSetVa
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
-    const { initialWithNotes, gridSize } = useSelector((state: RootState) => state.gameSettings);
-    const { checkCount, hintCount, withNotes, gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { initialWithNotes, gridSize } = useSelector((state: RootState) => state.mainSetup);
+    const { checkCount, hintCount, withNotes } = useSelector((state: RootState) => state.gameControls);
     const { grid, selectedCell, hintCell } = useSelector((state: RootState) => state.gameGrid);
+    const { gamePaused } = useSelector((state: RootState) => state.gameHeader);
 
     const [hoveredIcon, setHoveredIcon] = useState('');
 

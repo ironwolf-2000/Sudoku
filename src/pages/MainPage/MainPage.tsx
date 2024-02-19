@@ -17,14 +17,14 @@ import {
     setInitialClueCount,
     setSudokuType,
     toggleInitialWithNotes,
-} from '@/features/gameSettings';
+} from '@/features/mainSetup';
 import { ISliderProps } from '@/components/Slider/types';
 import { NumberInput, PlayButton } from './components';
 
 export const MainPage: React.FC = () => {
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount, initialWithNotes, initialClueCount, sudokuType, gridSize } =
-        useSelector((state: RootState) => state.gameSettings);
+        useSelector((state: RootState) => state.mainSetup);
 
     const sudokuTypes: ISliderProps['items'] = useMemo(() => {
         return SUDOKU_TYPES.map(type => ({

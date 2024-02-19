@@ -53,7 +53,7 @@ export const getEmptyCells = (grid: RawGrid): Coordinate[] => {
     return res;
 };
 
-const getCoordinatesFromCurrentRow = (gridSize: number, r: number): Coordinate[] => {
+export const getCoordinatesFromCurrentRow = (gridSize: number, r: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
     for (let i = 0; i < gridSize; i++) {
@@ -63,7 +63,7 @@ const getCoordinatesFromCurrentRow = (gridSize: number, r: number): Coordinate[]
     return res;
 };
 
-const getCoordinatesFromCurrentColumn = (gridSize: number, c: number): Coordinate[] => {
+export const getCoordinatesFromCurrentColumn = (gridSize: number, c: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
     for (let i = 0; i < gridSize; i++) {
@@ -73,17 +73,17 @@ const getCoordinatesFromCurrentColumn = (gridSize: number, c: number): Coordinat
     return res;
 };
 
-const getCoordinatesFromCurrentBox = (gridSize: number, r: number, c: number): Coordinate[] => {
+export const getCoordinatesFromCurrentBox = (gridSize: number, r: number, c: number): Coordinate[] => {
     const perfectSquare = gridSize === 4 || gridSize === 9;
-    const rowLength = perfectSquare ? Math.floor(Math.sqrt(gridSize)) : 2;
-    const columnLength = perfectSquare ? rowLength : Math.floor(gridSize / 2);
+    const rowCount = perfectSquare ? Math.floor(Math.sqrt(gridSize)) : 2;
+    const columnCount = perfectSquare ? rowCount : Math.floor(gridSize / 2);
 
-    const r0 = Math.floor(r / rowLength) * rowLength;
-    const c0 = Math.floor(c / columnLength) * columnLength;
+    const r0 = Math.floor(r / rowCount) * rowCount;
+    const c0 = Math.floor(c / columnCount) * columnCount;
     const res: Coordinate[] = [];
 
-    for (let i = r0; i < r0 + rowLength; i++) {
-        for (let j = c0; j < c0 + columnLength; j++) {
+    for (let i = r0; i < r0 + rowCount; i++) {
+        for (let j = c0; j < c0 + columnCount; j++) {
             res.push([i, j]);
         }
     }
@@ -91,7 +91,7 @@ const getCoordinatesFromCurrentBox = (gridSize: number, r: number, c: number): C
     return res;
 };
 
-const getCoordinatesFromCurrentDiagonals = (gridSize: number, r: number, c: number): Coordinate[] => {
+export const getCoordinatesFromCurrentDiagonals = (gridSize: number, r: number, c: number): Coordinate[] => {
     const res: Coordinate[] = [];
 
     for (let i = 0; i < gridSize; i++) {

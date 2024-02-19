@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 const MAX_CHECK_COUNT = 3;
 const MAX_HINT_COUNT = 5;
 
-interface GameSettingsState {
+interface mainSetupState {
     initialCheckCount: number;
     initialHintCount: number;
     initialWithNotes: boolean;
@@ -15,7 +15,7 @@ interface GameSettingsState {
     gridSize: number;
 }
 
-const initialState: GameSettingsState = {
+const initialState: mainSetupState = {
     initialCheckCount: 1,
     initialHintCount: 3,
     initialWithNotes: true,
@@ -24,8 +24,8 @@ const initialState: GameSettingsState = {
     gridSize: 9,
 };
 
-export const gameSettingsSlice = createSlice({
-    name: 'gameSettings',
+export const mainSetupSlice = createSlice({
+    name: 'mainSetup',
     initialState,
     reducers: {
         incrementInitialCheckCount: state => {
@@ -60,6 +60,6 @@ export const {
     setInitialClueCount,
     setSudokuType,
     setGridSize,
-} = gameSettingsSlice.actions;
+} = mainSetupSlice.actions;
 
-export default gameSettingsSlice.reducer;
+export default mainSetupSlice.reducer;

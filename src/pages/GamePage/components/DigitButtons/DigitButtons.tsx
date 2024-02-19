@@ -8,7 +8,7 @@ import { getInclusiveRange } from '@/algorithms/helpers';
 import { GameStatus } from '../../const';
 
 export const DigitButtons: React.FC<IDigitButtonsProps> = ({ className, count, gameStatus, onSetValue }) => {
-    const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { gamePaused } = useSelector((state: RootState) => state.gameHeader);
     const disabled = gamePaused || gameStatus === GameStatus.SUCCESS;
 
     return (

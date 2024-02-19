@@ -8,7 +8,7 @@ import { getShadedCoordinates, hasCoordinate, isBadCell } from './helpers';
 import { getAffectedCoordinates } from '@/algorithms/helpers';
 
 export const useGridClassNames = (gameStatus: GameStatus, customClassName?: string) => {
-    const { gridSize } = useSelector((state: RootState) => state.gameSettings);
+    const { gridSize } = useSelector((state: RootState) => state.mainSetup);
     const classNames = [styles.Content, styles[`size_${gridSize}`], customClassName];
 
     if (gameStatus === GameStatus.SUCCESS) {
@@ -24,7 +24,7 @@ export const useGridClassNames = (gameStatus: GameStatus, customClassName?: stri
 
 export const useCellsClassNames = (gameStatus: GameStatus, hintCell?: Coordinate) => {
     const { grid, solution, selectedCell, selectedValue } = useSelector((state: RootState) => state.gameGrid);
-    const { sudokuType } = useSelector((state: RootState) => state.gameSettings);
+    const { sudokuType } = useSelector((state: RootState) => state.mainSetup);
 
     const classNames: string[][][] = [];
 

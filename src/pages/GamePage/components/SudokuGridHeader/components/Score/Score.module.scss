@@ -1,0 +1,47 @@
+.Score {
+    font-weight: bold;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    column-gap: 0.25rem;
+    font-family: 'PTMono', monospace;
+}
+
+.PrimaryLabel {
+    background: var(--blue-darker);
+    border-radius: 1.5rem;
+    color: var(--white);
+    color: var(--white);
+    font-size: 1.25rem;
+    padding: 0.25rem 0.75rem;
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+}
+
+.ChangeLabel {
+    font-size: 1rem;
+    color: var(--green);
+    position: absolute;
+    right: 29%;
+    animation: score-pop-up 1.25s ease-in-out;
+}
+
+@keyframes score-pop-up {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    40% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    60% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}

@@ -74,8 +74,8 @@
 
     &.size_4 {
         font-size: 3.5rem;
-        width: 6rem;
-        height: 6rem;
+        width: 6.5rem;
+        height: 6.5rem;
 
         &:nth-child(2n):not(:nth-child(4n)) {
             margin-right: 0.1rem;
@@ -97,8 +97,8 @@
 
     &.size_6 {
         font-size: 2.5rem;
-        width: 4rem;
-        height: 4rem;
+        width: 4.5rem;
+        height: 4.5rem;
 
         &:nth-child(3n):not(:nth-child(6n)) {
             margin-right: 0.1rem;

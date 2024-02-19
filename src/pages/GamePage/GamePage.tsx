@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app';
 import { Coordinate } from '@/app/types';
 import styles from './GamePage.module.scss';
-
 import { GameControls, SudokuGridHeader, SudokuGrid } from './components';
 import { GameStatus } from './const';
 import {
+    addCompletedBox,
+    addCompletedColumn,
+    addCompletedDiagonal,
+    addCompletedRow,
     resetHintCell,
     resetSelectedCell,
     resetSelectedValue,
@@ -21,17 +24,28 @@ import {
 import { createNewGame } from '@/algorithms';
 import { setCheckCount, setHintCount } from '@/features/gameControls';
 import { Card } from '@/components';
-import { LayoutType } from '@/app/const';
+import { LayoutType, SudokuType } from '@/app/const';
 import { useLayoutType, useOutsideClick } from '@/app/hooks';
+import { getBoxIndex, getCompletedDiagonalIndices, isBoxCompleted, isColumnCompleted, isRowCompleted } from './helpers';
+import { setGameScoreChange } from '@/features/gameHeader';
 
 export const GamePage: React.FC = () => {
     const dispatch = useDispatch();
     const layoutType = useLayoutType();
 
     const { withNotes } = useSelector((state: RootState) => state.gameControls);
-    const { grid, solution, selectedCell } = useSelector((state: RootState) => state.gameGrid);
+    const {
+        grid,
+        solution,
+        selectedCell,
+        lastSetCell,
+        completedBoxes,
+        completedRows,
+        completedColumns,
+        completedDiagonals,
+    } = useSelector((state: RootState) => state.gameGrid);
     const { initialCheckCount, initialHintCount, initialClueCount, sudokuType, gridSize } = useSelector(
-        (state: RootState) => state.gameSettings
+        (state: RootState) => state.mainSetup
     );
 
     const emptyCells = useMemo(() => {
@@ -77,6 +91,59 @@ export const GamePage: React.FC = () => {
         startNewGame();
     }, [startNewGame]);
 
+    useEffect(() => {
+        if (!lastSetCell) {
+            return;
+        }
+
+        const [r, c] = lastSetCell;
+        if (grid[r][c].clue) {
+            return;
+        }
+
+        let comboCount = 0;
+
+        if (isBoxCompleted(grid, r, c)) {
+            const index = getBoxIndex(grid.length, r, c);
+
+            if (!completedBoxes.includes(index)) {
+                dispatch(addCompletedBox(index));
+                comboCount++;
+            }
+        }
+
+        if (isRowCompleted(grid, r)) {
+            const index = r;
+
+            if (!completedRows.includes(index)) {
+                dispatch(addCompletedRow(index));
+                comboCount++;
+            }
+        }
+
+        if (isColumnCompleted(grid, c)) {
+            const index = c;
+
+            if (!completedColumns.includes(index)) {
+                dispatch(addCompletedColumn(index));
+                comboCount++;
+            }
+        }
+
+        if (sudokuType === SudokuType.DIAGONAL) {
+            for (const index of getCompletedDiagonalIndices(grid, r, c)) {
+                if (!completedDiagonals.includes(index)) {
+                    dispatch(addCompletedDiagonal(index));
+                    comboCount++;
+                }
+            }
+        }
+
+        if (comboCount) {
+            dispatch(setGameScoreChange(2 ** comboCount * 100));
+        }
+    }, [completedBoxes, completedColumns, completedDiagonals, completedRows, dispatch, grid, lastSetCell, sudokuType]);
+
     const handleSetCell = useCallback(
         (cell: Coordinate) => {
             dispatch(resetHintCell());
@@ -96,7 +163,12 @@ export const GamePage: React.FC = () => {
 
     const handleSetValue = useCallback(
         (val: number) => {
-            if (!selectedCell || grid[selectedCell[0]][selectedCell[1]].clue || val > grid.length) {
+            if (!selectedCell) {
+                return;
+            }
+
+            const [r, c] = selectedCell;
+            if (grid[r][c].clue || val > grid.length) {
                 return;
             }
 

@@ -37,7 +37,7 @@ Each game mode offers four different grid sizes: 4x4, 6x6, 8x8, and 9x9.
 
 ### Difficulty
 
-The level of difficulty is determined flexibly based on the initial number of clues present in the Sudoku grid.
+The level of difficulty is determined flexibly based on the initial number of clues present in the Sudoku grid. You can specify up to $N^2-1$ clues where $N$ represents the size of the grid.
 
 ### Other functions
 

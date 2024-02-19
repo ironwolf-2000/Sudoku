@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 
 import play from '@/assets/icons/play.svg';
 import { Icon } from '@/components';
-import { toggleGamePaused } from '@/features/gameControls';
+import { toggleGamePaused } from '@/features/gameHeader';
 import styles from './PauseOverlay.module.scss';
 
 export const PauseOverlay = () => {

@@ -9,11 +9,20 @@ interface GameGridState {
     selectedValue?: number;
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
+    lastSetCell?: Coordinate;
+    completedBoxes: number[];
+    completedRows: number[];
+    completedColumns: number[];
+    completedDiagonals: number[];
 }
 
 const initialState: GameGridState = {
     grid: [],
     solution: [],
+    completedBoxes: [],
+    completedRows: [],
+    completedColumns: [],
+    completedDiagonals: [],
 };
 
 export const gameGridSlice = createSlice({
@@ -54,6 +63,10 @@ export const gameGridSlice = createSlice({
             }
 
             state.selectedCell = undefined;
+            state.completedBoxes = [];
+            state.completedRows = [];
+            state.completedColumns = [];
+            state.completedDiagonals = [];
         },
         clearGridErrors: state => {
             for (let i = 0; i < state.grid.length; i++) {
@@ -74,6 +87,7 @@ export const gameGridSlice = createSlice({
 
             if (!state.grid[r][c].clue) {
                 state.grid[r][c] = { val, notes: [] };
+                state.lastSetCell = [r, c];
             }
         },
         updateCellNotes: (state, action: PayloadAction<number>) => {
@@ -98,6 +112,46 @@ export const gameGridSlice = createSlice({
 
             state.grid[r][c].val = 0;
         },
+        addCompletedBox: (state, action: PayloadAction<number>) => {
+            const index = action.payload;
+
+            if (!state.completedBoxes.includes(index)) {
+                state.completedBoxes.push(index);
+            }
+        },
+        resetCompletedBoxes: state => {
+            state.completedBoxes = [];
+        },
+        addCompletedRow: (state, action: PayloadAction<number>) => {
+            const index = action.payload;
+
+            if (!state.completedRows.includes(index)) {
+                state.completedRows.push(index);
+            }
+        },
+        resetCompletedRows: state => {
+            state.completedRows = [];
+        },
+        addCompletedColumn: (state, action: PayloadAction<number>) => {
+            const index = action.payload;
+
+            if (!state.completedColumns.includes(index)) {
+                state.completedColumns.push(index);
+            }
+        },
+        resetCompletedColumns: state => {
+            state.completedColumns = [];
+        },
+        addCompletedDiagonal: (state, action: PayloadAction<number>) => {
+            const index = action.payload;
+
+            if (!state.completedDiagonals.includes(index)) {
+                state.completedDiagonals.push(index);
+            }
+        },
+        resetCompletedDiagonals: state => {
+            state.completedDiagonals = [];
+        },
     },
 });
 
@@ -114,6 +168,14 @@ export const {
     clearGridErrors,
     updateCellValue,
     updateCellNotes,
+    addCompletedBox,
+    resetCompletedBoxes,
+    addCompletedRow,
+    resetCompletedRows,
+    addCompletedColumn,
+    resetCompletedColumns,
+    addCompletedDiagonal,
+    resetCompletedDiagonals,
 } = gameGridSlice.actions;
 
 export default gameGridSlice.reducer;

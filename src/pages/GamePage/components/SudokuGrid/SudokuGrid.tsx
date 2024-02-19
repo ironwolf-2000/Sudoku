@@ -14,7 +14,7 @@ import { getInclusiveRange } from '@/algorithms/helpers';
 export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, onSelectCell, onSetValue }) => {
     const { withOverlay } = useSelector((state: RootState) => state.appSettings);
     const { grid, solution, hintCell } = useSelector((state: RootState) => state.gameGrid);
-    const { gamePaused } = useSelector((state: RootState) => state.gameControls);
+    const { gamePaused } = useSelector((state: RootState) => state.gameHeader);
 
     const [currentCell, setCurrentCell] = useState<Coordinate | null>(null);
 
