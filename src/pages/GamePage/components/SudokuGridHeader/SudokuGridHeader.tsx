@@ -20,7 +20,7 @@ import { getFormattedTime } from './helpers';
 import { useLayoutType } from '@/app/hooks';
 import { Score } from './components';
 
-export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus }) => {
+export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus, scoreCoefficient }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { initialCheckCount, initialHintCount } = useSelector((state: RootState) => state.mainSetup);
@@ -80,14 +80,14 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
 
     useEffect(() => {
         if (!gamePaused && gameStatus !== GameStatus.SUCCESS) {
-            // gameTimeTimeoutRef.current = setTimeout(() => setGameTime(gameTime + 1), 1000);
+            gameTimeTimeoutRef.current = setTimeout(() => setGameTime(gameTime + 1), 1000);
 
             if (gameTime >= GAME_TIMEOUT) {
                 handleModalOpen(ModalType.TIME_OVER);
             }
         }
 
-        // return () => clearTimeout(gameTimeTimeoutRef.current);
+        return () => clearTimeout(gameTimeTimeoutRef.current);
     }, [gameTime, gamePaused, gameStatus, handleModalOpen]);
 
     const formattedGameTime = useMemo(() => {
@@ -119,7 +119,7 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus 
                         onClick={() => handleModalOpen(ModalType.RESTART)}
                     />
                 </div>
-                <Score />
+                <Score coefficient={scoreCoefficient} />
                 <div className={styles.Time} onClick={layoutType === LayoutType.MOBILE ? handleTimeClick : undefined}>
                     <span>{formattedGameTime}</span>
                     <Icon

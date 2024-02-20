@@ -1,16 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-interface gameHeaderState {
+interface GameHeaderState {
     gamePaused: boolean;
     gameScore: number;
-    gameScoreChange: number;
 }
 
-const initialState: gameHeaderState = {
+const initialState: GameHeaderState = {
     gamePaused: false,
     gameScore: 0,
-    gameScoreChange: 0,
 };
 
 export const gameHeaderSlice = createSlice({
@@ -20,19 +18,15 @@ export const gameHeaderSlice = createSlice({
         toggleGamePaused: state => {
             state.gamePaused = !state.gamePaused;
         },
-        updateGameScore: state => {
-            state.gameScore += state.gameScoreChange;
+        increaseGameScore: (state, action: PayloadAction<number>) => {
+            state.gameScore += action.payload;
         },
         resetGameScore: state => {
             state.gameScore = 0;
-            state.gameScoreChange = 0;
-        },
-        setGameScoreChange: (state, action: PayloadAction<number>) => {
-            state.gameScoreChange = action.payload;
         },
     },
 });
 
-export const { toggleGamePaused, updateGameScore, resetGameScore, setGameScoreChange } = gameHeaderSlice.actions;
+export const { toggleGamePaused, increaseGameScore, resetGameScore } = gameHeaderSlice.actions;
 
 export default gameHeaderSlice.reducer;

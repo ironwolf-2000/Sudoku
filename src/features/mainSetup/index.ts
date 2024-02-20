@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 const MAX_CHECK_COUNT = 3;
 const MAX_HINT_COUNT = 5;
 
-interface mainSetupState {
+interface MainSetupState {
     initialCheckCount: number;
     initialHintCount: number;
     initialWithNotes: boolean;
@@ -15,7 +15,7 @@ interface mainSetupState {
     gridSize: number;
 }
 
-const initialState: mainSetupState = {
+const initialState: MainSetupState = {
     initialCheckCount: 1,
     initialHintCount: 3,
     initialWithNotes: true,

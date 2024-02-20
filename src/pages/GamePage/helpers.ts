@@ -10,7 +10,7 @@ export const getBoxIndex = (gridSize: number, r0: number, c0: number) => {
     const rowCount = perfectSquare ? Math.floor(Math.sqrt(gridSize)) : 2;
     const columnCount = perfectSquare ? rowCount : Math.floor(gridSize / 2);
 
-    return Math.floor(r0 / rowCount) * columnCount + Math.floor(c0 / columnCount);
+    return Math.floor(r0 / rowCount) * Math.floor(gridSize / columnCount) + Math.floor(c0 / columnCount);
 };
 
 export const isBoxCompleted = (grid: Grid, r0: number, c0: number) => {

@@ -10,19 +10,19 @@ interface GameGridState {
     selectedCell?: Coordinate;
     hintCell?: Coordinate;
     lastSetCell?: Coordinate;
-    completedBoxes: number[];
-    completedRows: number[];
-    completedColumns: number[];
-    completedDiagonals: number[];
+    completedBoxesStr: string;
+    completedRowsStr: string;
+    completedColumnsStr: string;
+    completedDiagonalsStr: string;
 }
 
 const initialState: GameGridState = {
     grid: [],
     solution: [],
-    completedBoxes: [],
-    completedRows: [],
-    completedColumns: [],
-    completedDiagonals: [],
+    completedBoxesStr: '',
+    completedRowsStr: '',
+    completedColumnsStr: '',
+    completedDiagonalsStr: '',
 };
 
 export const gameGridSlice = createSlice({
@@ -63,10 +63,10 @@ export const gameGridSlice = createSlice({
             }
 
             state.selectedCell = undefined;
-            state.completedBoxes = [];
-            state.completedRows = [];
-            state.completedColumns = [];
-            state.completedDiagonals = [];
+            state.completedBoxesStr = '';
+            state.completedRowsStr = '';
+            state.completedColumnsStr = '';
+            state.completedDiagonalsStr = '';
         },
         clearGridErrors: state => {
             for (let i = 0; i < state.grid.length; i++) {
@@ -113,44 +113,44 @@ export const gameGridSlice = createSlice({
             state.grid[r][c].val = 0;
         },
         addCompletedBox: (state, action: PayloadAction<number>) => {
-            const index = action.payload;
+            const index = String(action.payload);
 
-            if (!state.completedBoxes.includes(index)) {
-                state.completedBoxes.push(index);
+            if (!state.completedBoxesStr.includes(index)) {
+                state.completedBoxesStr += index;
             }
         },
         resetCompletedBoxes: state => {
-            state.completedBoxes = [];
+            state.completedBoxesStr = '';
         },
         addCompletedRow: (state, action: PayloadAction<number>) => {
-            const index = action.payload;
+            const index = String(action.payload);
 
-            if (!state.completedRows.includes(index)) {
-                state.completedRows.push(index);
+            if (!state.completedRowsStr.includes(index)) {
+                state.completedRowsStr += index;
             }
         },
         resetCompletedRows: state => {
-            state.completedRows = [];
+            state.completedRowsStr = '';
         },
         addCompletedColumn: (state, action: PayloadAction<number>) => {
-            const index = action.payload;
+            const index = String(action.payload);
 
-            if (!state.completedColumns.includes(index)) {
-                state.completedColumns.push(index);
+            if (!state.completedColumnsStr.includes(index)) {
+                state.completedColumnsStr += index;
             }
         },
         resetCompletedColumns: state => {
-            state.completedColumns = [];
+            state.completedColumnsStr = '';
         },
         addCompletedDiagonal: (state, action: PayloadAction<number>) => {
-            const index = action.payload;
+            const index = String(action.payload);
 
-            if (!state.completedDiagonals.includes(index)) {
-                state.completedDiagonals.push(index);
+            if (!state.completedDiagonalsStr.includes(index)) {
+                state.completedDiagonalsStr += index;
             }
         },
         resetCompletedDiagonals: state => {
-            state.completedDiagonals = [];
+            state.completedDiagonalsStr = '';
         },
     },
 });
