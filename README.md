@@ -2,13 +2,6 @@
 
 A classic Sudoku game offering a range of game modes and preset clues. Developed using React and Redux, with all algorithms for grid generation and uniqueness checks implemented from scratch.
 
-## Table Of Contents
-
--   [Demo](#demo)
--   [Features](#features)
--   [Algorithms](#algorithms)
--   [References](#references)
-
 ## Demo
 
 https://sudoku-nine-kappa.vercel.app/
@@ -39,7 +32,11 @@ Each game mode offers four different grid sizes: 4x4, 6x6, 8x8, and 9x9.
 
 The level of difficulty is determined flexibly based on the initial number of clues present in the Sudoku grid. You can specify up to $N^2-1$ clues where $N$ represents the size of the grid.
 
-### Other functions
+### Game Score
+
+As you solve the puzzle, you accumulate points. The base score multiplier is determined by various factors, including the grid size and the quantity of selected hints. Additionally, completing multiple boxes, rows, or columns simultaneously results in a greater contribution to the total score.
+
+### Other Functionality
 
 -   Game Restart: Resets the grid to its initial state.
 -   Game Pause: Temporarily halts the game, blurring the grid in the process.
@@ -60,7 +57,41 @@ To generate the Sudoku grid, we employ a backtracking algorithm, meticulously fi
 
 After creating a fully-filled grid, begin the process of elimination. Grid clues are removed one at a time. At each step, we ensure that the puzzle maintains a unique and solvable solution. For more information, refer to the code [here](src/algorithms/index.ts#L79).
 
-## References
+## Built With
+
+[![Built With](https://skillicons.dev/icons?i=git,js,ts,react,redux,scss,vite)](https://skillicons.dev)
+
+## Setup
+
+To run this project, follow these steps:
+
+1. Clone the repository to your local machine:
+
+```
+git clone https://github.com/ironwolf-2000/Sudoku-Games.git
+```
+
+2. Navigate to the project directory:
+
+```
+cd Sudoku-Games
+```
+
+3. Install dependencies using npm:
+
+```
+npm install
+```
+
+4. Run the development server:
+
+```
+npm run dev
+```
+
+5. Open your browser and visit **http://localhost:5173/** to view the project.
+
+## Resources
 
 -   [Online Sudoku Solver](https://www.thonky.com/sudoku/solution-count) – To ensure that my grid generation algorithm produces a unique solution
 -   [Color Palette](https://coolors.co/) – Color combination ideas

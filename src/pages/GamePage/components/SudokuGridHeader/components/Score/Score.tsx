@@ -47,7 +47,7 @@ export const Score: React.FC<IScoreProps> = ({ coefficient }) => {
 
     return (
         <div className={styles.Score}>
-            <span className={styles.Label}>{String(gameScore).padStart(6, '0')}</span>
+            <span className={styles.Label}>{String(gameScore).padStart(4, '0')}</span>
         </div>
     );
 };
