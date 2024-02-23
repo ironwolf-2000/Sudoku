@@ -15,6 +15,10 @@
 
 .IconButton {
     height: 2rem;
+
+    &.flickering {
+        animation: flicker 1s infinite 2s;
+    }
 }
 
 .Time {
@@ -30,5 +34,15 @@
 
     @media screen and (min-width: 1024px) {
         cursor: default;
+    }
+}
+
+@keyframes flicker {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
     }
 }

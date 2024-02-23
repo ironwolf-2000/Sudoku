@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import classnames from 'classnames';
 
 import { Icon, Modal } from '@/components';
 import { resetHintCell, resetSelectedValue, restartGame } from '@/features/gameGrid';
@@ -100,19 +101,21 @@ export const SudokuGridHeader: React.FC<ISudokuGridHeaderProps> = ({ gameStatus,
         }
     };
 
+    const iconClassName = classnames(styles.IconButton, gameStatus === GameStatus.SUCCESS && styles.flickering);
+
     return (
         <>
             <div className={styles.SudokuGridHeader}>
                 <div className={styles.ButtonContainer}>
                     <Icon
-                        className={styles.IconButton}
+                        className={iconClassName}
                         src={leave}
                         title="Quit the game"
                         label="leave"
                         onClick={() => handleModalOpen(ModalType.LEAVE)}
                     />
                     <Icon
-                        className={styles.IconButton}
+                        className={iconClassName}
                         src={restart}
                         title="Restart the game"
                         label="restart"

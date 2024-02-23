@@ -23,7 +23,7 @@ export const SudokuGrid: React.FC<ISudokuGridProps> = ({ className, gameStatus, 
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (withOverlay) {
+            if (withOverlay || gameStatus === GameStatus.SUCCESS) {
                 return;
             }
 
